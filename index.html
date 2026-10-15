@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="MWS CRM">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚛</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>üöõ</text></svg>">
 <style>
 :root{
   --almond:#EFDECD; --almond-2:#F7EFE6; --green:#0B7A52; --green-d:#095F40; --green-l:#0f9465;
@@ -181,7 +181,7 @@ textarea.f{min-height:82px;resize:vertical}
 .menu button:last-child{border-bottom:0}
 .menu button:active{background:var(--almond-2)}
 
-/* ================= FRONTLINE INTEL — driver capture ================= */
+/* ================= FRONTLINE INTEL ‚Äî driver capture ================= */
 
 /* the capture sheet is deliberately short and thumb-sized: a driver
    is at a light, not at a desk. Everything is one tap or one word. */
@@ -213,7 +213,7 @@ textarea.f{min-height:82px;resize:vertical}
 .qthumbs button{position:absolute;top:3px;right:3px;width:22px;height:22px;border-radius:50%;
   border:0;background:rgba(0,0,0,.62);color:#fff;font-size:13px;line-height:1;cursor:pointer}
 
-/* GPS strip — states: waiting, got it, denied */
+/* GPS strip ‚Äî states: waiting, got it, denied */
 .geo{display:flex;align-items:center;gap:9px;margin-top:12px;padding:11px 13px;border-radius:11px;
   border:1px solid var(--line);background:var(--card);font-size:13.5px;color:var(--muted)}
 .geo b{color:var(--ink);font-size:13.5px}
@@ -375,7 +375,7 @@ body.driver .obpill{bottom:calc(104px + var(--safe-b))}
   .list .card{display:none}
   .fab{width:auto;height:auto;border-radius:12px;padding:14px 22px;font-size:15px;font-weight:800;right:28px}
 
-  /* bottom sheets become centred dialogs — a sheet sliding off a 27" screen reads as broken */
+  /* bottom sheets become centred dialogs ‚Äî a sheet sliding off a 27" screen reads as broken */
   .scrim{background:rgba(30,22,16,.45)}
   .sheet,.qsheet{left:50%;right:auto;bottom:auto;top:50%;width:min(760px,92vw);
     border-radius:16px;max-height:86vh;transform:translate(-50%,-48%);opacity:0;pointer-events:none;
@@ -447,6 +447,82 @@ body.driver .obpill{bottom:calc(104px + var(--safe-b))}
 .loginbox .wmark{height:52px;margin:0 auto 6px}
 @media(min-width:1000px){.top .wmark{height:30px}}
 
+/* ================= QUOTES ================= */
+#qlsheet{z-index:53}
+#qbsheet{z-index:56}
+body.driver .qonly{display:none !important}
+.qtype{display:flex;gap:7px;flex-wrap:wrap}
+.qtype .chip[disabled]{opacity:.55;cursor:default}
+.qsec{font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--green);
+  font-weight:800;margin:18px 0 2px;padding-top:12px;border-top:1px solid var(--line)}
+.qline{display:flex;gap:8px;align-items:center;margin-top:9px}
+.qline .f{margin:0;min-width:0}
+.qline select.f{flex:0 0 auto;width:auto}
+.qline input.f{flex:1}
+.qkey{flex:0 0 26px;height:26px;border-radius:7px;background:var(--green);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:13px}
+.qdel{flex:0 0 auto;width:34px;height:34px;font-size:14px}
+.qcont{padding-bottom:6px}
+.qgrid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-left:34px}
+@media(max-width:480px){.qgrid4{grid-template-columns:1fr 1fr}}
+.qchecks{display:flex;gap:14px;flex-wrap:wrap;padding:9px 0}
+.qchecks.col{flex-direction:column;gap:7px}
+.qchecks label{font-size:14px;display:flex;align-items:center;gap:7px}
+.qchecks input{width:18px;height:18px;accent-color:var(--green)}
+#qb-body .act{display:inline-block;flex:0 0 auto;margin-top:10px;padding:8px 12px}
+.qtotal{margin:16px 0 4px;background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:10px 13px;box-shadow:var(--shadow)}
+.qtotal div{display:flex;justify-content:space-between;gap:10px;padding:4px 0;font-size:14px}
+.qtotal b{color:var(--green);text-align:right;font-variant-numeric:tabular-nums}
+.qacts .btn{margin-top:10px}
+.qnew{display:flex;gap:9px;margin-bottom:12px}
+.qnew .btn{margin:0;flex:1;padding:12px;font-size:14px}
+.qcust{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
+.qcust .act{flex:0 0 auto;padding:8px 11px}
+.qcust .act.ghost{background:transparent;color:var(--muted);font-weight:600}
+.qrow.s-Accepted{box-shadow:inset 3px 0 0 var(--green)}
+.qrow.s-Sent{box-shadow:inset 3px 0 0 var(--warn)}
+.qrow.s-Declined{opacity:.6}
+@media(max-width:430px){.qnew{flex-direction:column}}
+
+/* ---------- the printed quote (letter, one page) ---------- */
+#qprint{display:none}
+@media print{
+  @page{size:letter;margin:.4in .55in .45in}
+  html,body{background:#fff !important;height:auto}
+  body > *:not(#qprint){display:none !important}
+  #qprint{display:block !important}
+}
+.qp{color:#222;font:9pt/1.3 -apple-system,Helvetica,Arial,sans-serif;
+  -webkit-print-color-adjust:exact;print-color-adjust:exact}
+.qp-h{display:flex;justify-content:space-between;align-items:flex-start;
+  border-bottom:2px solid #0B7A52;padding-bottom:6px}
+.qp-h i{display:block;color:#5A4632;font-size:9.5pt;margin-top:3px}
+.qp .qp-logo{height:42px;background-color:#0B7A52 !important}
+.qp-co{text-align:right;color:#666;font-size:8.5pt;line-height:1.35}
+.qp h1{color:#0B7A52;font-size:13.5pt;margin:8px 0 4px}
+.qp h2{color:#0B7A52;font-size:10pt;margin:8px 0 3px}
+.qp p{margin:0}
+.qp-meta{display:grid;grid-template-columns:58% 42%;gap:2px 0;font-size:9pt}
+.qp-t{width:100%;border-collapse:collapse;margin:3px 0 0;font-size:8.6pt}
+.qp-t th{background:#0B7A52;color:#fff;text-align:left;padding:3px 6px;font-weight:700}
+.qp-t td{border:.5pt solid #B0B0B0;padding:2.5px 6px}
+.qp-t tr:nth-child(odd) td{background:#EFDECD}
+.qp-t tr.b td,.qp-t td.bb{font-weight:700}
+.qp-t.alt{margin-top:6px}
+.qp-t.alt th{background:#EFDECD;color:#5A4632}
+.qp-t.alt tr td{background:#fff}
+.qp-t.est{margin-top:6px}
+.qp-t.est td:not(:first-child),.qp-t.est th:not(:first-child){text-align:right}
+.qp-t.est tr td{background:#fff}
+.qp-t.est tr.tot td{background:#EFDECD;font-weight:700}
+.qp-note{color:#666;font-size:7.8pt;margin-top:2px !important}
+.qp-terms{font-size:8.2pt;line-height:1.28}
+.qp-acc{font-size:9pt}
+.qp-acc > div{margin-top:5px}
+.qp-acc .ln{display:flex;justify-content:space-between;margin-top:12px}
+.qp-f{border-top:1px solid #0B7A52;margin-top:12px;padding-top:3px;color:#666;font-size:7.8pt}
+
 </style>
 </head>
 <body>
@@ -459,7 +535,7 @@ body.driver .obpill{bottom:calc(104px + var(--safe-b))}
     <label class="f" for="lg-email">Email</label>
     <input class="f" id="lg-email" type="email" autocomplete="username" inputmode="email" placeholder="you@murphywaste.com">
     <label class="f" for="lg-pass">Password</label>
-    <input class="f" id="lg-pass" type="password" autocomplete="current-password" placeholder="••••••••">
+    <input class="f" id="lg-pass" type="password" autocomplete="current-password" placeholder="‚Ä¢‚Ä¢‚Ä¢‚Ä¢‚Ä¢‚Ä¢‚Ä¢‚Ä¢">
     <button class="btn" id="lg-go">Sign In</button>
     <div class="msg" id="lg-msg"></div>
     <p class="switch">Accounts are created by the office. Everyone on the team sees the same prospect list.</p>
@@ -473,23 +549,24 @@ body.driver .obpill{bottom:calc(104px + var(--safe-b))}
       <span class="wmark" role="img" aria-label="Murphy Waste Systems"></span><span class="tagpill">CRM</span>
     </div>
     <div class="sp">
-      <button class="iconbtn" id="btn-refresh" aria-label="Refresh">⟳</button>
-      <button class="iconbtn" id="btn-menu" aria-label="Menu">⋯</button>
+      <button class="iconbtn" id="btn-refresh" aria-label="Refresh">‚ü≥</button>
+      <button class="iconbtn" id="btn-menu" aria-label="Menu">‚ãØ</button>
     </div>
   </header>
 
   <div class="menu" id="menu">
-    <button data-m="muni">🏛  Municipal</button>
-    <button data-m="inbox">📥  Inbox</button>
-    <button data-m="dash">📊  Mission Control</button>
-    <button data-m="map">🗺  Map</button>
-    <button data-m="board">🏆  Leaderboard</button>
-    <button data-m="mode">🔄  Switch to driver mode</button>
-    <button data-m="export">⬇︎  Export to Excel (CSV)</button>
-    <button data-m="backup">💾  Backup (JSON)</button>
-    <button data-m="theme">🌗  Light / Dark</button>
-    <button data-m="who">👤  Signed in as…</button>
-    <button data-m="out">↩︎  Sign out</button>
+    <button data-m="quotes" class="qonly">üìÑ  Quotes</button>
+    <button data-m="muni">üèõ  Municipal</button>
+    <button data-m="inbox">üì•  Inbox</button>
+    <button data-m="dash">üìä  Mission Control</button>
+    <button data-m="map">üó∫  Map</button>
+    <button data-m="board">üèÜ  Leaderboard</button>
+    <button data-m="mode">üîÑ  Switch to driver mode</button>
+    <button data-m="export">‚¨áÔ∏é  Export to Excel (CSV)</button>
+    <button data-m="backup">üíæ  Backup (JSON)</button>
+    <button data-m="theme">üåó  Light / Dark</button>
+    <button data-m="who">üë§  Signed in as‚Ä¶</button>
+    <button data-m="out">‚Ü©Ô∏é  Sign out</button>
   </div>
 
   <div class="kpis">
@@ -503,13 +580,13 @@ body.driver .obpill{bottom:calc(104px + var(--safe-b))}
   <div class="alertbar ren" id="ab-ren"></div>
 
   <div class="tools">
-    <input class="search" id="q" type="search" placeholder="Search company, contact, city, hauler…">
+    <input class="search" id="q" type="search" placeholder="Search company, contact, city, hauler‚Ä¶">
   </div>
   <div class="chips" id="chips">
     <button class="chip on" data-f="all">All</button>
-    <button class="chip alert" data-f="due">⏰ Due</button>
-    <button class="chip" data-f="photos">📷 Has photos</button>
-    <button class="chip newq" data-f="unworked">🆕 Unworked</button>
+    <button class="chip alert" data-f="due">‚è∞ Due</button>
+    <button class="chip" data-f="photos">üì∑ Has photos</button>
+    <button class="chip newq" data-f="unworked">üÜï Unworked</button>
     <button class="chip" data-f="New">New</button>
     <button class="chip" data-f="Quoted">Quoted</button>
     <button class="chip" data-f="Won">Won</button>
@@ -518,7 +595,7 @@ body.driver .obpill{bottom:calc(104px + var(--safe-b))}
     <button class="chip" data-f="Lost">Lost</button>
   </div>
 
-  <p class="modenote"><b>Driver mode.</b> One button. Spot it, shoot it, send it — sales does the rest. Your last submissions are below.</p>
+  <p class="modenote"><b>Driver mode.</b> One button. Spot it, shoot it, send it ‚Äî sales does the rest. Your last submissions are below.</p>
   <div class="list" id="list"></div>
   <p class="tiny" id="syncline" style="text-align:center;padding:6px 16px 20px"></p>
 
@@ -530,7 +607,7 @@ body.driver .obpill{bottom:calc(104px + var(--safe-b))}
 <div class="sheet" id="sheet">
   <div class="sheet-h">
     <h2 id="sh-title">New Prospect</h2>
-    <div style="margin-left:auto"><button class="iconbtn" id="sh-close">✕</button></div>
+    <div style="margin-left:auto"><button class="iconbtn" id="sh-close">‚úï</button></div>
   </div>
   <div class="sheet-b">
     <div id="qa-wrap"></div>
@@ -553,14 +630,14 @@ body.driver .obpill{bottom:calc(104px + var(--safe-b))}
       <div><label class="f">Address</label><input class="f" id="f-address"></div>
       <div><label class="f">City</label><input class="f" id="f-city"></div>
     </div>
-    <button class="pinbtn" id="f-pin" type="button">📍 Use my location</button>
+    <button class="pinbtn" id="f-pin" type="button">üìç Use my location</button>
 
     <!-- ---------- SITE PHOTOS ---------- -->
     <label class="f">Site photos</label>
     <p class="tiny">Enclosure, access route, existing containers. Shrunk on the phone before upload.</p>
     <div class="photobar">
-      <label class="pb" for="cam">📷  Take photo</label>
-      <label class="pb" for="lib">🖼  From library</label>
+      <label class="pb" for="cam">üì∑  Take photo</label>
+      <label class="pb" for="lib">üñº  From library</label>
     </div>
     <input id="cam" type="file" accept="image/*" capture="environment" multiple hidden>
     <input id="lib" type="file" accept="image/*" multiple hidden>
@@ -574,7 +651,7 @@ body.driver .obpill{bottom:calc(104px + var(--safe-b))}
         </select></div>
       <div><label class="f">Service line</label>
         <select class="f" id="f-line">
-          <option value="">—</option><option>Roll-off</option><option>Front-load</option>
+          <option value="">‚Äî</option><option>Roll-off</option><option>Front-load</option>
           <option>Compactor</option><option>Grapple</option><option>Portable restrooms</option>
           <option>Aggregates</option><option>Multiple</option><option>Other</option>
         </select></div>
@@ -596,11 +673,11 @@ body.driver .obpill{bottom:calc(104px + var(--safe-b))}
     </div>
     <div class="row2">
       <div><label class="f">Our contract ends</label><input class="f" id="f-cend" type="date"></div>
-      <div><label class="f">Source</label><input class="f" id="f-source" placeholder="Drive-by, referral…"></div>
+      <div><label class="f">Source</label><input class="f" id="f-source" placeholder="Drive-by, referral‚Ä¶"></div>
     </div>
 
     <label class="f">Notes</label>
-    <textarea class="f" id="f-notes" placeholder="Gate code, who to ask for, what they complained about…"></textarea>
+    <textarea class="f" id="f-notes" placeholder="Gate code, who to ask for, what they complained about‚Ä¶"></textarea>
 
     <div id="log-wrap"></div>
 
@@ -620,14 +697,14 @@ body.driver .obpill{bottom:calc(104px + var(--safe-b))}
   <div class="qbody">
 
     <label class="snap" id="q-snap" for="q-cam">
-      <span class="ico">📷</span>
+      <span class="ico">üì∑</span>
       <span>Photo of the site</span>
-      <small>Containers, sign, address — whatever you can see</small>
+      <small>Containers, sign, address ‚Äî whatever you can see</small>
     </label>
     <input id="q-cam" type="file" accept="image/*" capture="environment" multiple hidden>
     <div class="qthumbs" id="q-thumbs"></div>
 
-    <div class="geo" id="q-geo"><b>Locating…</b></div>
+    <div class="geo" id="q-geo"><b>Locating‚Ä¶</b></div>
 
     <label class="f">Business name or what the sign says *</label>
     <input class="f" id="q-company" placeholder="Publix plaza on Federal" autocapitalize="words">
@@ -642,7 +719,7 @@ body.driver .obpill{bottom:calc(104px + var(--safe-b))}
 
     <button class="btn" id="q-save">Submit lead</button>
     <button class="btn sec" id="q-cancel">Cancel</button>
-    <button class="qmore" id="q-full">I have more detail — open the full form</button>
+    <button class="qmore" id="q-full">I have more detail ‚Äî open the full form</button>
   </div>
 </div>
 
@@ -650,7 +727,7 @@ body.driver .obpill{bottom:calc(104px + var(--safe-b))}
 <div class="sheet" id="lbsheet">
   <div class="sheet-h">
     <h2>Leaderboard</h2>
-    <div style="margin-left:auto"><button class="iconbtn" id="lb-x">✕</button></div>
+    <div style="margin-left:auto"><button class="iconbtn" id="lb-x">‚úï</button></div>
   </div>
   <div class="sheet-b">
     <p class="tiny" style="margin-top:0">Credit goes to whoever <b>spotted</b> the lead, not
@@ -664,7 +741,7 @@ body.driver .obpill{bottom:calc(104px + var(--safe-b))}
 <div class="sheet" id="dashsheet">
   <div class="sheet-h">
     <h2>Mission Control</h2>
-    <div style="margin-left:auto"><button class="iconbtn" id="dash-x">✕</button></div>
+    <div style="margin-left:auto"><button class="iconbtn" id="dash-x">‚úï</button></div>
   </div>
   <div class="sheet-b">
     <div id="dash-body"></div>
@@ -676,7 +753,7 @@ body.driver .obpill{bottom:calc(104px + var(--safe-b))}
 <div class="sheet mapsheet" id="mapsheet">
   <div class="sheet-h">
     <h2>Map</h2>
-    <div style="margin-left:auto"><button class="iconbtn" id="map-x">✕</button></div>
+    <div style="margin-left:auto"><button class="iconbtn" id="map-x">‚úï</button></div>
   </div>
   <p class="tiny" id="map-note" style="padding:0 18px 8px"></p>
   <div id="map-c"></div>
@@ -689,11 +766,11 @@ body.driver .obpill{bottom:calc(104px + var(--safe-b))}
 <div class="sheet" id="inboxsheet">
   <div class="sheet-h">
     <h2>Inbox</h2>
-    <div style="margin-left:auto"><button class="iconbtn" id="inbox-x">✕</button></div>
+    <div style="margin-left:auto"><button class="iconbtn" id="inbox-x">‚úï</button></div>
   </div>
   <div class="sheet-b">
     <p class="tiny" style="margin-top:0">Leads from your website and from printed QR codes.
-      They are held here until someone accepts one — spam never reaches the pipeline.</p>
+      They are held here until someone accepts one ‚Äî spam never reaches the pipeline.</p>
     <div id="inbox-body"></div>
     <button class="btn sec" id="inbox-close2">Close</button>
   </div>
@@ -703,7 +780,7 @@ body.driver .obpill{bottom:calc(104px + var(--safe-b))}
 <div class="sheet" id="munisheet">
   <div class="sheet-h">
     <h2>Municipal</h2>
-    <div style="margin-left:auto"><button class="iconbtn" id="muni-x">✕</button></div>
+    <div style="margin-left:auto"><button class="iconbtn" id="muni-x">‚úï</button></div>
   </div>
   <div class="sheet-b">
     <div id="muni-body"></div>
@@ -714,14 +791,37 @@ body.driver .obpill{bottom:calc(104px + var(--safe-b))}
 <div class="sheet" id="mdsheet">
   <div class="sheet-h">
     <h2 id="md-title">Solicitation</h2>
-    <div style="margin-left:auto"><button class="iconbtn" id="md-x">✕</button></div>
+    <div style="margin-left:auto"><button class="iconbtn" id="md-x">‚úï</button></div>
   </div>
   <div class="sheet-b" id="md-body"></div>
 </div>
 
+<!-- ============ QUOTES ============ -->
+<div class="sheet" id="qlsheet">
+  <div class="sheet-h">
+    <h2>Quotes</h2>
+    <div style="margin-left:auto"><button class="iconbtn" id="ql-x">‚úï</button></div>
+  </div>
+  <div class="sheet-b">
+    <div id="ql-body"></div>
+    <button class="btn sec" id="ql-close2">Close</button>
+  </div>
+</div>
+
+<div class="sheet" id="qbsheet">
+  <div class="sheet-h">
+    <h2 id="qb-title">New quote</h2>
+    <div style="margin-left:auto"><button class="iconbtn" id="qb-x">‚úï</button></div>
+  </div>
+  <div class="sheet-b" id="qb-body"></div>
+</div>
+
+<!-- the printable quote: hidden on screen, the only thing shown when printing -->
+<div id="qprint"></div>
+
 <!-- ============ LIGHTBOX ============ -->
 <div class="lb" id="lb">
-  <button class="close" id="lb-close">✕</button>
+  <button class="close" id="lb-close">‚úï</button>
   <img id="lb-img" alt="">
   <div class="cap" id="lb-cap"></div>
 </div>
@@ -729,11 +829,11 @@ body.driver .obpill{bottom:calc(104px + var(--safe-b))}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 /* =====================================================================
-   MURPHY WASTE SYSTEMS — FIELD CRM v3
+   MURPHY WASTE SYSTEMS ‚Äî FIELD CRM v3
    Shared team prospect list, site photos, Excel export.
    ===================================================================== */
 
-/* ---------- 1. CONFIG — replace these two values ---------- */
+/* ---------- 1. CONFIG ‚Äî replace these two values ---------- */
 const SUPABASE_URL  = "https://rxukrprtoiokvkxhiite.supabase.co";
 const SUPABASE_KEY  = "sb_publishable_5dj2dgoJticIZ2DTheQ5TA_H0zkMPgV";
 const BUCKET        = "site-photos";
@@ -793,7 +893,7 @@ const BUCKET        = "site-photos";
   function boot() {
     if (SUPABASE_URL.indexOf("PASTE_") === 0) {
       $("#lg-msg").className = "msg err";
-      $("#lg-msg").textContent = "Not configured yet — the Supabase URL and key still need pasting into this file.";
+      $("#lg-msg").textContent = "Not configured yet ‚Äî the Supabase URL and key still need pasting into this file.";
       return;
     }
     sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -830,17 +930,18 @@ const BUCKET        = "site-photos";
   async function load() {
     const cached = localStorage.getItem(CACHE);
     if (cached && !rows.length) { try { rows = JSON.parse(cached); render(); } catch (e) {} }
-    setSync("busy", "Syncing…");
+    setSync("busy", "Syncing‚Ä¶");
     const { data, error } = await sb.from("customers").select("*").order("updated_at", { ascending: false });
-    if (error) { setSync("err", "Offline — showing last saved copy"); return; }
+    if (error) { setSync("err", "Offline ‚Äî showing last saved copy"); return; }
     rows = data || [];
     localStorage.setItem(CACHE, JSON.stringify(rows));
     await loadPhotos();
     render();
-    setSync("ok", rows.length + " prospects · synced " + new Date().toLocaleTimeString());
+    setSync("ok", rows.length + " prospects ¬∑ synced " + new Date().toLocaleTimeString());
     flushOutbox();
     loadInbound();
     loadMunicipal();
+    loadQuotes();
   }
 
   async function loadPhotos() {
@@ -885,16 +986,16 @@ const BUCKET        = "site-photos";
     const due = rows.filter(isDue), ren = rows.filter(isRenew);
     const abd = $("#ab-due"), abr = $("#ab-ren");
     abd.style.display = due.length ? "block" : "none";
-    abd.textContent = due.length ? "⏰ " + due.length + " follow-up" + (due.length > 1 ? "s" : "") + " due" : "";
+    abd.textContent = due.length ? "‚è∞ " + due.length + " follow-up" + (due.length > 1 ? "s" : "") + " due" : "";
     abr.style.display = ren.length ? "block" : "none";
-    abr.textContent = ren.length ? "🔄 " + ren.length + " contract" + (ren.length > 1 ? "s" : "") + " renewing within 90 days" : "";
+    abr.textContent = ren.length ? "üîÑ " + ren.length + " contract" + (ren.length > 1 ? "s" : "") + " renewing within 90 days" : "";
 
     const v = visible();
     const list = $("#list");
     if (!v.length) {
-      list.innerHTML = '<div class="empty"><div class="big">🚛</div><b>' +
+      list.innerHTML = '<div class="empty"><div class="big">üöõ</div><b>' +
         (rows.length ? "Nothing matches" : "No prospects yet") + "</b><p class=\"tiny\" style=\"margin-top:6px\">" +
-        (mode === "driver" ? "Nothing sent in yet — tap the button below."
+        (mode === "driver" ? "Nothing sent in yet ‚Äî tap the button below."
          : rows.length ? "Try a different filter." : "Tap + to add the first one.") + "</p></div>";
       paintBadge();
       return;
@@ -926,24 +1027,24 @@ const BUCKET        = "site-photos";
     if (isDue(r))  badges.push('<span class="badge due">' + (daysUntil(r.next_follow) === 0 ? "Due today" : "Overdue") + "</span>");
     else if (isSoon(r)) badges.push('<span class="badge">Follow ' + fmtDate(r.next_follow) + "</span>");
     if (isRenew(r)) badges.push('<span class="badge ren">Renews ' + fmtDate(r.contract_end) + "</span>");
-    if (ph.length)  badges.push('<span class="badge ph">📷 ' + ph.length + "</span>");
+    if (ph.length)  badges.push('<span class="badge ph">üì∑ ' + ph.length + "</span>");
     if (r.worked === false) badges.push('<span class="badge ren">NEW LEAD</span>');
-    if (r._queued) badges.push('<span class="badge due">↑ NOT SENT YET</span>');
+    if (r._queued) badges.push('<span class="badge due">‚Üë NOT SENT YET</span>');
 
     const meta = [];
-    if (r.city)           meta.push("📍 " + esc(r.city));
-    if (r.line)           meta.push("🚛 " + esc(r.line));
-    if (Number(r.mrr))    meta.push("💵 " + money(r.mrr) + "/mo");
-    if (r.current_hauler) meta.push("⚠︎ has " + esc(r.current_hauler));
+    if (r.city)           meta.push("üìç " + esc(r.city));
+    if (r.line)           meta.push("üöõ " + esc(r.line));
+    if (Number(r.mrr))    meta.push("üíµ " + money(r.mrr) + "/mo");
+    if (r.current_hauler) meta.push("‚ö†Ô∏é has " + esc(r.current_hauler));
     if (r.lead_source === "driver" && r.created_by) {
       const who = nameOf(r.created_by);
-      if (who) meta.push("👁 spotted by " + esc(who));
+      if (who) meta.push("üëÅ spotted by " + esc(who));
     }
 
     const thumbs = ph.length
       ? '<div class="thumbs">' + ph.slice(0, 8).map((p) =>
           '<img src="' + esc(p.url) + '" data-full="' + esc(p.url) + '" data-cap="' +
-          esc(r.company + (p.kind ? " · " + p.kind : "")) + '" alt="" loading="lazy">').join("") + "</div>"
+          esc(r.company + (p.kind ? " ¬∑ " + p.kind : "")) + '" alt="" loading="lazy">').join("") + "</div>"
       : "";
 
     const acts = [];
@@ -956,7 +1057,7 @@ const BUCKET        = "site-photos";
     // a field lead often has no address at all, only the pin the phone dropped
     else if (r.lat != null)
       acts.push('<a class="act" target="_blank" rel="noopener" href="https://maps.google.com/?q=' +
-        r.lat + ',' + r.lng + '">📍 Pin</a>');
+        r.lat + ',' + r.lng + '">üìç Pin</a>');
 
     const spot = r.spotted_note
       ? '<div class="spot"><em>Spotted</em>' + esc(r.spotted_note) + '</div>' : "";
@@ -964,7 +1065,7 @@ const BUCKET        = "site-photos";
     return '<div class="card' + (r.worked === false ? ' unworked' : '')
       + (r._queued ? ' queued' : '') + '" data-id="' + esc(r.id) + '">' +
       "<h3>" + esc(r.company) + " " + badges.join(" ") + "</h3>" +
-      (r.contact ? '<div class="who">' + esc(r.contact) + (r.title ? " · " + esc(r.title) : "") + "</div>" : "") +
+      (r.contact ? '<div class="who">' + esc(r.contact) + (r.title ? " ¬∑ " + esc(r.title) : "") + "</div>" : "") +
       (meta.length ? '<div class="meta">' + meta.map((m) => "<span>" + m + "</span>").join("") + "</div>" : "") +
       spot +
       thumbs +
@@ -1033,13 +1134,13 @@ const BUCKET        = "site-photos";
     const cells = [];
     existing.forEach((p) => {
       cells.push('<div class="pcell"><img src="' + esc(p.url) + '" alt="">' +
-        '<button class="x" data-del="' + esc(p.id) + '" data-path="' + esc(p.path) + '">✕</button></div>');
+        '<button class="x" data-del="' + esc(p.id) + '" data-path="' + esc(p.path) + '">‚úï</button></div>');
     });
     staged.forEach((s) => {
-      const overlay = s.state === "up" ? '<div class="up">Uploading…</div>'
-                    : s.state === "err" ? '<div class="up">Failed — tap ✕</div>' : "";
+      const overlay = s.state === "up" ? '<div class="up">Uploading‚Ä¶</div>'
+                    : s.state === "err" ? '<div class="up">Failed ‚Äî tap ‚úï</div>' : "";
       cells.push('<div class="pcell"><img src="' + s.url + '" alt="">' + overlay +
-        '<button class="x" data-stage="' + s.id + '">✕</button></div>');
+        '<button class="x" data-stage="' + s.id + '">‚úï</button></div>');
     });
     $("#pgrid").innerHTML = cells.join("");
     $$("#pgrid .x").forEach((b) => b.addEventListener("click", async (e) => {
@@ -1074,8 +1175,8 @@ const BUCKET        = "site-photos";
     sheetGeo = null;
     $("#f-pin").classList.remove("ok");
     $("#f-pin").textContent = (rec && rec.lat != null)
-      ? "📍 Already pinned · tap to move it here" : "📍 Use my location";
-    $("#qa-wrap").innerHTML = rec ? quickActions(rec) : "";
+      ? "üìç Already pinned ¬∑ tap to move it here" : "üìç Use my location";
+    $("#qa-wrap").innerHTML = rec ? quickActions(rec) + customerQuoteBlock(rec) : "";
     $("#log-wrap").innerHTML = rec ? activityBlock(rec) : "";
     renderPhotoGrid();
     $("#scrim").classList.add("on"); $("#sheet").classList.add("on");
@@ -1088,12 +1189,12 @@ const BUCKET        = "site-photos";
 
   function quickActions(r) {
     const a = [];
-    if (r.phone)  a.push('<a class="act" href="tel:' + esc(r.phone) + '">📞 Call</a>');
-    if (r.phone2) a.push('<a class="act" href="tel:' + esc(r.phone2) + '">📱 Cell</a>');
-    if (r.email)  a.push('<a class="act" href="mailto:' + esc(r.email) + '">✉️ Email</a>');
+    if (r.phone)  a.push('<a class="act" href="tel:' + esc(r.phone) + '">üìû Call</a>');
+    if (r.phone2) a.push('<a class="act" href="tel:' + esc(r.phone2) + '">üì± Cell</a>');
+    if (r.email)  a.push('<a class="act" href="mailto:' + esc(r.email) + '">‚úâÔ∏è Email</a>');
     if (r.address || r.city)
       a.push('<a class="act" target="_blank" rel="noopener" href="https://maps.apple.com/?q=' +
-        encodeURIComponent([r.address, r.city, "FL"].filter(Boolean).join(", ")) + '">🗺 Map</a>');
+        encodeURIComponent([r.address, r.city, "FL"].filter(Boolean).join(", ")) + '">üó∫ Map</a>');
     if (r.icans_url) a.push('<a class="act" target="_blank" rel="noopener" href="' + esc(r.icans_url) + '">iCans</a>');
     return a.length ? '<div class="acts" style="margin-top:0">' + a.join("") + "</div>" : "";
   }
@@ -1102,7 +1203,7 @@ const BUCKET        = "site-photos";
     const log = Array.isArray(r.activity) ? r.activity : [];
     const items = log.slice().reverse().slice(0, 12).map((x) =>
       '<div class="tiny" style="padding:7px 0;border-bottom:1px solid var(--line)"><b>' +
-      esc(x.k) + "</b> · " + esc((x.t || "").slice(0, 10)) + (x.n ? " — " + esc(x.n) : "") + "</div>").join("");
+      esc(x.k) + "</b> ¬∑ " + esc((x.t || "").slice(0, 10)) + (x.n ? " ‚Äî " + esc(x.n) : "") + "</div>").join("");
     return '<label class="f">Log activity</label><div class="acts" style="margin-top:0">' +
       ["Call", "Visit", "Quote", "Note"].map((k) =>
         '<button class="act" data-log="' + k + '">' + k + "</button>").join("") + "</div>" +
@@ -1113,13 +1214,13 @@ const BUCKET        = "site-photos";
     $$("[data-log]").forEach((b) => b.addEventListener("click", (e) => {
       e.preventDefault();
       if (!editing) return;
-      const note = prompt(b.dataset.log + " — add a note (optional)") || "";
+      const note = prompt(b.dataset.log + " ‚Äî add a note (optional)") || "";
       const log = Array.isArray(editing.activity) ? editing.activity.slice() : [];
       log.push({ k: b.dataset.log, n: note, t: new Date().toISOString() });
       editing.activity = log;
       $("#log-wrap").innerHTML = activityBlock(editing);
       wireLogButtons();
-      toast("Logged — press Save to keep it");
+      toast("Logged ‚Äî press Save to keep it");
     }));
   }
 
@@ -1137,7 +1238,7 @@ const BUCKET        = "site-photos";
     if (editing && editing.worked === false) payload.worked = true;
     if (sheetGeo) { payload.lat = sheetGeo.lat; payload.lng = sheetGeo.lng; }
 
-    $("#sh-save").textContent = "Saving…";
+    $("#sh-save").textContent = "Saving‚Ä¶";
     let id = editing ? editing.id : null;
     const blobs = staged.filter((s) => s.state === "staged" || s.state === "err").map((s) => s.blob);
     if (editing) {
@@ -1198,7 +1299,7 @@ const BUCKET        = "site-photos";
     return [head].concat(body).join("\r\n");
   }
   function download(name, text, mime) {
-    const blob = new Blob(["﻿" + text], { type: mime || "text/csv;charset=utf-8" });
+    const blob = new Blob(["Ôªø" + text], { type: mime || "text/csv;charset=utf-8" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob); a.download = name;
     document.body.appendChild(a); a.click();
@@ -1213,7 +1314,7 @@ const BUCKET        = "site-photos";
   $("#fab").addEventListener("click", openQuick);
   $("#sh-close").addEventListener("click", closeSheet);
   $("#sh-cancel").addEventListener("click", closeSheet);
-  $("#scrim").addEventListener("click", () => { closeSheet(); closeQuick(); closeBoard(); });
+  $("#scrim").addEventListener("click", () => { closeSheet(); closeQuick(); closeBoard(); closeQuotes(); });
   $("#sh-save").addEventListener("click", save);
   $("#sh-del").addEventListener("click", del);
 
@@ -1238,10 +1339,11 @@ const BUCKET        = "site-photos";
     $("#menu").classList.remove("on");
     const m = b.dataset.m;
     $('[data-m="mode"]').textContent =
-      (mode === "driver" ? "🔄  Switch to sales mode" : "🔄  Switch to driver mode");
+      (mode === "driver" ? "üîÑ  Switch to sales mode" : "üîÑ  Switch to driver mode");
     if (m === "export") download("MWS-prospects-" + todayStr() + ".csv", csv());
     if (m === "backup") download("MWS-backup-" + todayStr() + ".json",
       JSON.stringify({ customers: rows, photos: photosBy }, null, 2), "application/json");
+    if (m === "quotes") openQuotes();
     if (m === "muni")   openMuni();
     if (m === "inbox")  openInbox();
     if (m === "dash")   openDash();
@@ -1262,7 +1364,7 @@ const BUCKET        = "site-photos";
 
 
   /* =================================================================
-     10. FRONTLINE INTEL — driver lead capture
+     10. FRONTLINE INTEL ‚Äî driver lead capture
      A driver is in a truck at a light. The capture path is one tap to
      the camera, one line of text, submit. Everything else is optional
      and everything else is somebody else's job.
@@ -1285,8 +1387,8 @@ const BUCKET        = "site-photos";
 
   function applyMode() {
     document.body.classList.toggle("driver", mode === "driver");
-    $("#fab").textContent = mode === "driver" ? "＋  Spot a lead"
-      : (typeof isDesk === "function" && isDesk()) ? "＋  New prospect" : "+";
+    $("#fab").textContent = mode === "driver" ? "Ôºã  Spot a lead"
+      : (typeof isDesk === "function" && isDesk()) ? "Ôºã  New prospect" : "+";
     localStorage.setItem("mws.crm3.mode", mode);
     render();
   }
@@ -1307,7 +1409,7 @@ const BUCKET        = "site-photos";
     if (!b) { b = document.createElement("span"); b.id = "newbadge"; b.className = "newbadge"; host.appendChild(b); }
     b.textContent = n > 99 ? "99+" : n;
     const chip = document.querySelector('.chip[data-f="unworked"]');
-    if (chip) chip.textContent = "🆕 Unworked (" + n + ")";
+    if (chip) chip.textContent = "üÜï Unworked (" + n + ")";
   }
 
   /* ---------- geolocation ---------- */
@@ -1317,13 +1419,13 @@ const BUCKET        = "site-photos";
     if (!navigator.geolocation) {
       el.className = "geo no"; el.innerHTML = "<b>No location on this device</b>"; return;
     }
-    el.className = "geo"; el.innerHTML = "<b>Locating…</b>";
+    el.className = "geo"; el.innerHTML = "<b>Locating‚Ä¶</b>";
     navigator.geolocation.getCurrentPosition(
       (p) => {
         qgeo = { lat: +p.coords.latitude.toFixed(6), lng: +p.coords.longitude.toFixed(6),
                  acc: Math.round(p.coords.accuracy) };
         el.className = "geo ok";
-        el.innerHTML = "<b>📍 Pin dropped</b> &middot; within " + qgeo.acc + " m" +
+        el.innerHTML = "<b>üìç Pin dropped</b> &middot; within " + qgeo.acc + " m" +
           '<a target="_blank" rel="noopener" href="https://maps.google.com/?q=' +
           qgeo.lat + "," + qgeo.lng + '">Check</a>';
       },
@@ -1341,7 +1443,7 @@ const BUCKET        = "site-photos";
   /* ---------- quick sheet photos ---------- */
   function renderQThumbs() {
     $("#q-thumbs").innerHTML = qstaged.map((s) =>
-      '<figure><img src="' + s.url + '" alt=""><button data-q="' + s.id + '">✕</button></figure>').join("");
+      '<figure><img src="' + s.url + '" alt=""><button data-q="' + s.id + '">‚úï</button></figure>').join("");
     $("#q-snap").classList.toggle("has", qstaged.length > 0);
     $$("#q-thumbs button").forEach((b) => b.addEventListener("click", (e) => {
       e.preventDefault();
@@ -1375,7 +1477,7 @@ const BUCKET        = "site-photos";
     qstaged = []; qgeo = null;
     ["#q-company", "#q-hauler", "#q-note"].forEach((s) => { $(s).value = ""; });
     renderQThumbs();
-    // the haulers a driver actually reads off a container — built from what
+    // the haulers a driver actually reads off a container ‚Äî built from what
     // the team has already logged, so it learns the local market on its own
     const seen = Array.from(new Set(rows.map((r) => r.current_hauler).filter(Boolean))).sort();
     $("#haulers").innerHTML = seen.map((h) => '<option value="' + esc(h) + '">').join("");
@@ -1390,8 +1492,8 @@ const BUCKET        = "site-photos";
 
   async function qSave() {
     const company = $("#q-company").value.trim();
-    if (!company) { alert("Give it a name — even “the grey warehouse on 12th” is enough."); return; }
-    $("#q-save").textContent = "Sending…";
+    if (!company) { alert("Give it a name ‚Äî even ‚Äúthe grey warehouse on 12th‚Äù is enough."); return; }
+    $("#q-save").textContent = "Sending‚Ä¶";
     const payload = {
       company: company,
       current_hauler: $("#q-hauler").value.trim() || null,
@@ -1413,12 +1515,12 @@ const BUCKET        = "site-photos";
     for (const s of qstaged) { if (await qUpload(s, data.id)) ok++; }
     closeQuick();
     await load();
-    toast("Lead sent" + (ok ? " with " + ok + " photo" + (ok > 1 ? "s" : "") : "") + " — nice spot");
+    toast("Lead sent" + (ok ? " with " + ok + " photo" + (ok > 1 ? "s" : "") : "") + " ‚Äî nice spot");
   }
 
   /* ---------- leaderboard ---------- */
   async function openBoard() {
-    $("#lb-rows").innerHTML = '<div class="lbrow"><span class="nm">Loading…</span></div>';
+    $("#lb-rows").innerHTML = '<div class="lbrow"><span class="nm">Loading‚Ä¶</span></div>';
     $("#scrim").classList.add("on"); $("#lbsheet").classList.add("on");
     const { data, error } = await sb.from("leaderboard").select("*");
     if (error) {
@@ -1430,7 +1532,7 @@ const BUCKET        = "site-photos";
     if (!list.length) { $("#lb-rows").innerHTML = '<div class="lbrow"><span class="nm">No one on the roster yet</span></div>'; return; }
     $("#lb-rows").innerHTML = list.map((t, i) =>
       '<div class="lbrow' + (i === 0 && t.won > 0 ? " top1" : "") + '">' +
-        '<span class="rk">' + (i === 0 && t.won > 0 ? "★" : i + 1) + "</span>" +
+        '<span class="rk">' + (i === 0 && t.won > 0 ? "‚òÖ" : i + 1) + "</span>" +
         '<span class="nm">' + esc(t.name) +
           "<small>" + esc(t.role || "") + (t.truck ? " &middot; " + esc(t.truck) : "") + "</small></span>" +
         '<span class="n"><b>' + t.submitted + "</b><span>spotted</span></span>" +
@@ -1460,7 +1562,7 @@ const BUCKET        = "site-photos";
   $("#lb-close2").addEventListener("click", closeBoard);
 
   /* =================================================================
-     11. THE OUTBOX — capture must survive no signal
+     11. THE OUTBOX ‚Äî capture must survive no signal
      A driver is behind a warehouse, in a loading dock, or out on the
      edge of a route. That is exactly where the leads are, and exactly
      where the phone has no bars. A submit that fails there is a lead
@@ -1540,7 +1642,7 @@ const BUCKET        = "site-photos";
       el.addEventListener("click", () => flushOutbox(true));
       document.body.appendChild(el);
     }
-    el.innerHTML = "↑ " + n + " waiting to send" +
+    el.innerHTML = "‚Üë " + n + " waiting to send" +
       (navigator.onLine ? " &middot; tap to retry" : " &middot; no signal");
     el.classList.toggle("off", !navigator.onLine);
   }
@@ -1550,7 +1652,7 @@ const BUCKET        = "site-photos";
   async function flushOutbox(manual) {
     if (flushing || !sb || !session) return;
     if (!outbox.length) { if (manual) toast("Nothing waiting"); return; }
-    if (!navigator.onLine) { if (manual) setSync("err", "Still no signal — everything is saved on this phone"); return; }
+    if (!navigator.onLine) { if (manual) setSync("err", "Still no signal ‚Äî everything is saved on this phone"); return; }
     flushing = true;
     let sent = 0, stop = false;
     for (const item of outbox.slice()) {
@@ -1582,7 +1684,7 @@ const BUCKET        = "site-photos";
     }
     flushing = false;
     if (sent) { toast(sent + " queued lead" + (sent > 1 ? "s" : "") + " sent"); await load(); }
-    else if (manual) setSync("err", "Could not send yet — still saved on this phone");
+    else if (manual) setSync("err", "Could not send yet ‚Äî still saved on this phone");
     paintOutbox();
   }
 
@@ -1607,7 +1709,7 @@ const BUCKET        = "site-photos";
   window.addEventListener("offline", paintOutbox);
 
   /* The bridge between a failed write and the queue. Returns true when the
-     work is safely stored locally, false when the row itself was rejected —
+     work is safely stored locally, false when the row itself was rejected ‚Äî
      in which case the caller must show the real error rather than pretend. */
   async function queueInstead(err, kind, payload, blobs) {
     if (!isOffline(err)) return false;
@@ -1618,13 +1720,13 @@ const BUCKET        = "site-photos";
     $("#q-save").textContent  = "Submit lead";
     closeSheet(); closeQuick();
     render();
-    setSync("err", "No signal — saved on this phone, it will send itself");
+    setSync("err", "No signal ‚Äî saved on this phone, it will send itself");
     return true;
   }
 
   /* =================================================================
      12. MISSION CONTROL
-     Everything here is computed from rows already in memory — no extra
+     Everything here is computed from rows already in memory ‚Äî no extra
      query, works offline, and stays correct while the list is filtered.
      ================================================================= */
 
@@ -1680,9 +1782,9 @@ const BUCKET        = "site-photos";
     const band = (lo, hi) => radar.filter((x) => x.d >= lo && x.d <= hi).length;
     let radarHTML = statBlock([
       { k: "Past due",   v: band(-99999, -1), cls: band(-99999, -1) ? "hot" : "" },
-      { k: "≤ 30 days",  v: band(0, 30),   cls: band(0, 30) ? "hot" : "" },
-      { k: "31–90",      v: band(31, 90),  cls: band(31, 90) ? "warm" : "" },
-      { k: "91–365",     v: band(91, 365) }
+      { k: "‚â§ 30 days",  v: band(0, 30),   cls: band(0, 30) ? "hot" : "" },
+      { k: "31‚Äì90",      v: band(31, 90),  cls: band(31, 90) ? "warm" : "" },
+      { k: "91‚Äì365",     v: band(91, 365) }
     ]);
     if (radar.length) {
       radarHTML += '<div class="dlist">' + radar.slice(0, 12).map((x) => {
@@ -1691,13 +1793,13 @@ const BUCKET        = "site-photos";
         return '<button class="drow ' + cls + '" data-go="' + esc(x.r.id) + '">' +
           '<span class="n">' + esc(x.r.company) + "</span>" +
           '<span class="s">' + esc(x.r.current_hauler || "hauler unknown") +
-            (Number(x.r.current_rate) ? " · " + money(x.r.current_rate) + "/mo" : "") + "</span>" +
+            (Number(x.r.current_rate) ? " ¬∑ " + money(x.r.current_rate) + "/mo" : "") + "</span>" +
           '<span class="d">' + when + "</span></button>";
       }).join("") + "</div>";
       if (radar.length > 12) radarHTML += '<p class="tiny">+ ' + (radar.length - 12) + " more further out.</p>";
     } else {
       radarHTML += '<p class="tiny">No competitor contract dates logged yet. It is the single most ' +
-        'useful thing a rep can ask on a first visit — “when are you up for renewal?”</p>';
+        'useful thing a rep can ask on a first visit ‚Äî ‚Äúwhen are you up for renewal?‚Äù</p>';
     }
     out.push(section("Contract expiry radar",
       "An incumbent is only beatable in the window before their renewal. Work these first.", radarHTML));
@@ -1722,7 +1824,7 @@ const BUCKET        = "site-photos";
       const mx = haulers[0].n;
       out.push(section("Who holds the business",
         "Counted from what your people read off the containers.",
-        haulers.map((h) => bar(h.k, h.n, mx, "", h.n + (h.mrr ? "  ·  " + money(h.mrr) + "/mo" : ""))).join("")));
+        haulers.map((h) => bar(h.k, h.n, mx, "", h.n + (h.mrr ? "  ¬∑  " + money(h.mrr) + "/mo" : ""))).join("")));
     }
 
     /* ---- geography ---- */
@@ -1731,7 +1833,7 @@ const BUCKET        = "site-photos";
     const cities = Object.keys(cMap).map((k) => ({ k: k, n: cMap[k] })).sort((a, b) => b.n - a.n).slice(0, 8);
     if (cities.length) {
       out.push(section("Density by city",
-        "Route economics live here — five accounts in one city beat fifteen scattered.",
+        "Route economics live here ‚Äî five accounts in one city beat fifteen scattered.",
         cities.map((c) => bar(c.k, c.n, cities[0].n)).join("")));
     }
 
@@ -1816,19 +1918,19 @@ const BUCKET        = "site-photos";
     const missing = rows.length - pts.length;
     note.innerHTML = pts.length
       ? pts.length + " pinned" + (missing ? " &middot; " + missing +
-          " have no pin yet (open one and tap “Use my location” while you are there)" : "")
+          " have no pin yet (open one and tap ‚ÄúUse my location‚Äù while you are there)" : "")
       : "Nothing is pinned yet. Every lead a driver sends in drops a pin automatically.";
 
     const ok = await loadLeaflet();
     if (!ok) {
       $("#map-c").innerHTML = '<p class="tiny" style="padding:20px">Could not load the map ' +
-        "library — that needs a connection. Everything else in the app still works.</p>";
+        "library ‚Äî that needs a connection. Everything else in the app still works.</p>";
       return;
     }
     /* Leaflet fixes its pixel origin and tile range at construction time. If it
        is built while the dialog is still animating in, the container is short,
        and the tile range it computes then leaves an unpainted band across the
-       top that a later invalidateSize() does not repair — the tiles all report
+       top that a later invalidateSize() does not repair ‚Äî the tiles all report
        as loaded, they are simply positioned for a viewport that no longer
        exists. So wait for the transition to finish, then build it once. */
     await new Promise((r) => setTimeout(r, 320));
@@ -1862,10 +1964,10 @@ const BUCKET        = "site-photos";
         fillColor: c, fillOpacity: r.worked === false ? 1 : 0.85
       }).addTo(layer);
       const why = [r.current_hauler ? "has " + r.current_hauler : "", r.spotted_note || ""]
-        .filter(Boolean).join(" — ");
+        .filter(Boolean).join(" ‚Äî ");
       m.bindPopup(
         "<b>" + esc(r.company) + "</b><br>" +
-        '<span style="color:#7B6A58">' + esc(r.status || "New") + (why ? " · " + esc(why) : "") + "</span><br>" +
+        '<span style="color:#7B6A58">' + esc(r.status || "New") + (why ? " ¬∑ " + esc(why) : "") + "</span><br>" +
         '<a href="#" data-open="' + esc(r.id) + '">Open this record</a>'
       );
       bounds.push([r.lat, r.lng]);
@@ -1891,15 +1993,15 @@ const BUCKET        = "site-photos";
   function pinHere() {
     const b = $("#f-pin");
     if (!navigator.geolocation) { b.textContent = "No location on this device"; return; }
-    b.textContent = "Locating…"; b.disabled = true;
+    b.textContent = "Locating‚Ä¶"; b.disabled = true;
     navigator.geolocation.getCurrentPosition(
       (p) => {
         sheetGeo = { lat: +p.coords.latitude.toFixed(6), lng: +p.coords.longitude.toFixed(6) };
         b.disabled = false;
-        b.textContent = "📍 Pinned here · ±" + Math.round(p.coords.accuracy) + "m — tap to redo";
+        b.textContent = "üìç Pinned here ¬∑ ¬±" + Math.round(p.coords.accuracy) + "m ‚Äî tap to redo";
         b.classList.add("ok");
       },
-      () => { b.disabled = false; b.textContent = "📍 Use my location (location is off)"; },
+      () => { b.disabled = false; b.textContent = "üìç Use my location (location is off)"; },
       { enableHighAccuracy: true, timeout: 12000, maximumAge: 30000 }
     );
   }
@@ -1910,7 +2012,7 @@ const BUCKET        = "site-photos";
 
   /* =================================================================
      14. DESK VIEW
-     Same URL, same data, same login — the layout changes with the
+     Same URL, same data, same login ‚Äî the layout changes with the
      screen. On a phone you get cards you can work one-handed; on a
      computer you get a sortable grid you can scan a hundred rows in.
      Nothing is duplicated: both read the same filtered set.
@@ -1936,7 +2038,7 @@ const BUCKET        = "site-photos";
     { k: "contract_expires", h: "They renew",     w: "minmax(0,104px)", date: true, radar: true },
     { k: "next_follow",      h: "Follow up",      w: "minmax(0,104px)", date: true, due: true },
     { k: "_spotter",         h: "Spotted",        w: "minmax(0,94px)", wide: true },
-    { k: "_photos",          h: "📷",             w: "minmax(0,50px)", num: true }
+    { k: "_photos",          h: "üì∑",             w: "minmax(0,50px)", num: true }
   ];
   const cols = () => GRID_COLS.filter((c) => !c.wide || window.innerWidth >= 1320);
 
@@ -1973,7 +2075,7 @@ const BUCKET        = "site-photos";
     }
     // a column of "$0" and "0" hides the numbers that matter
     if (v == null || v === "" || ((c.money || c.k === "_photos") && !Number(v)))
-      return '<span class="gc dim">—</span>';
+      return '<span class="gc dim">‚Äî</span>';
     if (c.tel)   return '<span class="gc"><a href="tel:' + esc(v) + '">' + esc(v) + "</a></span>";
     if (c.money) return '<span class="gc num">' + esc(money(v)) + "</span>";
     if (c.date) {
@@ -1998,7 +2100,7 @@ const BUCKET        = "site-photos";
     const head = '<div class="ghead" style="grid-template-columns:' + tmpl + '">' +
       CS.map((c) =>
         '<button class="gh' + (sortKey === c.k ? " on" : "") + '" data-sort="' + c.k + '">' +
-        esc(c.h) + (sortKey === c.k ? (sortDir === 1 ? " ▲" : " ▼") : "") + "</button>").join("") + "</div>";
+        esc(c.h) + (sortKey === c.k ? (sortDir === 1 ? " ‚ñ≤" : " ‚ñº") : "") + "</button>").join("") + "</div>";
 
     const body = sorted.map((r) =>
       '<div class="grow' + (r.worked === false ? " unworked" : "") + (r._queued ? " queued" : "") +
@@ -2007,7 +2109,7 @@ const BUCKET        = "site-photos";
 
     host.innerHTML = '<div class="gwrap"><div class="gscroll">' + head + body + "</div>" +
       '<p class="gfoot">' + sorted.length + " row" + (sorted.length === 1 ? "" : "s") +
-      " · click any row to open it · the Status column edits in place</p></div>";
+      " ¬∑ click any row to open it ¬∑ the Status column edits in place</p></div>";
 
     $$("#list .gh").forEach((b) => b.addEventListener("click", () => {
       if (sortKey === b.dataset.sort) sortDir = -sortDir;
@@ -2028,7 +2130,7 @@ const BUCKET        = "site-photos";
         const { error } = await sb.from("customers").update(patch).eq("id", id);
         sel.disabled = false;
         if (error) { setSync("err", "Could not change status: " + error.message); return; }
-        toast(rec.company + " → " + sel.value);
+        toast(rec.company + " ‚Üí " + sel.value);
         await load();
       });
     });
@@ -2054,7 +2156,7 @@ const BUCKET        = "site-photos";
   });
 
   /* =================================================================
-     15. INBOX — leads from the website, yard signs and truck decals
+     15. INBOX ‚Äî leads from the website, yard signs and truck decals
      These land in inbound_leads, not customers, so spam never reaches
      the pipeline. A person reads each one and accepts it, which is
      what turns it into a real prospect.
@@ -2066,14 +2168,14 @@ const BUCKET        = "site-photos";
     if (!sb || !session) return;
     const { data, error } = await sb.from("inbound_leads")
       .select("*").eq("handled", false).order("created_at", { ascending: false });
-    if (error) return;                       // 03_intake.sql not run yet — stay quiet
+    if (error) return;                       // 03_intake.sql not run yet ‚Äî stay quiet
     inbound = data || [];
     paintInbox();
   }
 
   function paintInbox() {
     const b = $('[data-m="inbox"]');
-    if (b) b.textContent = "📥  Inbox" + (inbound.length ? "  (" + inbound.length + ")" : "");
+    if (b) b.textContent = "üì•  Inbox" + (inbound.length ? "  (" + inbound.length + ")" : "");
     const dot = $("#inboxdot");
     if (!inbound.length) { if (dot) dot.remove(); return; }
     if (!dot) {
@@ -2086,21 +2188,21 @@ const BUCKET        = "site-photos";
 
   function inboundHTML(l) {
     const when = new Date(l.created_at);
-    const bits = [l.city, l.service].filter(Boolean).join(" · ");
+    const bits = [l.city, l.service].filter(Boolean).join(" ¬∑ ");
     const acts = [];
-    if (l.phone) acts.push('<a class="act" href="tel:' + esc(l.phone) + '">📞 ' + esc(l.phone) + "</a>");
-    if (l.email) acts.push('<a class="act" href="mailto:' + esc(l.email) + '">✉️ Email</a>');
+    if (l.phone) acts.push('<a class="act" href="tel:' + esc(l.phone) + '">üìû ' + esc(l.phone) + "</a>");
+    if (l.email) acts.push('<a class="act" href="mailto:' + esc(l.email) + '">‚úâÔ∏è Email</a>');
     return '<div class="ibcard" data-lead="' + esc(l.id) + '">' +
       '<h3>' + esc(l.company || l.contact || "Website enquiry") +
         '<span class="badge ph">' + esc(l.source || "web") + "</span></h3>" +
       (l.contact && l.company ? '<div class="who">' + esc(l.contact) + "</div>" : "") +
       (bits ? '<div class="meta"><span>' + esc(bits) + "</span></div>" : "") +
-      (l.address ? '<div class="meta"><span>📍 ' + esc(l.address) + "</span></div>" : "") +
+      (l.address ? '<div class="meta"><span>üìç ' + esc(l.address) + "</span></div>" : "") +
       (l.message ? '<div class="spot"><em>They wrote</em>' + esc(l.message) + "</div>" : "") +
       (acts.length ? '<div class="acts">' + acts.join("") + "</div>" : "") +
       '<p class="tiny">Arrived ' + when.toLocaleDateString() + " " +
         when.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) +
-        (l.page ? " · from " + esc(String(l.page).slice(0, 60)) : "") + "</p>" +
+        (l.page ? " ¬∑ from " + esc(String(l.page).slice(0, 60)) : "") + "</p>" +
       '<div class="ibacts">' +
         '<button class="btn ibok" data-accept="' + esc(l.id) + '">Accept as a prospect</button>' +
         '<button class="btn sec" data-bin="' + esc(l.id) + '">Not a lead</button>' +
@@ -2110,7 +2212,7 @@ const BUCKET        = "site-photos";
   function renderInbox() {
     const host = $("#inbox-body");
     if (!inbound.length) {
-      host.innerHTML = '<div class="empty"><div class="big">📥</div><b>Nothing waiting</b>' +
+      host.innerHTML = '<div class="empty"><div class="big">üì•</div><b>Nothing waiting</b>' +
         '<p class="tiny" style="margin-top:6px">Leads from your website form and from any QR code ' +
         "you print will land here.</p></div>";
       return;
@@ -2118,7 +2220,7 @@ const BUCKET        = "site-photos";
     host.innerHTML = inbound.map(inboundHTML).join("");
 
     $$("#inbox-body [data-accept]").forEach((b) => b.addEventListener("click", async () => {
-      b.disabled = true; b.textContent = "Accepting…";
+      b.disabled = true; b.textContent = "Accepting‚Ä¶";
       const { data, error } = await sb.rpc("accept_inbound", { lead_id: b.dataset.accept });
       if (error) {
         b.disabled = false; b.textContent = "Accept as a prospect";
@@ -2148,7 +2250,7 @@ const BUCKET        = "site-photos";
   $("#inbox-close2").addEventListener("click", closeInbox);
 
   /* =================================================================
-     16. MUNICIPAL — public-sector solicitations
+     16. MUNICIPAL ‚Äî public-sector solicitations
      Separate from the prospect pipeline on purpose: a city ITB has a
      bid number and a deadline, not a monthly rate, and mixing the two
      would distort every figure in Mission Control.
@@ -2160,7 +2262,7 @@ const BUCKET        = "site-photos";
     if (!sb || !session) return;
     const { data, error } = await sb.from("municipal_leads")
       .select("*").order("due_date", { ascending: true });
-    if (error) return;                    // 04_municipal.sql not run yet — stay quiet
+    if (error) return;                    // 04_municipal.sql not run yet ‚Äî stay quiet
     muni = data || [];
     const { data: runs } = await sb.from("civic_runs")
       .select("*").order("ran_at", { ascending: false }).limit(1);
@@ -2176,7 +2278,7 @@ const BUCKET        = "site-photos";
   function paintMuni() {
     const b = $('[data-m="muni"]');
     const n = muni.filter(muniNew).length;
-    if (b) b.textContent = "🏛  Municipal" + (n ? "  (" + n + ")" : "");
+    if (b) b.textContent = "üèõ  Municipal" + (n ? "  (" + n + ")" : "");
   }
 
   function muniVisible() {
@@ -2215,17 +2317,17 @@ const BUCKET        = "site-photos";
       const ago = Math.round((Date.now() - new Date(muniRun.ran_at).getTime()) / 36e5);
       const stale = ago > 36;
       head = '<p class="tiny' + (stale ? " warnline" : "") + '">Last checked ' +
-        (ago < 1 ? "under an hour ago" : ago + "h ago") + " · " +
-        muniRun.sources_ok + " of " + muniRun.sources_tried + " sources read · " +
+        (ago < 1 ? "under an hour ago" : ago + "h ago") + " ¬∑ " +
+        muniRun.sources_ok + " of " + muniRun.sources_tried + " sources read ¬∑ " +
         muniRun.new_leads + " new" +
-        (muniRun.sources_failed ? " · " + muniRun.sources_failed + " could not be read" : "") +
-        (stale ? " — that is older than a day, so the daily job may not be running." : "") + "</p>";
+        (muniRun.sources_failed ? " ¬∑ " + muniRun.sources_failed + " could not be read" : "") +
+        (stale ? " ‚Äî that is older than a day, so the daily job may not be running." : "") + "</p>";
     } else {
-      head = '<p class="tiny warnline">No run recorded yet. Nothing here is out of date — ' +
+      head = '<p class="tiny warnline">No run recorded yet. Nothing here is out of date ‚Äî ' +
              "it simply has not collected anything yet.</p>";
     }
 
-    const chips = [["live", "Open"], ["hot", "⏰ Closing soon"], ["new", "New"],
+    const chips = [["live", "Open"], ["hot", "‚è∞ Closing soon"], ["new", "New"],
                    ["bidding", "We are bidding"], ["all", "Everything"]];
     head += '<div class="chips" style="padding:10px 0 8px">' + chips.map(([k, label]) =>
       '<button class="chip' + (muniFilter === k ? " on" : "") + '" data-mf="' + k + '">' +
@@ -2233,7 +2335,7 @@ const BUCKET        = "site-photos";
 
     host.innerHTML = head + (v.length
       ? '<div class="mlist">' + v.map(muniRowHTML).join("") + "</div>"
-      : '<div class="empty"><div class="big">🏛</div><b>Nothing here</b>' +
+      : '<div class="empty"><div class="big">üèõ</div><b>Nothing here</b>' +
         '<p class="tiny" style="margin-top:6px">Either no solicitation matches this filter, ' +
         "or the daily check has not found one yet.</p></div>");
 
@@ -2253,30 +2355,30 @@ const BUCKET        = "site-photos";
     $("#md-title").textContent = m.title;
     $("#md-body").innerHTML =
       '<p class="tiny" style="margin-top:0">' + esc(m.jurisdiction) +
-        (m.county ? " · " + esc(m.county) + " County" : "") +
-        (m.solicitation_no ? " · " + esc(m.solicitation_no) : "") +
-        (m.kind ? " · " + esc(m.kind) : "") + "</p>" +
+        (m.county ? " ¬∑ " + esc(m.county) + " County" : "") +
+        (m.solicitation_no ? " ¬∑ " + esc(m.solicitation_no) : "") +
+        (m.kind ? " ¬∑ " + esc(m.kind) : "") + "</p>" +
       (dates.length ? '<div class="mdates">' + dates.map((x) =>
         '<div><b>' + esc(fmtDate(x[1])) + "</b><span>" + esc(x[0]) + "</span></div>").join("") + "</div>" : "") +
       (m.summary ? '<div class="spot"><em>Summary</em>' + esc(m.summary) + "</div>" : "") +
       (m.evidence ? '<div class="spot"><em>Why this was flagged' +
-        (m.matched_on ? " — matched “" + esc(m.matched_on) + "”" : "") + "</em>" +
+        (m.matched_on ? " ‚Äî matched ‚Äú" + esc(m.matched_on) + "‚Äù" : "") + "</em>" +
         esc(m.evidence) + "</div>" : "") +
       (m.url ? '<div class="acts"><a class="act" target="_blank" rel="noopener" href="' +
-        esc(m.url) + '">Open the solicitation ↗</a></div>' : "") +
+        esc(m.url) + '">Open the solicitation ‚Üó</a></div>' : "") +
       '<label class="f">Where we stand</label>' +
       '<select class="f" id="md-status">' +
         ["New", "Reviewing", "Bidding", "Submitted", "Won", "Lost", "Passed"].map((s) =>
           "<option" + (s === m.status ? " selected" : "") + ">" + s + "</option>").join("") +
       "</select>" +
       '<label class="f">Notes</label>' +
-      '<textarea class="f" id="md-notes" placeholder="Who we called, what the scope really is, go/no-go reasoning…">' +
+      '<textarea class="f" id="md-notes" placeholder="Who we called, what the scope really is, go/no-go reasoning‚Ä¶">' +
         esc(m.notes || "") + "</textarea>" +
       '<button class="btn" id="md-save">Save</button>' +
       '<button class="btn sec" id="md-back">Back to the list</button>';
 
     $("#md-save").addEventListener("click", async () => {
-      const b = $("#md-save"); b.disabled = true; b.textContent = "Saving…";
+      const b = $("#md-save"); b.disabled = true; b.textContent = "Saving‚Ä¶";
       const { error } = await sb.from("municipal_leads")
         .update({ status: $("#md-status").value, notes: $("#md-notes").value || null })
         .eq("id", m.id);
@@ -2298,6 +2400,658 @@ const BUCKET        = "site-photos";
   $("#muni-x").addEventListener("click", closeMuni);
   $("#muni-close2").addEventListener("click", closeMuni);
   $("#md-x").addEventListener("click", closeMuniDetail);
+
+  /* =================================================================
+     17. QUOTES ‚Äî build, save, print and email a customer quote
+     Same layout and terms as the desktop quote scripts. A saved quote is
+     a snapshot: once Sent it is never edited, only revised (-R1, -R2‚Ä¶).
+     Sales + admin only; the database enforces that, the UI just hides it.
+     ================================================================= */
+
+  let quotes = [];                 // every quote, newest first
+  let qb = null;                   // the quote open in the builder
+  let qlFilter = "all";
+
+  const PAYMENT_LINE = "credit card payments are subject to a 3.5% processing fee; " +
+                       "ACH and Zelle payments have no transaction fees.";
+  const ESCALATOR = "the greater of 3% or the change in CPI-U";
+  const OPTIONAL = [
+    ["caster",   "Caster installation (one-time)",                        "$80.00"],
+    ["rollout",  "Roll-out / caster service (we roll the container out and back)", "$35.27 per month"],
+    ["cart",     "Delinquent cart pull (account past due)",               "$100.00"],
+    ["dumpster", "Delinquent dumpster pull (account past due)",           "$275.00"],
+  ];
+  const FREQS = [["weekly", "Weekly"], ["bi-weekly", "Bi-weekly (every other week)"],
+                 ["2x per week", "2x per week"], ["3x per week", "3x per week"]];
+  const FREQ_DETAIL = { "bi-weekly": "bi-weekly (every other week)" };
+  // pct = share of the invoice added on top and paid to the City.
+  // A city with a flat permit instead of a % gets pct 0 and a note.
+  const CITY_FEES = {
+    "fort lauderdale": { frontload: 25, rolloff: 25, label: "City of Fort Lauderdale franchise fee",
+                         hint: "Front-load below 2x/week needs the City frequency waiver." },
+    "delray beach":    { rolloff: 10, label: "City of Delray Beach franchise fee",
+                         hint: "Front-load is closed in Delray (WM exclusive)." },
+    "boca raton":      { frontload: 8, rolloff: 15, label: "City of Boca Raton franchise fee" },
+    "coral springs":   { frontload: 0, rolloff: 0, label: "",
+                         hint: "Flat annual permit ‚Äî no per-quote fee. Front-load is closed (Coastal)." },
+  };
+
+  const usd = (n) => "$" + (Number(n) || 0).toLocaleString(undefined,
+    { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const num = (v) => (v === "" || v == null || isNaN(Number(v))) ? null : Number(v);
+  const canQuote = () => mode !== "driver" && (!me || me.role === "sales" || me.role === "admin");
+
+  /* ---------- load ---------- */
+  async function loadQuotes() {
+    if (!sb || !session) return;
+    const { data, error } = await sb.from("quotes").select("*").order("created_at", { ascending: false });
+    if (error) return;                        // 05_quotes.sql not run yet ‚Äî stay quiet
+    quotes = data || [];
+    if ($("#qlsheet").classList.contains("on")) renderQuoteList();
+  }
+
+  /* ---------- defaults ---------- */
+  function cityKey(c) { return String(c || "").trim().toLowerCase().replace(/^city of\s+/, ""); }
+
+  function feeFor(kind, city) {
+    const f = CITY_FEES[cityKey(city)];
+    if (!f) return { pct: null, label: "", hint: "No fee on file for this city ‚Äî check the Franchise Tracker." };
+    return { pct: f[kind] != null ? f[kind] : null, label: f.label || "", hint: f.hint || "" };
+  }
+
+  function blankQuote(kind, cust) {
+    const c = cust || {};
+    const q = {
+      id: null, quote_no: null, base_no: null, revision: 0, kind: kind, status: "Draft",
+      customer_id: c.id || null, company: c.company || "", contact: c.contact || "",
+      email: c.email || "", phone: c.phone || c.phone2 || "", address: c.address || "",
+      city: c.city || "", zip: "",
+      data: { valid_days: 30, fee_pct: null, fee_label: "", payment: PAYMENT_LINE }
+    };
+    if (kind === "frontload") Object.assign(q.data, {
+      options: [{ size: "4", freq: "weekly", rate: "" }],
+      extra: "", extra_next: "", extra_next_date: "",
+      optional: { caster: true, rollout: true, cart: false, dumpster: true },
+      terms: [3, 5]
+    });
+    else Object.assign(q.data, {
+      containers: [{ size: "20", material: "C&D / roofing", rate: "", tons: "", over: "", hauls: 1 }],
+      delivery: "Included"
+    });
+    const f = feeFor(kind, q.city);
+    q.data.fee_pct = f.pct; q.data.fee_label = f.label;
+    return q;
+  }
+
+  /* ---------- totals ---------- */
+  function totals(q) {
+    const d = q.data, pct = (num(d.fee_pct) || 0) / 100;
+    if (q.kind === "frontload") {
+      const per = (d.options || []).map((o) => {
+        const b = num(o.rate) || 0;
+        return { base: b, fee: b * pct, total: b + b * pct };
+      });
+      return { per: per, base: per.length ? per[0].base : 0, total: per.length ? per[0].total : 0 };
+    }
+    const lines = (d.containers || []).map((c) => (num(c.rate) || 0) * (num(c.hauls) || 1));
+    const deliv = num(d.delivery) || 0;
+    const sub = lines.reduce((a, b) => a + b, 0) + deliv * (d.containers || []).length;
+    return { lines: lines, deliv: deliv * (d.containers || []).length, base: sub, fee: sub * pct, total: sub + sub * pct };
+  }
+
+  /* ---------- the builder sheet ---------- */
+  const locked = () => qb && qb.status !== "Draft";
+
+  function field(label, key, val, attrs) {
+    return '<div><label class="f">' + label + '</label><input class="f" data-k="' + key + '" value="' +
+      esc(val == null ? "" : val) + '"' + (attrs || "") + (locked() ? " disabled" : "") + "></div>";
+  }
+  const money$ = ' type="number" inputmode="decimal" step="0.01" min="0"';
+
+  function renderBuilder() {
+    const q = qb, d = q.data, L = locked();
+    const dis = L ? " disabled" : "";
+    const f = feeFor(q.kind, q.city);
+    let h = "";
+
+    h += '<div class="qtype">' + [["frontload", "Front-load (monthly)"], ["rolloff", "Roll-off (one-time job)"]]
+      .map(([k, t]) => '<button class="chip' + (q.kind === k ? " on" : "") + '" data-kind="' + k + '"' +
+        (q.id ? " disabled" : "") + ">" + t + "</button>").join("") + "</div>";
+
+    if (q.quote_no) h += '<p class="tiny" style="margin:6px 0 0"><b>' + esc(q.quote_no) + "</b> ¬∑ " +
+      esc(q.status) + (q.sent_at ? " ¬∑ sent " + esc(q.sent_at.slice(0, 10)) : "") +
+      (L ? " ‚Äî sent quotes are locked. Use <b>Revise</b> to change one." : "") + "</p>";
+
+    h += '<h4 class="qsec">Customer</h4>';
+    h += '<div class="row2">' + field("Contact", "contact", q.contact) + field("Business", "company", q.company) + "</div>";
+    h += '<div class="row2">' + field("Email", "email", q.email, ' type="email" inputmode="email"') +
+         field("Phone", "phone", q.phone, ' type="tel" inputmode="tel"') + "</div>";
+    h += field("Service address", "address", q.address);
+    h += '<div class="row2">' + field("City", "city", q.city) + field("ZIP", "zip", q.zip, ' inputmode="numeric"') + "</div>";
+
+    if (q.kind === "frontload") {
+      h += '<h4 class="qsec">Service options</h4>';
+      d.options.forEach((o, i) => {
+        h += '<div class="qline"><b class="qkey">' + String.fromCharCode(65 + i) + "</b>" +
+          '<select class="f" data-o="' + i + '" data-ok="size"' + dis + ">" +
+            ["2", "3", "4", "6", "8"].map((s) => "<option" + (String(o.size) === s ? " selected" : "") +
+              ' value="' + s + '">' + s + "-yard</option>").join("") + "</select>" +
+          '<select class="f" data-o="' + i + '" data-ok="freq"' + dis + ">" +
+            FREQS.map(([v, t]) => '<option value="' + v + '"' + (o.freq === v ? " selected" : "") + ">" + t + "</option>").join("") +
+          "</select>" +
+          '<input class="f" data-o="' + i + '" data-ok="rate" placeholder="$ / month" value="' + esc(o.rate) + '"' + money$ + dis + ">" +
+          (d.options.length > 1 && !L ? '<button class="iconbtn qdel" data-delo="' + i + '">‚úï</button>' : "") +
+          "</div>";
+      });
+      if (!L && d.options.length < 3) h += '<button class="act" data-add="option">Ôºã Add an option</button>';
+
+      h += '<div class="row2">' + field("Extra dump / overage ($)", "d.extra", d.extra, money$) +
+           field("Rises to ($, optional)", "d.extra_next", d.extra_next, money$) + "</div>";
+      h += '<div class="row2">' + field("‚Ä¶effective", "d.extra_next_date", d.extra_next_date, ' placeholder="January 1, 2027"') +
+           '<div><label class="f">Term</label><div class="qchecks">' +
+           [3, 5].map((y) => '<label><input type="checkbox" data-term="' + y + '"' +
+             ((d.terms || []).indexOf(y) >= 0 ? " checked" : "") + dis + "> " + y + "-year</label>").join("") +
+           "</div></div></div>";
+      h += '<label class="f">Optional charges to show</label><div class="qchecks col">' +
+        OPTIONAL.map(([k, t, r]) => '<label><input type="checkbox" data-opt="' + k + '"' +
+          (d.optional[k] ? " checked" : "") + dis + "> " + esc(t) + " ‚Äî " + r + "</label>").join("") + "</div>";
+    } else {
+      h += '<h4 class="qsec">Containers</h4>';
+      d.containers.forEach((c, i) => {
+        h += '<div class="qcont">' +
+          '<div class="qline"><b class="qkey">' + (i + 1) + "</b>" +
+          '<select class="f" data-c="' + i + '" data-ck="size"' + dis + ">" +
+            ["10", "15", "20", "30", "40"].map((s) => "<option" + (String(c.size) === s ? " selected" : "") +
+              ' value="' + s + '">' + s + "-yard</option>").join("") + "</select>" +
+          '<input class="f" data-c="' + i + '" data-ck="material" list="qmat" placeholder="Material" value="' + esc(c.material) + '"' + dis + ">" +
+          (d.containers.length > 1 && !L ? '<button class="iconbtn qdel" data-delc="' + i + '">‚úï</button>' : "") +
+          "</div>" +
+          '<div class="qgrid4">' +
+            '<div><label class="f">$ per haul</label><input class="f" data-c="' + i + '" data-ck="rate" value="' + esc(c.rate) + '"' + money$ + dis + "></div>" +
+            '<div><label class="f">Tons incl.</label><input class="f" data-c="' + i + '" data-ck="tons" value="' + esc(c.tons) + '" type="number" inputmode="decimal" step="0.5"' + dis + "></div>" +
+            '<div><label class="f">$ / ton over</label><input class="f" data-c="' + i + '" data-ck="over" value="' + esc(c.over) + '"' + money$ + dis + "></div>" +
+            '<div><label class="f">Hauls</label><input class="f" data-c="' + i + '" data-ck="hauls" value="' + esc(c.hauls) + '" type="number" inputmode="numeric" min="1" step="1"' + dis + "></div>" +
+          "</div></div>";
+      });
+      h += '<datalist id="qmat"><option>C&amp;D / roofing</option><option>Clean roof tile</option>' +
+           "<option>Clean concrete</option><option>Household cleanout</option><option>Yard waste</option></datalist>";
+      if (!L) h += '<button class="act" data-add="container">Ôºã Add a container</button>';
+      h += field("Delivery ($, or blank = included)", "d.delivery", d.delivery === "Included" ? "" : d.delivery, money$);
+    }
+
+    h += '<h4 class="qsec">City fee</h4>';
+    h += '<div class="row2">' + field("Fee %", "d.fee_pct", d.fee_pct, ' type="number" inputmode="decimal" step="0.5" min="0"') +
+         field("Shown on the quote as", "d.fee_label", d.fee_label, ' placeholder="City of ‚Ä¶ franchise fee"') + "</div>";
+    if (f.hint) h += '<p class="tiny warnline" style="margin-top:4px">' + esc(f.hint) + "</p>";
+
+    h += '<div class="qtotal" id="qb-total"></div>';
+
+    // actions
+    h += '<div class="qacts">';
+    if (!L) h += '<button class="btn" id="qb-save">' + (q.id ? "Save changes" : "Save quote") + "</button>";
+    h += '<button class="btn sec" id="qb-print">üñ®  Print / Save PDF</button>';
+    h += '<button class="btn sec" id="qb-mail">‚úâÔ∏è  Email it</button>';
+    h += '<button class="btn sec" id="qb-copy">üìã  Copy email text</button>';
+    if (q.id) {
+      h += '<label class="f">Status</label><select class="f" id="qb-status">' +
+        ["Draft", "Sent", "Accepted", "Declined", "Superseded"].map((s) =>
+          "<option" + (s === q.status ? " selected" : "") + ">" + s + "</option>").join("") + "</select>";
+      if (L && q.status !== "Superseded") h += '<button class="btn sec" id="qb-revise">‚úèÔ∏è  Revise (makes ' +
+        esc(q.base_no + "-R" + (q.revision + 1)) + ")</button>";
+      if (q.status === "Draft") h += '<button class="btn danger" id="qb-del">Delete draft</button>';
+    }
+    h += "</div>";
+
+    $("#qb-body").innerHTML = h;
+    $("#qb-title").textContent = q.quote_no ? q.quote_no : "New quote";
+    paintTotal();
+  }
+
+  function paintTotal() {
+    const t = totals(qb), d = qb.data, pct = num(d.fee_pct) || 0;
+    let h = "";
+    if (qb.kind === "frontload") {
+      h = d.options.map((o, i) => {
+        const p = t.per[i];
+        return "<div><span>Option " + String.fromCharCode(65 + i) + " ¬∑ " + esc(o.size) + "-yd " + esc(o.freq) +
+          "</span><b>" + usd(p.base) + (pct ? " + " + usd(p.fee) + " fee = " + usd(p.total) : "") + "/mo</b></div>";
+      }).join("");
+    } else {
+      h = "<div><span>Job (included weight)</span><b>" + usd(t.base) +
+        (pct ? " + " + usd(t.fee) + " fee = " + usd(t.total) : "") + "</b></div>";
+    }
+    $("#qb-total").innerHTML = h;
+  }
+
+  function openBuilder(q) {
+    if (!canQuote()) { alert("Quotes are built by sales or admin."); return; }
+    qb = JSON.parse(JSON.stringify(q));
+    renderBuilder();
+    $("#scrim").classList.add("on"); $("#qbsheet").classList.add("on");
+  }
+  function closeBuilder() { $("#qbsheet").classList.remove("on"); qb = null;
+    if (!$("#qlsheet").classList.contains("on") && !$("#sheet").classList.contains("on")) $("#scrim").classList.remove("on"); }
+
+  // one set of delegated listeners for the whole builder body
+  $("#qb-body").addEventListener("input", (e) => {
+    if (!qb || locked()) return;
+    const t = e.target, d = qb.data;
+    if (t.dataset.k) {
+      const k = t.dataset.k;
+      if (k.indexOf("d.") === 0) {
+        const kk = k.slice(2);
+        d[kk] = (kk === "delivery" && t.value === "") ? "Included" : t.value;
+      } else {
+        qb[k] = t.value;
+        if (k === "city") {                       // a new city re-reads the fee table
+          const f = feeFor(qb.kind, t.value);
+          if (f.pct != null) { d.fee_pct = f.pct; d.fee_label = f.label;
+            const a = $('[data-k="d.fee_pct"]'), b = $('[data-k="d.fee_label"]');
+            if (a) a.value = f.pct; if (b) b.value = f.label; }
+        }
+      }
+    }
+    if (t.dataset.o != null)  d.options[+t.dataset.o][t.dataset.ok] = t.value;
+    if (t.dataset.c != null)  d.containers[+t.dataset.c][t.dataset.ck] = t.value;
+    paintTotal();
+  });
+  $("#qb-body").addEventListener("change", (e) => {
+    if (!qb) return;
+    const t = e.target, d = qb.data;
+    if (t.id === "qb-status") { setStatus(t.value); return; }
+    if (locked()) return;
+    if (t.dataset.term) {
+      const y = +t.dataset.term;
+      d.terms = (d.terms || []).filter((x) => x !== y);
+      if (t.checked) d.terms.push(y);
+      d.terms.sort();
+    }
+    if (t.dataset.opt) d.optional[t.dataset.opt] = t.checked;
+    if (t.dataset.o != null)  { d.options[+t.dataset.o][t.dataset.ok] = t.value; paintTotal(); }
+    if (t.dataset.c != null)  { d.containers[+t.dataset.c][t.dataset.ck] = t.value; paintTotal(); }
+  });
+  $("#qb-body").addEventListener("click", (e) => {
+    if (!qb) return;
+    const b = e.target.closest("button"); if (!b) return;
+    const d = qb.data;
+    if (b.dataset.kind && !qb.id) {
+      const keep = qb; qb = blankQuote(b.dataset.kind, {});
+      ["customer_id", "company", "contact", "email", "phone", "address", "city", "zip"].forEach((k) => qb[k] = keep[k]);
+      const f = feeFor(qb.kind, qb.city); qb.data.fee_pct = f.pct; qb.data.fee_label = f.label;
+      renderBuilder(); return;
+    }
+    if (b.dataset.add === "option")    { d.options.push({ size: "4", freq: "weekly", rate: "" }); renderBuilder(); return; }
+    if (b.dataset.add === "container") { d.containers.push({ size: "20", material: "", rate: "", tons: "", over: "", hauls: 1 }); renderBuilder(); return; }
+    if (b.dataset.delo != null) { d.options.splice(+b.dataset.delo, 1); renderBuilder(); return; }
+    if (b.dataset.delc != null) { d.containers.splice(+b.dataset.delc, 1); renderBuilder(); return; }
+    if (b.id === "qb-save")   saveQuote();
+    if (b.id === "qb-print")  printQuote();
+    if (b.id === "qb-mail")   mailQuote();
+    if (b.id === "qb-copy")   copyEmail();
+    if (b.id === "qb-revise") reviseQuote();
+    if (b.id === "qb-del")    deleteQuote();
+  });
+
+  /* ---------- save / revise / status ---------- */
+  function check(q) {
+    if (!q.contact && !q.company) return "Add a contact or business name.";
+    if (!q.address || !q.city)   return "Add the service address and city.";
+    if (q.kind === "frontload" && !q.data.options.every((o) => num(o.rate))) return "Every option needs a monthly rate.";
+    if (q.kind === "rolloff" && !q.data.containers.every((c) => num(c.rate) && c.material)) return "Every container needs a material and a price.";
+    if (q.data.fee_pct == null || q.data.fee_pct === "") return "Set the city fee % (0 if there is none).";
+    return "";
+  }
+
+  function rowFor(q) {
+    const t = totals(q);
+    return {
+      kind: q.kind, status: q.status, customer_id: q.customer_id,
+      company: q.company || null, contact: q.contact || null, email: q.email || null,
+      phone: q.phone || null, address: q.address || null, city: q.city || null, zip: q.zip || null,
+      data: q.data, total: Math.round(t.total * 100) / 100, base_total: Math.round(t.base * 100) / 100
+    };
+  }
+
+  async function saveQuote() {
+    const bad = check(qb); if (bad) { alert(bad); return false; }
+    const btn = $("#qb-save"); if (btn) { btn.disabled = true; btn.textContent = "Saving‚Ä¶"; }
+    const done = (ok) => { if (btn) { btn.disabled = false; btn.textContent = qb && qb.id ? "Save changes" : "Save quote"; } return ok; };
+    const row = rowFor(qb);
+    if (qb.id) {
+      const { error } = await sb.from("quotes").update(row).eq("id", qb.id);
+      if (error) { alert("Could not save: " + error.message); return done(false); }
+    } else {
+      const n = await sb.rpc("next_quote_no");
+      if (n.error) {
+        alert(/next_quote_no|quotes/.test(n.error.message)
+          ? "The quotes table is not set up yet ‚Äî run 05_quotes.sql in Supabase first."
+          : "Could not number the quote: " + n.error.message);
+        return done(false);
+      }
+      row.quote_no = n.data; row.base_no = n.data; row.revision = 0;
+      const { data, error } = await sb.from("quotes").insert(row).select().single();
+      if (error) { alert("Could not save: " + error.message); return done(false); }
+      Object.assign(qb, data);
+      await touchCustomer(qb, "Quote " + qb.quote_no + " built");
+    }
+    await loadQuotes();
+    renderBuilder(); toast("Saved " + qb.quote_no);
+    return done(true);
+  }
+
+  // first quote moves a New prospect to Quoted and logs it on the record
+  async function touchCustomer(q, note) {
+    if (!q.customer_id) return;
+    const c = rows.find((r) => r.id === q.customer_id); if (!c) return;
+    const patch = {};
+    const log = Array.isArray(c.activity) ? c.activity.slice() : [];
+    log.push({ k: "Quote", n: note, t: new Date().toISOString() });
+    patch.activity = log;
+    if (!c.status || c.status === "New") patch.status = "Quoted";
+    if (q.kind === "frontload" && !Number(c.mrr)) patch.mrr = totals(q).base;
+    const { error } = await sb.from("customers").update(patch).eq("id", c.id);
+    if (!error) Object.assign(c, patch);
+  }
+
+  async function setStatus(s) {
+    if (!qb || !qb.id) return;
+    const patch = { status: s };
+    if (s === "Sent" && !qb.sent_at) patch.sent_at = new Date().toISOString();
+    const { error } = await sb.from("quotes").update(patch).eq("id", qb.id);
+    if (error) { alert("Could not update: " + error.message); renderBuilder(); return; }
+    Object.assign(qb, patch);
+    if (s === "Sent" || s === "Accepted" || s === "Declined")
+      await touchCustomer(qb, "Quote " + qb.quote_no + " marked " + s);
+    if (s === "Accepted" && qb.customer_id) {
+      const c = rows.find((r) => r.id === qb.customer_id);
+      if (c && c.status !== "Active" && c.status !== "Won" &&
+          confirm("Mark " + (c.company || "this customer") + " as Won?")) {
+        await sb.from("customers").update({ status: "Won" }).eq("id", c.id); c.status = "Won";
+      }
+    }
+    await loadQuotes(); renderBuilder(); render(); toast(qb.quote_no + " ‚Üí " + s);
+  }
+
+  async function reviseQuote() {
+    const src = qb;
+    const rev = Object.assign(JSON.parse(JSON.stringify(src)), {
+      id: null, status: "Draft", sent_at: null, revision: src.revision + 1,
+      quote_no: src.base_no + "-R" + (src.revision + 1)
+    });
+    const row = rowFor(rev);
+    Object.assign(row, { quote_no: rev.quote_no, base_no: src.base_no, revision: rev.revision });
+    const { data, error } = await sb.from("quotes").insert(row).select().single();
+    if (error) { alert("Could not create the revision: " + error.message); return; }
+    if (src.status === "Sent" || src.status === "Draft")
+      await sb.from("quotes").update({ status: "Superseded" }).eq("id", src.id);
+    await loadQuotes();
+    qb = data; renderBuilder(); toast("Revision " + data.quote_no + " started ‚Äî edit and save");
+  }
+
+  async function deleteQuote() {
+    if (!confirm("Delete draft " + qb.quote_no + "? Its number will not be reused.")) return;
+    const { error } = await sb.from("quotes").delete().eq("id", qb.id);
+    if (error) { alert("Could not delete: " + error.message); return; }
+    await loadQuotes(); closeBuilder(); toast("Draft deleted");
+  }
+
+  /* ---------- the printed quote ---------- */
+  const words = { 1: "one", 2: "two", 3: "three", 4: "four", 5: "five" };
+  const mid = (t) => { const w = String(t || "").split(" ")[0];
+    return (w.indexOf("&") >= 0 || /[A-Z]/.test(w.slice(1))) ? t : t.charAt(0).toLowerCase() + t.slice(1); };
+  const longDate = (dt) => dt.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+
+  function quoteHTML(q) {
+    const d = q.data, t = totals(q), pct = num(d.fee_pct) || 0;
+    const multi = q.kind === "frontload" && d.options.length > 1;
+    const made = q.created_at ? new Date(q.created_at) : new Date();
+    const valid = new Date(made.getTime() + (num(d.valid_days) || 30) * 864e5);
+    const site = [q.address, [q.city, "FL"].filter(Boolean).join(", ") + (q.zip ? " " + q.zip : "")]
+      .filter(Boolean).join(", ");
+    const who = [q.contact, q.company].filter(Boolean).join(" ¬∑ ");
+    let h = '<div class="qp">';
+
+    h += '<div class="qp-h"><div><span class="wmark qp-logo"></span><i>Right size. Right now.</i></div>' +
+         '<div class="qp-co">5390 NW 12th Ave<br>Fort Lauderdale, FL 33309<br>954-772-6440<br>murphywaste.com</div></div>';
+    h += '<h1>' + (q.kind === "frontload" ? "COMMERCIAL SERVICE QUOTE" : "ROLL-OFF CONTAINER QUOTE") + "</h1>";
+    h += '<div class="qp-meta">' +
+      "<div><b>Quote #:</b> " + esc(q.quote_no || "DRAFT") + "</div><div><b>Date:</b> " + longDate(made) + "</div>" +
+      "<div><b>Prepared for:</b> " + esc(who) + "</div><div><b>Valid through:</b> " + longDate(valid) + "</div>" +
+      "<div><b>" + (q.kind === "frontload" ? "Service address" : "Job site") + ":</b> " + esc(site) +
+      "</div><div><b>Prepared by:</b> Sean-Patrick Murphy</div>" +
+      (q.email ? "<div><b>Email:</b> " + esc(q.email) + "</div><div></div>" : "") + "</div>";
+
+    if (q.kind === "frontload") {
+      const freqTxt = d.options.map((o, i) => (FREQ_DETAIL[o.freq] || o.freq) +
+        (multi ? " (Option " + String.fromCharCode(65 + i) + ")" : "")).join(" or ");
+      const sizes = Array.from(new Set(d.options.map((o) => o.size)));
+      h += "<h2>Scope of Service</h2><p>One (1) " + (sizes.length === 1 ? sizes[0] + "-yard" : "") +
+        " front-load container, supplied and maintained by Murphy Waste Systems, serviced " + esc(freqTxt) +
+        " on a regular scheduled day. Container delivery, placement, repairs and replacement are included in " +
+        "the monthly rate. Additional service is available on call.</p>";
+
+      const ex = num(d.extra), star = num(d.extra_next) ? "*" : "";
+      h += '<h2>Pricing</h2><table class="qp-t"><tr><th>Item</th><th>Rate</th></tr>' +
+        d.options.map((o, i) => '<tr class="b"><td>' + (multi ? "Option " + String.fromCharCode(65 + i) + ": " : "") +
+          esc(o.size) + "-yard front-load container, serviced " + esc(o.freq) + "</td><td>" + usd(o.rate) + " per month</td></tr>").join("") +
+        (ex != null ? "<tr><td>Extra dump (on-call service beyond the scheduled day)</td><td>" + usd(ex) + " per dump" + star + "</td></tr>" +
+          "<tr><td>Overage (container overfilled / lid not closed at service)</td><td>" + usd(ex) + " per occurrence" + star + "</td></tr>" : "") +
+        "<tr><td>Container delivery &amp; setup</td><td>Included</td></tr>" +
+        (pct ? "<tr><td>" + esc(d.fee_label || "City franchise fee") + "</td><td>" + pct + "% of invoice</td></tr>" : "") +
+        "</table>";
+      if (ex != null) h += '<p class="qp-note">Overage is billed as an extra dump: if the container is overfilled or the lid ' +
+        "cannot close at the time of service, the excess is charged at the extra-dump rate of " + usd(ex) + "." +
+        (star ? " <b>*Effective " + esc(d.extra_next_date || "a later date") + ", the extra-dump and overage rate increases to " +
+          usd(d.extra_next) + ".</b>" : "") + "</p>";
+
+      const opts = OPTIONAL.filter(([k]) => d.optional[k]);
+      if (opts.length) h += '<table class="qp-t alt"><tr><th>Optional Services &amp; Other Charges (only if they apply)</th><th>Rate</th></tr>' +
+        opts.map(([, n, r]) => "<tr><td>" + esc(n) + "</td><td>" + r + "</td></tr>").join("") + "</table>";
+
+      h += '<table class="qp-t est"><tr><th>Estimated Monthly Invoice</th>' +
+        d.options.map((o, i) => "<th>" + (multi ? "Option " + String.fromCharCode(65 + i) + " (" + esc(o.freq) + ")" : "") + "</th>").join("") + "</tr>" +
+        "<tr><td>Scheduled service" + (multi ? "" : " (" + esc(d.options[0].freq) + ")") + "</td>" + t.per.map((p) => "<td>" + usd(p.base) + "</td>").join("") + "</tr>" +
+        (pct ? "<tr><td>" + esc(d.fee_label || "City franchise fee") + " (" + pct + "%)</td>" + t.per.map((p) => "<td>" + usd(p.fee) + "</td>").join("") + "</tr>" : "") +
+        '<tr class="tot"><td>Estimated monthly total</td>' + t.per.map((p) => "<td>" + usd(p.total) + "</td>").join("") + "</tr></table>";
+      h += '<p class="qp-note">Extra dumps and overages, when they occur, are added to the invoice for that month.' +
+        (pct ? " The franchise fee is imposed by the City on collection services within the City and is remitted to the City; it is not a Murphy Waste Systems charge." : "") + "</p>";
+
+      const yrs = (d.terms && d.terms.length ? d.terms : [3, 5]);
+      const etc = d.options.map((o, i) => (multi ? "Option " + String.fromCharCode(65 + i) + " " : "") + usd(2 * (num(o.rate) || 0))).join("; ");
+      h += '<h2>Terms</h2><p class="qp-terms"><b>Term:</b> ' + yrs.map((y) => (words[y] || y) + " (" + y + ") years").join(" or ") +
+        ", at the customer's election, beginning on the first service date. <b>Renewal:</b> the agreement automatically renews for " +
+        "successive terms of the same length unless either party gives written notice of non-renewal at least ninety (90) days before " +
+        "the end of the then-current term. <b>Termination:</b> the customer may terminate for convenience at any time with ninety (90) " +
+        "days' written notice and payment of an early-termination charge equal to two (2) months of the monthly service rate (" + etc +
+        "). After the first twenty-four (24) months of service, the early-termination charge no longer applies and the customer may " +
+        "terminate with ninety (90) days' written notice alone. <b>Rate adjustment:</b> the monthly rate and fees adjust annually on the " +
+        "service anniversary by " + ESCALATOR + ". <b>Acceptable materials:</b> non-hazardous commercial solid waste; no hazardous " +
+        "materials, liquids, paint, tires, batteries, or construction debris. <b>Payment:</b> billed monthly in advance, due on receipt; " +
+        esc(d.payment || PAYMENT_LINE) + " Quote valid for " + (num(d.valid_days) || 30) + " days from the date above.</p>";
+
+      h += '<h2>Acceptance</h2><div class="qp-acc">' +
+        (multi ? "<div><b>Select option:</b> " + d.options.map((o, i) => "[&nbsp;&nbsp;] " + String.fromCharCode(65 + i) +
+          " (" + usd(o.rate) + ")").join("&nbsp;&nbsp;&nbsp;") + "</div>" : "") +
+        "<div><b>Select term:</b> " + yrs.map((y) => "[&nbsp;&nbsp;] " + y + "-year term").join("&nbsp;&nbsp;&nbsp;") + "</div>" +
+        '<div class="ln"><span>Authorized signature: ______________________________</span><span>Date: ______________</span></div>' +
+        '<div class="ln"><span>Print name / title: ______________________________</span><span>Start date: __________</span></div></div>';
+    } else {
+      const n = d.containers.length;
+      h += "<h2>Scope of Service</h2><p>" + (words[n] || n).replace(/^./, (c) => c.toUpperCase()) + " (" + n + ") roll-off container" +
+        (n > 1 ? "s" : "") + " delivered to the job site: " +
+        d.containers.map((c) => "one (1) " + esc(c.size) + "-yard for " + esc(mid(c.material))).join("; ") +
+        ". Each container is delivered, filled by the customer, and hauled away for disposal or recycling when you call for pickup." +
+        (d.delivery === "Included" ? " Delivery is included." : "") + "</p>";
+      h += '<h2>Pricing</h2><table class="qp-t"><tr><th>Container</th><th>Material</th><th>Price per haul</th><th>Weight included</th><th>Over the limit</th></tr>' +
+        d.containers.map((c) => '<tr><td class="bb">' + esc(c.size) + "-yard</td><td>" + esc(c.material) + '</td><td class="bb">' + usd(c.rate) +
+          "</td><td>" + (num(c.tons) ? num(c.tons) + " tons" : "‚Äî") + "</td><td>" + (num(c.over) ? usd(c.over) + " per ton" : "‚Äî") + "</td></tr>").join("") +
+        "</table>";
+      h += '<table class="qp-t alt"><tr><th>Other Charges (only if they apply)</th><th>Rate</th></tr>' +
+        "<tr><td>Container delivery</td><td>" + (d.delivery === "Included" ? "Included" : usd(d.delivery) + " per container") + "</td></tr>" +
+        "<tr><td>Container rental (after the 30-day included period)</td><td>$15.00 per day</td></tr>" +
+        "<tr><td>Trip charge / relocation on site</td><td>$175.00 per occurrence</td></tr>" +
+        (pct ? "<tr><td>" + esc(d.fee_label || "City franchise fee") + "</td><td>" + pct + "% of invoice</td></tr>" : "") + "</table>";
+      h += '<table class="qp-t est"><tr><th>Estimated Job Total</th><th></th></tr>' +
+        d.containers.map((c, i) => "<tr><td>" + esc(c.size) + "-yard ‚Äî " + esc(mid(c.material)) + " (" + (num(c.hauls) || 1) + " haul" +
+          ((num(c.hauls) || 1) !== 1 ? "s" : "") + ")</td><td>" + usd(t.lines[i]) + "</td></tr>").join("") +
+        (t.deliv ? "<tr><td>Delivery</td><td>" + usd(t.deliv) + "</td></tr>" : "") +
+        (pct ? "<tr><td>" + esc(d.fee_label || "City franchise fee") + " (" + pct + "%)</td><td>" + usd(t.fee) + "</td></tr>" : "") +
+        '<tr class="tot"><td>Estimated job total</td><td>' + usd(t.total) + "</td></tr></table>";
+      h += '<p class="qp-note">Total assumes each container stays within its included weight. Weight over the limit is billed per ton from the scale ticket.</p>';
+      const tile = d.containers.find((c) => /tile|concrete|inert|masonry/i.test(c.material));
+      h += '<h2>Accepted Materials</h2><p class="qp-terms">' +
+        (tile ? "<b>Clean " + esc(mid(tile.material).replace(/^clean\s+/i, "")) + " container:</b> clean roof tile, concrete, brick and masonry only. No underlayment, wood, metal, shingles or trash. A clean-material container that contains other material is billed at the C&amp;D rate. " : "") +
+        d.containers.filter((c) => num(c.tons) && num(c.over)).map((c) => "<b>" + esc(c.size) + "-yard " + esc(mid(c.material)) + ":</b> weight above " +
+          num(c.tons) + " tons is billed at " + usd(c.over) + " per ton, from the scale ticket. ").join("") +
+        "<b>Not accepted in any container:</b> hazardous materials, paint, liquids, tires, batteries, appliances with refrigerant, or household garbage.</p>";
+      h += '<h2>Terms</h2><p class="qp-terms">Quote valid for ' + (num(d.valid_days) || 30) + " days from the date above. " +
+        (d.delivery === "Included" ? "Container delivery is included. " : "") +
+        "Each container includes a 30-day rental period; if no haul is requested within 30 days of delivery, $15.00 per day applies until " +
+        "service is requested. If we cannot service a container because of blocked access or other site conditions, or you ask us to move it on " +
+        "the same site, a $175.00 trip charge applies. Containers must be loaded level with the top rim ‚Äî nothing above the sides ‚Äî and the " +
+        "customer is responsible for a clear, firm placement area; we are not responsible for damage to driveways or surfaces at the placement " +
+        "location requested by the customer. " + esc((d.payment || PAYMENT_LINE).replace(/^./, (c) => c.toUpperCase())) +
+        " Payment due upon receipt of invoice.</p>";
+      h += '<h2>Acceptance</h2><div class="qp-acc">' +
+        '<div class="ln"><span>Authorized signature: ______________________________</span><span>Date: ______________</span></div>' +
+        '<div class="ln"><span>Print name: ______________________________</span><span>Delivery date: ________</span></div></div>';
+    }
+    h += '<div class="qp-f">Murphy Waste Systems  ‚Ä¢  5390 NW 12th Ave, Fort Lauderdale, FL 33309  ‚Ä¢  954-772-6440  ‚Ä¢  murphywaste.com</div>';
+    return h + "</div>";
+  }
+
+  async function printQuote() {
+    if (!qb.id && !locked()) { if (!(await saveQuote())) return; }
+    $("#qprint").innerHTML = quoteHTML(qb);
+    const t = document.title;
+    // the PDF file name comes from the page title on most browsers
+    document.title = "MWS_Quote_" + String(qb.contact || qb.company || "Customer").replace(/[^A-Za-z0-9]+/g, "_") + "_" + qb.quote_no;
+    setTimeout(() => { window.print(); document.title = t; }, 60);
+  }
+
+  /* ---------- cover email ---------- */
+  function coverEmail(q) {
+    const d = q.data, t = totals(q), pct = num(d.fee_pct) || 0;
+    const first = String(q.contact || "").split(" ")[0] || "there";
+    const site = [q.address, q.city, q.zip].filter(Boolean).join(", ");
+    const L = [];
+    const dots = (a, b) => "  " + a + " " + ".".repeat(Math.max(2, 46 - a.length)) + " " + b;
+    if (q.kind === "frontload") {
+      const multi = d.options.length > 1;
+      L.push("Hi " + first + ",", "",
+        "Thank you for the chance to quote your trash service. The details are below,",
+        "and the signed-ready quote (" + q.quote_no + ") is attached.", "",
+        "SERVICE",
+        "Front-load service at " + site + ", serviced on a set day.",
+        "Delivery, setup, repairs and container replacement are all included.", "", "PRICING");
+      d.options.forEach((o, i) => L.push(dots((multi ? "Option " + String.fromCharCode(65 + i) + ": " : "") +
+        o.size + "-yard, serviced " + o.freq, usd(o.rate) + " per month")));
+      if (num(d.extra) != null) {
+        L.push(dots("Extra dump (on call)", usd(d.extra) + " per dump"),
+               dots("Overage (overfilled / lid won't close)", "billed as an extra dump"));
+        if (num(d.extra_next)) L.push("  (Extra-dump rate goes to " + usd(d.extra_next) + " effective " + (d.extra_next_date || "a later date") + ".)");
+      }
+      if (pct) L.push(dots(d.fee_label || "City franchise fee", pct + "%"));
+      L.push("", "ESTIMATED MONTHLY INVOICE");
+      d.options.forEach((o, i) => L.push(dots((multi ? "Option " + String.fromCharCode(65 + i) : "Total") +
+        (pct ? " (incl. City fee)" : ""), usd(t.per[i].total))));
+      if (pct) L.push("", "The franchise fee is required by the City on collection service inside city",
+        "limits and is paid to the City.");
+      const yrs = d.terms && d.terms.length ? d.terms : [3, 5];
+      L.push("", "TERM",
+        "Your choice of a " + yrs.join("-year or ") + "-year agreement. During the first 24 months you",
+        "can end it for any reason with 90 days' written notice and a charge of two",
+        "months' service. After 24 months the charge drops off. It renews",
+        "automatically unless either of us gives 90 days' notice before it ends.", "",
+        "To get started, check the " + (multi ? "option and " : "") + "term you prefer on the attached quote, sign,",
+        "and send it back. I'll confirm your delivery date and service day.");
+    } else {
+      L.push("Hi " + first + ",", "",
+        "Thank you for reaching out. Here is the quote for your roll-off service at",
+        site + ", with the signed-ready quote (" + q.quote_no + ") attached.", "", "PRICING");
+      d.containers.forEach((c) => L.push(dots(c.size + "-yard, " + c.material, usd(c.rate) +
+        (num(c.tons) ? "  (" + num(c.tons) + " tons incl; " + usd(c.over) + "/ton over)" : ""))));
+      L.push(dots("Delivery", d.delivery === "Included" ? "Included" : usd(d.delivery) + " each"));
+      if (pct) L.push(dots((d.fee_label || "City fee") + " (" + pct + "%)", usd(t.fee)));
+      L.push("", dots("ESTIMATED JOB TOTAL", usd(t.total)), "",
+        "The total assumes each container stays within its included weight. Any",
+        "weight over is billed per ton from the scale ticket.", "",
+        "OTHER CHARGES, IF THEY APPLY",
+        "  Rental: each container includes 30 days, then $15.00 per day if no haul",
+        "  has been requested.",
+        "  Trip / relocation: $175.00 for blocked access or moving a container.", "",
+        "Sign the attached quote, add your preferred delivery date, and send it back,",
+        "and I'll get it scheduled.");
+    }
+    L.push("", "PAYMENT", (d.payment || PAYMENT_LINE).replace(/^./, (c) => c.toUpperCase()),
+      "Payment due on receipt of invoice.", "", "Thank you,", "", "Sean-Patrick Murphy",
+      "Murphy Waste Systems", "954-772-6440", "murphywaste.com");
+    return L.join("\n");
+  }
+  const subjectOf = (q) => (q.kind === "frontload" ? "Front-load service quote " : "Roll-off quote ") +
+    q.quote_no + " ‚Äì " + [q.address, q.city].filter(Boolean).join(", ");
+
+  async function mailQuote() {
+    if (!qb.id) { if (!(await saveQuote())) return; }
+    alert("Your email app will open with the message filled in.\n\nAttach the PDF yourself ‚Äî " +
+          "use Print / Save PDF first if you have not saved it yet.");
+    location.href = "mailto:" + encodeURIComponent(qb.email || "") + "?subject=" +
+      encodeURIComponent(subjectOf(qb)) + "&body=" + encodeURIComponent(coverEmail(qb));
+  }
+  async function copyEmail() {
+    if (!qb.id) { if (!(await saveQuote())) return; }
+    const text = "Subject: " + subjectOf(qb) + "\n\n" + coverEmail(qb);
+    try { await navigator.clipboard.writeText(text); toast("Email text copied"); }
+    catch (e) { prompt("Copy this:", text); }
+  }
+
+  /* ---------- the list ---------- */
+  function renderQuoteList() {
+    const chips = [["all", "All"], ["Draft", "Drafts"], ["Sent", "Sent"], ["Accepted", "Accepted"], ["Declined", "Declined"]];
+    const v = quotes.filter((q) => qlFilter === "all" ? q.status !== "Superseded" : q.status === qlFilter);
+    let h = '<div class="chips" style="padding:0 0 10px">' + chips.map(([k, t]) =>
+      '<button class="chip' + (qlFilter === k ? " on" : "") + '" data-qf="' + k + '">' + t + "</button>").join("") + "</div>";
+    h += canQuote() ? '<div class="qnew"><button class="btn" data-new="frontload">Ôºã Front-load quote</button>' +
+                      '<button class="btn" data-new="rolloff">Ôºã Roll-off quote</button></div>' : "";
+    h += v.length ? '<div class="mlist">' + v.map((q) =>
+      '<button class="mrow qrow s-' + esc(q.status) + '" data-q="' + esc(q.id) + '">' +
+        '<span class="j">' + esc(q.quote_no) + " <i>" + (q.kind === "frontload" ? "front-load" : "roll-off") + "</i></span>" +
+        '<span class="t">' + esc([q.contact, q.company].filter(Boolean).join(" ¬∑ ") || "‚Äî") +
+          (q.city ? ' <span class="tiny">¬∑ ' + esc(q.city) + "</span>" : "") + "</span>" +
+        '<span class="c"><span class="badge">' + esc(q.status) + "</span> <span class=\"tiny\">" + esc((q.created_at || "").slice(0, 10)) + "</span></span>" +
+        '<span class="d">' + usd(q.total) + (q.kind === "frontload" ? "/mo" : "") + "</span></button>").join("") + "</div>"
+      : '<div class="empty"><div class="big">üìÑ</div><b>No quotes here yet</b></div>';
+    $("#ql-body").innerHTML = h;
+  }
+  $("#ql-body").addEventListener("click", (e) => {
+    const f = e.target.closest("[data-qf]"); if (f) { qlFilter = f.dataset.qf; renderQuoteList(); return; }
+    const n = e.target.closest("[data-new]"); if (n) { openBuilder(blankQuote(n.dataset.new, null)); return; }
+    const r = e.target.closest("[data-q]"); if (r) openBuilder(quotes.find((q) => q.id === r.dataset.q));
+  });
+
+  function openQuotes() { renderQuoteList(); $("#scrim").classList.add("on"); $("#qlsheet").classList.add("on"); loadQuotes(); }
+  function closeQuotes() { $("#qlsheet").classList.remove("on"); $("#qbsheet").classList.remove("on"); qb = null;
+    if (!$("#sheet").classList.contains("on")) $("#scrim").classList.remove("on"); }
+
+  /* ---------- from a customer record ---------- */
+  function customerQuoteBlock(rec) {
+    if (!rec || !canQuote()) return "";
+    const mine = quotes.filter((q) => q.customer_id === rec.id && q.status !== "Superseded");
+    return '<div class="qcust"><button class="act" data-qc="frontload">üìÑ Front-load quote</button>' +
+      '<button class="act" data-qc="rolloff">üìÑ Roll-off quote</button>' +
+      mine.map((q) => '<button class="act ghost" data-qo="' + esc(q.id) + '">' + esc(q.quote_no) + " ¬∑ " + esc(q.status) + "</button>").join("") +
+      "</div>";
+  }
+  $("#qa-wrap").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-qc],[data-qo]"); if (!b || !editing) return;
+    e.preventDefault();
+    if (b.dataset.qc) openBuilder(blankQuote(b.dataset.qc, editing));
+    else openBuilder(quotes.find((q) => q.id === b.dataset.qo));
+  });
+
+  $("#ql-x").addEventListener("click", closeQuotes);
+  $("#ql-close2").addEventListener("click", closeQuotes);
+  $("#qb-x").addEventListener("click", closeBuilder);
 
   boot();
 })();
