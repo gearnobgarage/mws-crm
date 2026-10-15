@@ -1,0 +1,3060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<title>MWS CRM</title>
+<meta name="theme-color" content="#0B7A52">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MWS CRM">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚛</text></svg>">
+<style>
+:root{
+  --almond:#EFDECD; --almond-2:#F7EFE6; --green:#0B7A52; --green-d:#095F40; --green-l:#0f9465;
+  --brown:#5A4632; --ink:#2A2018; --muted:#7B6A58; --line:#E3D5C4;
+  --bg:#FBF7F2; --card:#FFFFFF; --shadow:0 1px 3px rgba(90,70,50,.10),0 8px 24px rgba(90,70,50,.06);
+  --danger:#B3261E; --warn:#B26B00; --ok:#0B7A52;
+  --r:14px; --safe-b:env(safe-area-inset-bottom,0px); --safe-t:env(safe-area-inset-top,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --almond:#2A2119; --almond-2:#241C15; --green:#2BAE7E; --green-d:#1E8C63; --green-l:#43c795;
+    --brown:#D9C7B2; --ink:#F2E9DE; --muted:#A2917E; --line:#3A2E24;
+    --bg:#171210; --card:#211A15; --shadow:0 1px 3px rgba(0,0,0,.5),0 8px 24px rgba(0,0,0,.35);
+    --danger:#F2B8B5; --warn:#E8A33D;
+  }
+}
+:root[data-theme="dark"]{
+  --almond:#2A2119; --almond-2:#241C15; --green:#2BAE7E; --green-d:#1E8C63; --green-l:#43c795;
+  --brown:#D9C7B2; --ink:#F2E9DE; --muted:#A2917E; --line:#3A2E24;
+  --bg:#171210; --card:#211A15; --shadow:0 1px 3px rgba(0,0,0,.5),0 8px 24px rgba(0,0,0,.35);
+  --danger:#F2B8B5; --warn:#E8A33D;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg); color:var(--ink); line-height:1.45; font-size:16px;
+  -webkit-font-smoothing:antialiased; overscroll-behavior-y:none;
+}
+button,input,select,textarea{font:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer}
+a{color:var(--green)}
+
+/* ---------- app shell ---------- */
+#app{display:none;padding-bottom:calc(96px + var(--safe-b))}
+header.top{
+  position:sticky;top:0;z-index:40;background:var(--almond);border-bottom:1px solid var(--line);
+  padding:calc(10px + var(--safe-t)) 16px 10px;display:flex;align-items:center;gap:10px;
+}
+.brand{display:flex;align-items:center;gap:9px;min-width:0}
+.brand .wm{font-weight:800;font-size:19px;letter-spacing:-.3px;color:var(--green);font-style:italic}
+.tagpill{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  background:var(--green);color:#fff;padding:3px 7px;border-radius:6px}
+.top .sp{margin-left:auto;display:flex;gap:6px}
+.iconbtn{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  background:var(--card);border:1px solid var(--line);font-size:17px}
+.iconbtn:active{background:var(--almond-2)}
+
+/* ---------- KPI tiles ---------- */
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:12px 16px 4px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:12px 13px;box-shadow:var(--shadow)}
+.kpi b{display:block;font-size:22px;font-weight:800;letter-spacing:-.5px;line-height:1.1}
+.kpi span{display:block;font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-top:3px}
+.kpi.m b{color:var(--green)}
+
+/* ---------- search + chips ---------- */
+.tools{padding:10px 16px 4px;position:sticky;top:calc(58px + var(--safe-t));background:var(--bg);z-index:30}
+.search{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.chips{display:flex;gap:7px;overflow-x:auto;padding:10px 16px 8px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;padding:7px 13px;border-radius:999px;border:1px solid var(--line);
+  background:var(--card);font-size:13.5px;font-weight:600;white-space:nowrap}
+.chip.on{background:var(--green);border-color:var(--green);color:#fff}
+.chip.alert{border-color:var(--danger);color:var(--danger)}
+.chip.alert.on{background:var(--danger);border-color:var(--danger);color:#fff}
+
+/* ---------- alert bars ---------- */
+.alertbar{margin:6px 16px;padding:11px 13px;border-radius:12px;font-size:13.5px;font-weight:600;display:none}
+.alertbar.due{background:#FDECEA;color:#8C1D18;border:1px solid #F5C6C2}
+.alertbar.ren{background:#FFF4E0;color:#7A4A00;border:1px solid #F0DBB0}
+:root[data-theme="dark"] .alertbar.due,html:not([data-theme="light"]) .alertbar.due{background:#3A1D1A;color:#F2B8B5;border-color:#5A2C27}
+:root[data-theme="dark"] .alertbar.ren,html:not([data-theme="light"]) .alertbar.ren{background:#3A2D14;color:#E8C07D;border-color:#5A4720}
+
+/* ---------- customer cards ---------- */
+.list{padding:6px 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;
+  margin-bottom:10px;box-shadow:var(--shadow)}
+.card h3{font-size:16.5px;font-weight:700;letter-spacing:-.2px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.card .who{font-size:14px;color:var(--muted);margin-top:2px}
+.badge{font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;
+  padding:3px 7px;border-radius:6px;background:var(--almond);color:var(--brown)}
+.badge.s-New{background:#E7F0FF;color:#1B4B8F}
+.badge.s-Quoted{background:#FFF1D6;color:#7A4A00}
+.badge.s-Won{background:#DFF3E7;color:#0B5F42}
+.badge.s-Active{background:var(--green);color:#fff}
+.badge.s-Lost{background:#F1E7E6;color:#7A2A24}
+.badge.s-On.Hold,.badge.s-Hold{background:#EEE;color:#555}
+.badge.due{background:#FDECEA;color:#8C1D18}
+.badge.ren{background:#FFF4E0;color:#7A4A00}
+.badge.ph{background:var(--almond-2);color:var(--brown)}
+.card .meta{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:9px;font-size:13.5px;color:var(--muted)}
+.card .thumbs{display:flex;gap:6px;margin-top:11px;overflow-x:auto;scrollbar-width:none}
+.card .thumbs::-webkit-scrollbar{display:none}
+.card .thumbs img{width:62px;height:62px;object-fit:cover;border-radius:9px;border:1px solid var(--line);flex:0 0 auto}
+.acts{display:flex;gap:7px;margin-top:12px;flex-wrap:wrap}
+.act{flex:1;min-width:64px;text-align:center;padding:9px 6px;border-radius:10px;border:1px solid var(--line);
+  background:var(--almond-2);font-size:12.5px;font-weight:700;text-decoration:none;color:var(--brown)}
+.act:active{background:var(--almond)}
+
+/* ---------- FAB ---------- */
+.fab{position:fixed;right:18px;bottom:calc(20px + var(--safe-b));width:60px;height:60px;border-radius:50%;
+  background:var(--green);color:#fff;font-size:30px;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 20px rgba(11,122,82,.42);z-index:45}
+.fab:active{background:var(--green-d)}
+
+/* ---------- bottom sheet ---------- */
+.scrim{position:fixed;inset:0;background:rgba(30,22,16,.55);z-index:50;display:none}
+.scrim.on{display:block}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:51;background:var(--bg);
+  border-radius:20px 20px 0 0;max-height:94vh;overflow-y:auto;transform:translateY(100%);
+  transition:transform .26s ease;padding-bottom:calc(24px + var(--safe-b))}
+.sheet.on{transform:translateY(0)}
+.sheet-h{position:sticky;top:0;background:var(--bg);padding:14px 16px 10px;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:10px;z-index:2}
+.sheet-h h2{font-size:17px;font-weight:800}
+.sheet-b{padding:14px 16px}
+label.f{display:block;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--muted);margin:14px 0 5px}
+input.f,select.f,textarea.f{width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:11px;background:var(--card)}
+textarea.f{min-height:82px;resize:vertical}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{display:block;width:100%;padding:15px;border-radius:12px;background:var(--green);color:#fff;
+  font-weight:800;font-size:16px;text-align:center;margin-top:18px}
+.btn:active{background:var(--green-d)}
+.btn.sec{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.btn.danger{background:none;color:var(--danger);border:1px solid var(--line);margin-top:10px}
+
+/* ---------- photos ---------- */
+.photobar{display:flex;gap:8px;margin-top:8px}
+.photobar .pb{flex:1;padding:13px 8px;border-radius:11px;border:1px dashed var(--green);
+  background:var(--almond-2);color:var(--green);font-weight:700;font-size:13.5px;text-align:center}
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.pcell{position:relative;aspect-ratio:1;border-radius:11px;overflow:hidden;border:1px solid var(--line);background:var(--almond-2)}
+.pcell img{width:100%;height:100%;object-fit:cover;display:block}
+.pcell .x{position:absolute;top:4px;right:4px;width:24px;height:24px;border-radius:50%;
+  background:rgba(0,0,0,.62);color:#fff;font-size:15px;line-height:24px;text-align:center}
+.pcell .up{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.45);color:#fff;font-size:12px;font-weight:700}
+
+/* ---------- lightbox ---------- */
+.lb{position:fixed;inset:0;background:rgba(0,0,0,.93);z-index:60;display:none;
+  align-items:center;justify-content:center;flex-direction:column}
+.lb.on{display:flex}
+.lb img{max-width:96vw;max-height:80vh;object-fit:contain}
+.lb .close{position:absolute;top:calc(14px + var(--safe-t));right:18px;color:#fff;font-size:30px}
+.lb .cap{color:#ddd;font-size:13px;margin-top:12px;padding:0 20px;text-align:center}
+
+/* ---------- login ---------- */
+#login{display:flex;min-height:100dvh;align-items:center;justify-content:center;padding:24px}
+.loginbox{width:100%;max-width:380px;background:var(--card);border:1px solid var(--line);
+  border-radius:18px;padding:26px 22px;box-shadow:var(--shadow)}
+.loginbox .lg{text-align:center;margin-bottom:6px}
+.loginbox .lg .wm{font-size:27px;font-weight:800;font-style:italic;color:var(--green);letter-spacing:-.6px}
+.loginbox p.sub{text-align:center;color:var(--muted);font-size:13.5px;margin-bottom:18px}
+.msg{padding:11px 13px;border-radius:11px;font-size:13.5px;margin-top:12px;display:none}
+.msg.err{background:#FDECEA;color:#8C1D18;display:block}
+.msg.ok{background:#DFF3E7;color:#0B5F42;display:block}
+.switch{text-align:center;margin-top:14px;font-size:13.5px;color:var(--muted)}
+
+/* ---------- misc ---------- */
+.empty{text-align:center;padding:50px 24px;color:var(--muted)}
+.empty .big{font-size:40px;margin-bottom:10px}
+.syncdot{width:8px;height:8px;border-radius:50%;background:var(--muted);display:inline-block;margin-right:5px}
+.syncdot.ok{background:var(--ok)} .syncdot.busy{background:var(--warn)} .syncdot.err{background:var(--danger)}
+.tiny{font-size:12px;color:var(--muted)}
+.menu{position:absolute;right:14px;top:calc(56px + var(--safe-t));background:var(--card);border:1px solid var(--line);
+  border-radius:13px;box-shadow:var(--shadow);z-index:55;display:none;overflow:hidden;min-width:212px}
+.menu.on{display:block}
+.menu button{display:block;width:100%;text-align:left;padding:13px 16px;font-size:14.5px;border-bottom:1px solid var(--line)}
+.menu button:last-child{border-bottom:0}
+.menu button:active{background:var(--almond-2)}
+
+/* ================= FRONTLINE INTEL — driver capture ================= */
+
+/* the capture sheet is deliberately short and thumb-sized: a driver
+   is at a light, not at a desk. Everything is one tap or one word. */
+.qsheet{position:fixed;left:0;right:0;bottom:0;z-index:53;background:var(--bg);
+  border-radius:20px 20px 0 0;box-shadow:0 -10px 40px rgba(0,0,0,.28);
+  transform:translateY(102%);transition:transform .26s ease;max-height:94vh;overflow-y:auto;
+  padding-bottom:calc(24px + var(--safe-b))}
+.qsheet.on{transform:translateY(0)}
+.qsheet .grab{width:40px;height:4px;border-radius:2px;background:var(--line);margin:10px auto 4px}
+.qhead{padding:6px 18px 2px}
+.qhead h2{font-size:21px;letter-spacing:-.3px;margin:0}
+.qhead p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+.qbody{padding:14px 18px 0}
+
+/* the camera is the primary action, so it gets the largest target on screen */
+.snap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  width:100%;min-height:132px;border-radius:16px;border:2px dashed var(--green);
+  background:var(--almond-2);color:var(--green);font-weight:700;font-size:17px;cursor:pointer;
+  -webkit-tap-highlight-color:transparent}
+.snap:active{background:var(--almond)}
+.snap .ico{font-size:38px;line-height:1}
+.snap small{font-weight:500;color:var(--muted);font-size:12.5px}
+.snap.has{min-height:auto;padding:14px;border-style:solid}
+
+.qthumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:8px;margin-top:10px}
+.qthumbs figure{position:relative;margin:0;aspect-ratio:1;border-radius:10px;overflow:hidden;
+  border:1px solid var(--line);background:var(--almond-2)}
+.qthumbs img{width:100%;height:100%;object-fit:cover;display:block}
+.qthumbs button{position:absolute;top:3px;right:3px;width:22px;height:22px;border-radius:50%;
+  border:0;background:rgba(0,0,0,.62);color:#fff;font-size:13px;line-height:1;cursor:pointer}
+
+/* GPS strip — states: waiting, got it, denied */
+.geo{display:flex;align-items:center;gap:9px;margin-top:12px;padding:11px 13px;border-radius:11px;
+  border:1px solid var(--line);background:var(--card);font-size:13.5px;color:var(--muted)}
+.geo b{color:var(--ink);font-size:13.5px}
+.geo.ok{border-color:var(--green);background:color-mix(in srgb,var(--green) 8%,var(--card))}
+.geo.ok b{color:var(--green)}
+.geo.no{border-color:var(--warn)}
+.geo a{margin-left:auto;font-size:12.5px;font-weight:700;text-decoration:none;white-space:nowrap}
+
+.qmore{display:block;width:100%;text-align:center;margin-top:12px;padding:11px;background:none;
+  border:0;color:var(--green);font-size:14px;font-weight:600;cursor:pointer;text-decoration:underline}
+
+/* ---- unworked queue badge on the top bar ---- */
+.newbadge{position:absolute;top:4px;right:2px;min-width:17px;height:17px;padding:0 4px;
+  border-radius:9px;background:var(--danger);color:#fff;font-size:10.5px;font-weight:800;
+  line-height:17px;text-align:center;pointer-events:none}
+.iconbtn{position:relative}
+.chip.newq{border-color:var(--warn);color:var(--warn);font-weight:700}
+.chip.newq.on{background:var(--warn);border-color:var(--warn);color:#fff}
+
+/* a lead that nobody has touched yet gets a left rail so it reads at a glance */
+.card.unworked{border-left:4px solid var(--warn)}
+.spot{margin:7px 0 0;padding:9px 11px;border-radius:9px;background:var(--almond-2);
+  border:1px solid var(--line);font-size:13.5px;color:var(--ink)}
+.spot em{display:block;font-style:normal;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:3px}
+
+/* ---- leaderboard ---- */
+.lbrow{display:grid;grid-template-columns:26px 1fr auto auto auto;gap:10px;align-items:center;
+  padding:13px 14px;border-bottom:1px solid var(--line);font-size:14px}
+.lbrow:last-child{border-bottom:0}
+.lbrow .rk{font-weight:800;color:var(--muted);font-size:13px;text-align:center}
+.lbrow.top1 .rk{color:var(--green)}
+.lbrow .nm{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lbrow .nm small{display:block;font-weight:500;color:var(--muted);font-size:11.5px;text-transform:capitalize}
+.lbrow .n{text-align:right;font-variant-numeric:tabular-nums;min-width:44px}
+.lbrow .n b{display:block;font-size:15px}
+.lbrow .n span{display:block;font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.lbrow .n.win b{color:var(--green)}
+.lbwrap{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:var(--shadow);overflow:hidden;margin:0 0 14px}
+
+/* ---- driver mode: hide the pipeline furniture a driver never uses ---- */
+/* render() writes display:block onto the alert bars inline, so the mode rule
+   has to out-rank an inline style. A driver has no follow-up queue to alert on. */
+body.driver .kpis,
+body.driver .chips,
+body.driver .tools,
+body.driver .newbadge,
+body.driver .alertbar{display:none !important}
+body.driver .fab{width:auto;height:auto;border-radius:16px;left:18px;right:18px;
+  padding:18px 20px;font-size:17px;font-weight:800;letter-spacing:.02em;
+  box-shadow:0 10px 30px rgba(11,122,82,.35)}
+body.driver #list{padding-top:6px}
+.modenote{margin:12px 16px 0;padding:12px 14px;border-radius:11px;background:var(--almond-2);
+  border:1px solid var(--line);font-size:13.5px;color:var(--muted);display:none}
+body.driver .modenote{display:block}
+.modenote b{color:var(--ink)}
+
+/* ================= OUTBOX ================= */
+.obpill{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(92px + var(--safe-b));z-index:45;
+  padding:9px 16px;border-radius:999px;border:0;background:var(--brown);color:var(--bg);
+  font-size:13px;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,.25);cursor:pointer;
+  max-width:calc(100% - 36px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.obpill.off{background:var(--warn);color:#fff}
+body.driver .obpill{bottom:calc(104px + var(--safe-b))}
+.card.queued{opacity:.72;border-style:dashed}
+
+/* ================= MISSION CONTROL ================= */
+.dsec{margin:22px 0 0}
+.dsec h3{font-size:15px;margin:0 0 2px;letter-spacing:-.2px}
+.dsec .tiny{margin:0 0 10px}
+.dstats{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:2px 0 4px}
+.dstat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 12px}
+.dstat b{display:block;font-size:21px;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
+.dstat span{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+.dstat em{display:block;font-style:normal;font-size:11px;color:var(--muted);margin-top:3px}
+.dstat.good b{color:var(--green)}
+.dstat.hot{border-color:var(--danger)} .dstat.hot b{color:var(--danger)}
+.dstat.warm{border-color:var(--warn)} .dstat.warm b{color:var(--warn)}
+
+.dbar{display:grid;grid-template-columns:96px 1fr auto;gap:9px;align-items:center;margin:0 0 7px;font-size:13px}
+.dbar .l{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dbar .t{height:9px;border-radius:5px;background:var(--almond-2);overflow:hidden}
+.dbar .t i{display:block;height:100%;background:var(--brown);border-radius:5px}
+.dbar.good .t i{background:var(--green)}
+.dbar.bad  .t i{background:var(--muted)}
+.dbar .v{font-variant-numeric:tabular-nums;font-weight:700;font-size:12.5px;white-space:nowrap}
+
+.dlist{margin-top:10px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+.drow{display:grid;grid-template-columns:1fr auto;gap:4px 10px;width:100%;text-align:left;
+  padding:11px 13px;border:0;border-bottom:1px solid var(--line);background:none;cursor:pointer;
+  color:var(--ink);font:inherit}
+.drow:last-child{border-bottom:0}
+.drow:active{background:var(--almond-2)}
+.drow .n{font-weight:700;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.drow .s{grid-column:1;font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.drow .d{grid-column:2;grid-row:1/3;align-self:center;font-size:12.5px;font-weight:800;
+  white-space:nowrap;color:var(--muted);text-align:right}
+.drow.hot  .d{color:var(--danger)}
+.drow.warm .d{color:var(--warn)}
+
+/* ================= MAP ================= */
+.mapsheet{display:flex;flex-direction:column;height:92vh}
+#map-c{flex:1;min-height:260px;margin:0 18px;border-radius:12px;overflow:hidden;
+  border:1px solid var(--line);background:var(--almond-2)}
+.leaflet-container{font:inherit}
+.leaflet-popup-content{font-size:13px;line-height:1.45}
+
+/* pin-from-here button on the full form */
+.pinbtn{display:block;width:100%;padding:12px;border-radius:11px;border:1px dashed var(--green);
+  background:var(--card);color:var(--green);font:inherit;font-weight:600;font-size:14px;cursor:pointer;
+  margin-bottom:4px}
+.pinbtn.ok{border-style:solid;background:color-mix(in srgb,var(--green) 9%,var(--card))}
+.pinbtn:disabled{opacity:.6}
+
+/* ================= DESK VIEW ================= */
+/* The grid is CSS-grid rows rather than a <table> so the header and every
+   row share one column template and stay aligned while the body scrolls. */
+.gwrap{margin:0 0 20px}
+.gscroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--card);
+  box-shadow:var(--shadow)}
+.ghead{display:grid;position:sticky;top:0;z-index:2;background:var(--almond-2);
+  border-bottom:1px solid var(--line)}
+.gh{border:0;background:none;font:inherit;font-size:11px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--muted);padding:11px 10px;text-align:left;cursor:pointer;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gh:hover{color:var(--ink)}
+.gh.on{color:var(--green)}
+.grow{display:grid;border-bottom:1px solid var(--line);cursor:pointer;align-items:center}
+.grow:last-child{border-bottom:0}
+.grow:hover{background:var(--almond-2)}
+.grow.unworked{box-shadow:inset 3px 0 0 var(--warn)}
+.grow.queued{opacity:.7}
+.gc{padding:10px;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gc.strong{font-weight:700}
+.gc.num{text-align:right;font-variant-numeric:tabular-nums}
+.gc.dim{color:var(--muted)}
+.gc.hot{color:var(--danger);font-weight:700}
+.gc.warm{color:var(--warn);font-weight:700}
+.gc a{text-decoration:none}
+.gsel{width:100%;border:1px solid var(--line);border-radius:7px;background:var(--bg);color:var(--ink);
+  font:inherit;font-size:12px;font-weight:700;padding:5px 6px;cursor:pointer}
+.gsel:focus-visible{outline:2px solid var(--green);outline-offset:1px}
+.gfoot{margin:9px 2px 0;font-size:12px;color:var(--muted)}
+
+@media(max-width:999px){ .gwrap{display:none} }
+
+@media(min-width:1000px){
+  #app{padding-bottom:40px}
+  .top{padding:12px 28px}
+  .kpis{grid-template-columns:repeat(4,1fr);padding:16px 28px 4px;max-width:1600px}
+  .alertbar{margin:8px 28px 0;max-width:1546px}
+  .tools{padding:14px 28px 0;max-width:1600px}
+  .search{max-width:460px}
+  .chips{padding:12px 28px 6px;flex-wrap:wrap;overflow:visible}
+  .list{padding:6px 28px}
+  .modenote{margin:12px 28px 0}
+  /* the phone card list is replaced wholesale, never rendered alongside */
+  .list .card{display:none}
+  .fab{width:auto;height:auto;border-radius:12px;padding:14px 22px;font-size:15px;font-weight:800;right:28px}
+
+  /* bottom sheets become centred dialogs — a sheet sliding off a 27" screen reads as broken */
+  .scrim{background:rgba(30,22,16,.45)}
+  .sheet,.qsheet{left:50%;right:auto;bottom:auto;top:50%;width:min(760px,92vw);
+    border-radius:16px;max-height:86vh;transform:translate(-50%,-48%);opacity:0;pointer-events:none;
+    transition:transform .18s ease,opacity .18s ease;box-shadow:0 24px 70px rgba(0,0,0,.34)}
+  .sheet.on,.qsheet.on{transform:translate(-50%,-50%);opacity:1;pointer-events:auto}
+  .mapsheet{height:86vh;width:min(1100px,94vw)}
+  .sheet-h{padding:16px 24px 12px}
+  .sheet-b{padding:18px 24px 24px}
+  .qhead{padding:16px 24px 2px}
+  .qbody{padding:14px 24px 0}
+  .dstats{grid-template-columns:repeat(4,1fr)}
+  .row2{gap:14px}
+  .btn{max-width:280px}
+  .obpill{bottom:28px;left:auto;right:28px;transform:none}
+}
+
+/* ================= INBOX ================= */
+.newbadge.inbox{background:var(--green)}
+.ibcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:14px 15px;margin:0 0 12px;box-shadow:var(--shadow)}
+.ibcard h3{font-size:15.5px;letter-spacing:-.2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ibcard .who{color:var(--muted);font-size:13.5px;margin-top:3px}
+.ibcard .meta{margin-top:5px;font-size:13px;color:var(--muted)}
+.ibcard .tiny{margin-top:9px}
+.ibacts{display:flex;gap:9px;margin-top:12px}
+.ibacts .btn{margin:0;flex:1;padding:12px;font-size:14px}
+@media(max-width:430px){.ibacts{flex-direction:column}}
+
+/* ================= MUNICIPAL ================= */
+#mdsheet{z-index:54}
+.warnline{color:var(--warn) !important;font-weight:600}
+.mlist{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;
+  background:var(--card);box-shadow:var(--shadow);margin-bottom:14px}
+.mrow{display:grid;grid-template-columns:1fr auto;gap:3px 12px;width:100%;text-align:left;
+  padding:12px 14px;border:0;border-bottom:1px solid var(--line);background:none;
+  color:var(--ink);font:inherit;cursor:pointer}
+.mrow:last-child{border-bottom:0}
+.mrow:active,.mrow:hover{background:var(--almond-2)}
+.mrow .j{font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.mrow .j i{font-style:normal;color:var(--green)}
+.mrow .t{grid-column:1;font-size:14px;font-weight:600;line-height:1.35}
+.mrow .c{grid-column:1;margin-top:4px;display:flex;gap:5px;flex-wrap:wrap}
+/* explicit column: a definite grid-row makes auto-placement claim column 1 */
+.mrow .d{grid-column:2;grid-row:1/4;align-self:center;text-align:right;font-size:12.5px;
+  font-weight:800;white-space:nowrap;color:var(--muted)}
+.mrow.hot{box-shadow:inset 3px 0 0 var(--danger)}  .mrow.hot .d{color:var(--danger)}
+.mrow.warm{box-shadow:inset 3px 0 0 var(--warn)}   .mrow.warm .d{color:var(--warn)}
+.mrow.dim{opacity:.55}
+.mdates{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:8px;margin:12px 0}
+.mdates div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 10px}
+.mdates b{display:block;font-size:14px}
+.mdates span{display:block;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--muted);margin-top:2px}
+
+/* ================= WORDMARK =================
+   The real logo, carried as a CSS mask rather than an <img>: the shape is one
+   small asset and the colour comes from a token, so it recolours itself for
+   the dark theme instead of shipping a second white copy of the same artwork. */
+:root{--wm-ink:var(--green)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--wm-ink:#F2E9DE}}
+:root[data-theme="dark"]{--wm-ink:#F2E9DE}
+:root[data-theme="light"]{--wm-ink:var(--green)}
+.wmark{display:block;height:26px;aspect-ratio:3.5208/1;flex:0 0 auto;
+  background-color:var(--wm-ink);
+  --wm-src:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAVIAAABgCAQAAADlGTJ2AAAqyUlEQVR42u2dd7wU1fn/32dm9t7LpYuAqBQLWBAL9pqoQYnGrlhiVDSJPWqMLXZjATVq1Bhb1FiCvXdijxoVBFsAFRERLk2QctvuzDm/P+bs3N17Z86Z2YXX159h94+Yy86c9pynfp7ngeo+HoLfo/BRhq9EsQngpHyrC4y0vrXtG6D4knoEglWfVZ92H0EnZmkyMRPpsNREKnDowTfWt7Z9C0iuB3KrDuTH+HGqetpFsS1rEaR4T2sG7iw5nv74GTiv4GEgWHWgqz4dyQluQpFPIY730GI8jajfhEYKyNTCXjKVzjirhP0qTtrx45Nj7xTEJ4GDUo0mENRzO/UZSE4ieIlGHNSqA/2x8sLKhX3A9gwgSMUh8ynnU+BItk/5TgCFwzKu1ldh1adSZqR+uFfcq3LpR+Km1ASdVL/xWYtLM2ijIHGZwGycVURqkWX/g5zUIaAfo1Nqmuk4qUPAVQxIZYiVCvtHEbiriDTxk6OPhYsK8iz4MSoKguNT+jJ9FA/jWq6ECxyAopDSYCo6twL6wyqjySDBhpA3fpvJ817VFsoPkJMK7fuUKTipA/ycLixBJGo+AkVv/o7MtFUSh6dpSK10/O99XCT7kjPuq4vDc/BjU5kE0JtvkakcRRLFIroZ+V0O+FNGPho6t3ZLrXL8b3JSl3dR+MjEb0ATQ3+4nLQaYT86NUlJFIvpbiBSF9ia1gze0aKHdCbdV3lIMYU5RliUsgKSR6s2on+AflKJ4pBMmqAymE4CqOPv1GQkN4ngZaMSseqjOACM+yMQPP7ju+YOgnVZnFLYKySSZayXeClc4PIMgJI2g6zAnohVwt5wTgNZbjynAMVUan9soj4UDGMy6Y8FFKcmiBQHGKzFjspo2S+g0yrL3nhOv7EKe8U1P2yt3qlQ2NeyNyrj04VEceMxFpUZaCdR3E4r3iphnyjqPQ62xJIE8LhFIfj/1PM2HJkaSFe8ryfGclIPODSzVV/8bvjjs0lXqAemLy1a5iQpTJJXET/sPXQqtBgPZMUA4wSKnlxEkFlkKxSzWbTKaDKe09HU4Bv2ViJ4GPXj1Oo/zQBJLnLSk2M4qQfcUBEfLaD4ww/ZcfKD+Ew3nlOAZDZ9fnwZDQ6wFS2ZSDQkqdEdSMpFsBuBFY8aZzT5NLHxD11Q/Z/yUfgZLVaj6Y4f40WvzF3ko7i3g3rhAW9U4HoKn/jgB2zXi7Jv0t/N3+rP6SnL3gY0s/0KceFVvpoUO+FVoEN2Yt/M5CGAbdrZkC4+N7BLBuxoecz+MQQeBRwrN5WJMWnXug4/tUdSpHhKZcZVKEBljqkLJH3ZyeiBCXD5iHdxtHURBlJUBfH7auwCteIBJgLJRhmS6ko/TR3yozbntEywvFLXCjyJwjeSoH01QdUcJIQItp9Bz5KkwFaW6P+qoUfqN+f5vp2S5WgrPR0f9dmF1YwMQAGP45KjgCpZQ3jdBCL1eMoCBQSHeTFvEihy9EQZWUXOqwBTcwAKv4LMTKcDgVyIqkhkSxze5StcIGA4vzNgfCQOb3JXDMLHQXI6mxvxQa2cSj6WU4TkKTXPHEY9+7EmCgeF4BfUoxBIBDP4CYtw8NmMN1OhvBSC5TwHwOPM43umRUTkpbqUEocLLIfv4PMUQXRRN6Q7UODDdvLOzFs9Ao7jJsN1kDhMYTsKHfimQPCSMQ9DAhOyax6dmZLRsi8G3z4uicy7wIEUKtBGixrpvoCHB1xp/f2RsTLDoY6Zlic/j8UTtGlx/TiGV/hP4n5IFG/j4OLhcJPRZ5n8beFd3uUchmsCdy2E7gBDLcatj2I8sDFHMY73eDcyXz/gXf7DwxzNJtSVKALJuu9447oCFFfEJJx7wK4pduQsMmOfDqrQ8e5TYAe9KAePNZhZAbEXkQBz6YPAwaGOTyjQQiH220qBj6mNUd09BEehEp8s0KSdXLmYY4GunMTTLC45Cr/k2SIIrkCeg/WBrEazdvuk+4ZvCkr2yGcSl7OO1cPtAedYzslH8Qqv0lpGTkEZybTQwBgGGxRDF8H2+EYgoESxWcyMXeCvSPIGCKHkK7pntxgfrJhIFbvqd+SAO1KkQic7Tp4EXFxgc2PsK4/k4tiyER7wFDKRl0sUc1m7A3k7QC2n8UU0m/CIknhIA0JfiaORFcbVJD5B9OwSbmAdQ7RdIOjBF6nhP+EK2tbg62/bXG+mX8K1cIBnjD6EAMn71HXgxgKHOqYbT6+A4q7swn41GjIGREuJ9KcRaW3M8sSjtasOjWyNKBGhvoHnKjaNOdCQvFsNK/FRvNjuydAruwvjo8OU1soqYxB4CODjipxt5espkmoDWyWSqQtWDGkb95cWmVXQRYwOjBlPIOjNvHb8t+M+HhHzrAccY5xlCMbeKJvN4gEXVrzRRSL1cOnLvAq1syLKP6dvcQ+WG97kI5kYc4vDtVxqlAk+inPKfIgOHnCLJr8g5WzX0Xx0Mxorvpbt3xnO+oIEIeyS4xmDjKhMdoW4VK/DLl5s3EWJZD79Ysxjh1o+Nyp8PooJWQ1rD3ikYpFVFPe1wGUVA0pC7nQ3Hh4egoNLxGD85h6aYDTBR4YtkkjmlcEAQ7H/V81B061Y8g61OgHxvirWHC9E4zU9BxiErJgJJKsE0+lb5pMWuNQxwXgd8iiuizkBF8HWZfp2/LN/RGTxIwnIBHSOI9LQcNqW5Zmxo+WcdFPQ2/WQ4eglAQtYM8ZoCgVi3qgNSR4sEVIOLj14JBPqtRAZXoLVmFXxziWL6jms1SEwnANORVao75tXU05uLiEO2AypDtglJqaVAy43zlKi+J51swW+cwjOqdjYCYn0VwjgxSp0swDFp1ERntWYZ9giH8ULsQq/h2CckbMVdHqMFyFe4fZMq5dIGuiin929Qk9GNrIpuoveqlr7jb/yS+lfcuU94FajZPWRvBary8JqfGMk7wKSh7KGmwTwXhWLL6B4DjjWKKDTvGWsNr8EB1vsSp+dYm5xaP0uNJBNgOQTOkXk7QA3o8rcNWnUknF6pi6vrVAdsY1sGlmnjNe4wM4rgUSLvG276NKHPou5Vq3ydwnC/hDLLH0UB2fLGHCADatS/Qso/sHqzK/QO1A8lsX0iXibyR0WoJhOLsFDur9xiwooxkSb62ldNJ95vQchqAH60byChX2b1nZWmYPNA25codpv+bW7IRottM59w0gBkll0iz0BeMjIg0NfeO9sQBsPOLuqxRdQ3M0tVb2j6BYK4RwDWGQwD8LCunFqt2sxYySSRZE2VKw6Xchs2IS82AOuXQl8tLjG+3AibiMQDFxJFyLcgVs0kQocujDNyEfDE+/IC8P0wMVG066A5I9ZM69c4N2q9apWi80ZWDmH5DgEOXIIzjNyN4lixwTrdzCNBt9eQQcMXS2YhrGUfMZjL6C4UmvydXxRhfSwaegNkfAtVi9QK2WscE03ayItqhWB5fe/0DKvvdH0R+vZNdIrGx91gV2NLtuiMK52y6VFJ2rWPjcHeM8wYsjJOid4SM+0eEgLjNS6rAs8mpKPBtHXx2cx62s3/s4EK4WPhpGo5ewYcRwPl0dWEtcO9+BvmshyCG40CuwAxeSYgLTAoYYJRmrxkTzfVjvMSamROhyGY8FWVoeSlzhczxIDwjBA8ToLcHGQDGZTA1pSIrg5trCuwuMAAz5I4TKbl1FIXCRbsB+B0cZU+AR6l8Kvi8v7fIkDKA60lPcN2n1DP2xaHGdnBmhOKvDpwl4pzqE9UaT/NOtxfXLsYxwpQPFITC6vi2Q3trSgwQSPt8EovVRbUaCWva2/XswMhmcsOFYKwH2Ez+mOnziKQPAwvuYaf6QusY6pwmE5L8bgPB0C1mcbg7bjk+NZIKehZefjGVGnKhJok8pWc6NGZHZmXyMzSEqCk6lZSL5kbcdTZwGRq5ir7aeiAxe4HwhwCNiB/saRcsCTMemaCjjYCHaWuMxgXBtT9FLxUcku9DVOSeLwAV9USKQSaGAUbxi0EInDVzyAg0LRg12NfNRhAjNjMaRwGDnDWjwC/onUeNGtOMC4IoXA51EeZCaTY//9aNY1EEGAy98Yp6sCChQD2AfJrqyh357OOVg83KOslfEEgkIZQtZL7YsMdHsOhcvFxkqGAQ5v8WWH34TXdoQxY0Di8CKNeFnA7K52ZBcs+sppDK1QaS+g+AkDabaYM3+NACo/NbqQ8ihOjbHsBYJa5hlm6aN4owSrdYVFwfdpZf+EbJ2QfKYZkVaSBrrF7Hkv9uPDFLtZ0N5EDxfBcFqN+qjEZzr70Z/+rKW/a7Mht6YIovoo3ien938ri+YbOuDis4NPttZUybNbjMFluXld+TqFWTSQDSoynnwU/wDutpgzxam7eDxt2KTQ5u0bGw4V/MwItfZ1/qSroyIzLVERxTFAbSwMOQwazDe8oYDiMaBGu/zDb5Gz9WS21ZlUQDEq4oaXpcCQ3hJ7yndYjcNiKmVozlyeAlbSOwYc4gKvWEIwim+zpjUVgV+BxSs4EY/tKsLsS2bTi1resRJejRbYa1OweEj/HqvKuNotb4r2L2OwjtWjE2XMIVrXoDjYMEIBLRp02JHAa4GrLCGEAMkCemqjrcYCBgwjVINxcUuMPEEOl5+St/gECviMBDwcavjEGgx5MgHmvIMFVlJAclXWcKgH3GbBPhVQXAgMY7nVUdURdpZnY2B9Wi086yIEHjkEJxhz9X0UI2OdyDCIpYYZ+ije0vffoZbxFkeJz+GJJphAsDoLDbwwQPFFYsKvg2BbWq1YzYlR/O3AFHVI70qIpA+kyVp7bw51mh4OsqZKS7aMuXwecJ3VQ6oYkC3RM4S1zjFySIlPI5sgIDO0wUfpyMIfrbHcQVG2zSsWoPPUxGCcuVpKHsXpCHJRpT9bYeBOiaaeC+xnjWz/JlH3EkCOpUZtMY/kcgQ5POCBFKxkn1jnuuBcC8/OR9LJBf5p9ZBOpTZhX76w7InkJWqyRZpyCE60LMBH8Yk+lrczEWmAYiIegloajOaM5C1yWvMbxBKLgXV2Ymm05w3bK5Es0TgfD5erLQgfxfU67JnkgrnPQjZNrJHoa3SAPSxCOECxv15ZrVH7LQLAc7G6M7xvUdR8FD+PRlpg1dT/nAAr2c+yoqIU9LKmIf8rhSU3WkMp/pOBSCV5WhiGQLCrcfI+ijMipf04i+bVykYJ+tBwnfSVvI4rNAAFPEv2gETFjtO2b+uxxDia5FkjkQvOMCKvAhTz6KZ54wkWdFkBxcUxx+8AGxvDxMV6Ma7e/1ONI0kkS9kw5vK51nwoieRbVssWDg2NlCXGBUgUS+ihecfvMkAx8ijOBeo0EM5kzixnsE7l7cEUg6boI5kUW9Mkh2CMUSYE5NkEgYuDYLBRew2QTKIuUXPyENbga+gZcA17/zcL5lVyN5DDYXVmWFQyycIYiHRbmNjGhi6IhL0ZsFlMlXZidOzBFvXFR/HPrLASDzje6iGVPBI5Tg5JTaQBiieow8OhM19ZwMtvR2HXdaw67oEx/CK8mVMsKsVEvAj5dLcVFH2RQSwJ4B1Lesoi1kzM4HFwWJ8mK3/bSzOHoRZPp4/iiVijyaE7DRaZIZlHL41E2MWY0RDuzG8TNN9Lrd6KPEOz1qZycRhvEfZ+lEdUFMWFlNCIhfTVW7yzNU/m99o8EJxu0SoXJHpIdzW6uoseCk+XwDB5hiWS7wwtfxwEG9JoSU8ZYyDyHPB3i/tKMp3u2sw7P4VKdkQM6aRxMPooHgUcctawTughXTOGkwoEky2FKBUfaTaRSdgPoMma9Dpfk4ULbMGyVJ7SvHZC53DJcb8F3fmddkoIXGNJiaJ/Lt5D+qTl0FsZFum9J1v8gJKnDGLJA86wrCkfK3zbSPQIS30Xn2LtbEEt8y3CXjGDnjGXN6cdjHkLgR+q43f9aDAaTXlkhDltzyQ2M6aQh7t6cbbEu3D5p6TQVh7TxxVuwLcpQ2zXascw9Ma3uObvjfShHYzc0KeVnyYkjPQ12qQFJI9p8nLJ8aqRMwUotjY4jwRdLd4KxZvkYok8PKS+NFlK1wR8HYGq97QQdB7J1TGkE9ocC6we0s/piiCH4FirwFb8LMFDer5FyralWGbykHrWUjgFAg7TxyWAWmZbiTRAMU3XWPIQ7IhvcbDvE8Xsr7UkjExJ5GwHWtX9I6MyDmuQN6wiQDEjFqvadrl/YvWQnlbG8YXO6w8P9whmWxJ12noQOOR4x8JKJIptYws0CE5IYXOM0TIP/mKRRooGusVUKxH04htjaCRA8kbWVj0usJ1FSQ4t+54RnhFqWGAl0jxBtGUO8LKR8CSz6IXAQdDJaNnnUYyNFRcOLpMsQddpdNLXBi6xekh/a9AnHeAVi7u7wPq6llWune9yLa4pib0kz3cCXXTwdjtr/EcxNcqw7ehgtBP41nq1Ay0RxQKKUxJgJSNTyOTDKgmHXpPilt1XIvY8HItVHJLSFfr9IddabPFdtjk/trdUDgr4VaIn0BZ0vTZ60jG6c0KX/7pGJ/xafG/xVtzf7nkXwVaM0iXQpIU1FGhmeKQ/X209pSC2rqCDYGOWWoS9ZEKkVpyYIsMzLsverkBJJLNZPWu9Eodaplq3S7F5iRjJAZdYfJGKV+mqUUYecKwVgrG5rvsEfzYaI4pWusf4SO015toKV7gIdrQGFt4yaE4eWLquhrk/UINgSy7iPJ7ma76KSKWQwui8WDt1HDox1eIgV3wTy5884PoUEMxjIt/No5YIWjEu5caUFQmsAd5rYwvLWdqrbG/BqwQo/lumm+X0vc4bc3L6R0fsInjBsMWhUyK0SV3geavNfSjQqQTjE6ZydDdetxBD6kajXGfRXn0ONPjyHOp535h9pfiYOs1JX++ANLIZnQUUE6jD06bM4SlgJbfFeiIEnSzVmEKX3pr6pHpbAgbhPHYCasv2vx6H0ywehADFjlk9pGmEvR8VaijvtZx8Y/Iojo3ui0CwNssM4iaP5BINJoOdrZdGMoNBMasZYYFIBxyv1+xQZzw4iWIONQYPKWxj5RkXADVAXxbTSit+h8qgJlG/iK30SC726lw+ij1i6woKa2ZpHsnNkRdmDauu7CM5M3Zf3reCHr+O1ZoN6SMCST37WdwBgjxPlCUiKGBuu+SE8maPd/MPXJ274hKwJ10MqRw54HEUAR4B2+GQp8aY5jKIN3iIcTrNoTjKyYaMGkWOVp4DAjx8DmGwYUYBHs/h6wyo+HLtB+oZm3N/AM6kR8r8ouJcAzz2YgIuAS4BQ9nH2CoswOU9XomaN5TnOl2okzVM8vQJ7XmQ7IK0tCVzkVzLvrzE0ygUAsWG7MKabG18UgFX0YSXso1GxBG3tAKdFdNiCswOMTzzLfUlBoODx5fGYjeKSdRFqcVpKnNUkhcgGa8dXB4OT1rs8oDdjRjSrsaSCT6St6nFxSVXUcu2sWU1RM5PoVOenRAm7m1Eu4Yz+4YuCO0xGZuqikslZSkkzayXnHuafIvPRxlvWYDgSVQZT1HAQq5M6PPRjwdLbouLZHMGGMZQwJO04Omcw31TOHodJDJW/zJJhMcI8BD4dIsNBpTypfd5JTEFzSVgb4ZQSDQAFILraaWWVg5iaKb2QAVyXM05eHrHFTXsb23eIHkmJjfTIWBXelmTK19keXRiTak7upRyTaWTGs2Zwg8w3ZjYF3ugq1luWagBbpO5BbUoux6XWSz7gM1LCPPzlVCbI0Ayk85RWPdsS71TaWwV6ehSEr4xiNxHx9sfzlDrNTQ7ri4Z2wE2shhaPopnYhNcHGp5yyorC2ypR7L7bVQVxZP8qBhHpnDo4RYxEpYDq4uF0OYSvm47Yl3dmGjmo3i6jHd+upLKJ95RElj42EpinRL5cliufZ7F6/uMHq3eWMkqToReE2Fdi+CfK61+y9bYsuUOsEmK0PU/o/23Z85WU6uvgbqsHlJXmyu+RZM7poqulK41U6aA5MgofpQDK9Cr0hJoe0bBAlthXcXDFljJBVbk0jYIahGckroEZgFFk05OEyWXvJOFzAMUn0U1qtsbbxdaYSU++0eBmpwFMlNd0bU7NcIqU8x+EIuswr7cjZ/14+EYi/9JFMtKkmI9YFRVlU2TVvEBuQhFcL8VZHyIIR/cpY4PLMHXz6nVgu3DlDkMBRTfs207hhC2c/dTxPbiqw/U8bEVN7WYrtH+O0B/Y45uNWfws6yUlLMm4hZt1E4V134KAQeLLdinJ0u0KQF0s+C6K6nvKTlbx24EPY24A4miKcIpxMuG9Y3FuYuVmWuB7WhOobqEvtOX2CqmnnNY5dC32MybxBibHoJ9U0jKm8uSWzw8Xq24Y0KWHi+pwqEuH1rCoQUUx1Uh7IsYfnPw8ZdlI3g4XLsSBP4GUf39IbplVmWJdx6Cm4yyIWAZQxHkqLXEzorROUWBuyK3fXnUfX1LWk8BxfOJ2Np7U8DmhpYReDFLI7/Chf0BlSTebWLFPknmsWYVVfRcbC0ZJEvajRCWDPzvCtSLQg9pTeSHvceiT/psafCQFlP3Akvujwf0skSyi6T+LsNiqxUWwR4Fi818WAK2thvfWmFzk9tJSoGghhkrtNR5GHbtkb0NjrAo/8no6ywXoZsFghwmxbodntuS71YYmRY7lIajdGGukY9KPqPGmHh3tFFHLKA4HkEdgpEGkHJR717CueTKjKXS69rZEkcPMa9xWZfFrAEbbO7SWBVjJ5atQDItII2mqMGPOTFFBd9TqxL2goMtiM3W2JYMYSRsfoZmX+ZbPFOnz3rA3sYZFVBcYlizC7xpcV8tYC1jdQIZdYj6nj+zbmL92HRVliXXJMJKZhv5aJgk2D2hktNOLNd4hxXjADw0KyW5wC60WEGwM2MrhGQZ5WEL9ukb3NgRXKA3D0Y8x6+4PnweyWVRwgg8YSGx2fRIXLODYDiNFljJ3zSspH+ZNllsdVsceyKXMtBY4DgHXG/pgRTmUMVVHxCMsFocsp2HunzsHZgVVcRua3FbmSSbkt389hBWldpHcWsVzieBYE3mGy17xVmJrp7Q7X4GM9rFYwrkM31bdL0iR+dO+YbfNhJE1eKT9u1Ga2LFCG3ZX4dPk56xLCPktzmyxFWfrCytzkzytCbOt5kCr8bmUOWAM8nTaFhtE4qjExPiXKAH52lCbZt7+beQko9elb1Tk6C7UfkvKuQjsgax2m2THRaxtoGTCO2Q2oO7eYdmGisUNh9rHbMGuMv662S0Y1j1dLoFKjOXbji4rMZ3Zf/WzHIe4B5OZ6MSP4bZMzI6xepGJDSsXZOZ1mfDPCWTTQE9+QP3sIBmmiq0EQKdmOKmcQa13RGfnehjAR24zOJNVBYwQAc4wX4GWISPy5vMNcC2FOCylJd5GViDgC0ZlrHCtELwAHkE4AP3MiXxDQrBbN5GJKzZQbINgwz7JnG4hqXkKOBxrV6ZxOFTJgLzS9QGaYGrSeAdzrau98OYYuwKWMp1BrhjOKuPWGqsxCxwWMy1QE9qUPRgv3aV/F0uoLMR/BLg8gYfxYAIrQR7j8UTVkByYxVGkwNsYGw4U0BxUooRRFt3iv/jj4OtFWVAno0MLjsXzyDgf5gfYSxjXm/M8ipS0uh0lOS1K++/p5H9Klx8ro25o+kPVLE/XiIoWOGwjBesIwgN3xNRUZq4W2uuHx+UdN5wE95Q2mEkuQNIX7YyVIH3cXmcKVFdfK+EQ0tkTPODNAEXWz395A4mnvHJcFb2GYU7IiKG0fb3Gpq4ztiiI6SkphTn3I5IPQKOpY/l1Q5LWJKAvE8n7MNmho5BnZjIDETJ5J2Y5jyq7H8DApwITVpKPkk82I8hYxGDg1cRyrHtaMsJ1sXnVHoZ903waOQZUBR0hWWhjUcHB1k21/C3Ibbd1f8doEq8C0GZeO6IuS8qD0Es5lWV7ITQ75Oxmn/6c23z4TaxDb+MRfWWC/vXmZcNQ5qmmnno0j6rKmEv2IYmg2GWR3FyxG2SIXF921Vkj//lxjH/UgSs1FJLbap6GUL/MongOzHZAiv5rMzR4mQ6k3TA7ex4XmKyKlbMZwe+t4IqZZSfS3pOKpCsxrrWrCbBK8YePDYi9TmRTob+Sx7zeSK6mQLFODozmWtYFnFGjwK38jj3RUq3S8AWXMhMxvM8rs5WuoIz6E1jGUd1CejKMZxEZxQ13MFFePjszu7IiGspzfHu5hsO4QJ6IXhCSxCJ5HLy+q0OAYPYzJDBIxE8QXPU8MVBsjZ7sh4wi/tZzhDWYQIL9RsF0J2e1DOX7+jBMfRGUGAsTfSie8RPlV7PHPqUNDNTgM8sXal6CM+UyQqXgNE8w0LdY6qWI1gfhcs4Pi7bJ4ETm9JoU+W24+ccTI3FrJM4fM1n1nY+MXd2rxTtG6ZmLXHaIWo821Jw7K52nPpbFIq+ZaC9fQj7lXjRhnbi/chR5ERZq0tKwGZtgLMpZWP+ScdgOs6mhToEj3T4+0Jd66SoBNxp6TesInx7seL8suhf7wUmoWhgDV093yHHVBST6copJe6iV6nlig5vn8kwWtoZKLdof+xrUXWr0v70E3U7HejGv0sk2NElfM2zJnZXl+fUViQos/fyrhQ110+vEvu0hyXi3LHg2BR8FkcghLBdwnRUSX8RD7gQhc9JkRu8P3NopVCGpHKAgXyOQnE71/EMeRSN1FDDv5jLHBrIk6eVBmbTwD1AN74lYAkLmEsDc5jNoyUldsLCQgstiXdv6mTCkAgOQaKYT4OOMq3NKagInesAN6GYTmdORqGYSwNLaUZxAyfyHXNpQeGzkLl8x1gOR6FYxEIWspAFfMnAKLH6mZLVhzUPwyqlNTj05D0UTTTQQCuKRVGeRYixaq3Q91mwkmhAwFcxXUdT6IoD+c4KdG5iSBXai4fgDkM4z0cxocP7Z6BoYkP9dy9yvD+rIyphUUFFwKtRkzCPh1E0t6tM5JLjJRSN/Fr/5UKeZauIr3TmMJRWMLrqvKe9CFBcSmd60Jl6OsegkWywkmOi4GvYDFdxG93owl608A86sRctSC4C6nC4BYXi5wxCoTiferqyHsuYzS+poSeduRXJ13Shnm7UcjOS5+lBVz2/HOBQwxQkD5aUDnJYg4UEvKhP4g0UM9mcrnTmfKYwOipyk0Nw0UrKZyruyQnZmZ0HnJIiHDqhChINs7e/tQj7+8uU6WJpHcU5mvhCpaQVRYF+Ub+lT/BpYm0cjff8UzTjk0uOKez/FDAZqOuAaBLAnSgWMbRk9DtR5NmsZN3lFZxcS5cAHz8yEIo1WP4VqSAb4lBMA3mUGuAPKI2kfYKAt6KRtqR3NKv/orgtIqiZGkrtlUnFo1AELKSf9qR4OkUw/C38AkWBbaJElJp2Vv2kldaQPCxamVyT0EBAYeJDYLHs98nWTK/DRfhlhPOJn34zG5QRaQ44HYXiTB2+rGNepDGuoX9xJUrXuXO1br0cxac0ong3EipFIpVMY/UIbFGsHCVw6cpEFNNKjqozs1B8a6hWMqSDRtjeYf1cVL1V0IXP9F+Isg5ccryI4nsEO7NI13utp0GHTdyo6p6jeXEByR4IanEYSUFX9Sx12NUzTVd7WS+6yIfqy/1TAI5DItkgKunY5mJzEWxCy0oi0Yr5aIh9SqMm96+Ck7oIXrdgnya0c4zkgPNQKM4CasjxPIo5PISiiT4AbE8zipd0nzdBPQ0oFrMpL0StuNqafy3Cx+dbDqRP2XUQQD/yKG7XF9EFdidAMp49GMkIfsYIdmm3ovOs5WO21zp2mDIzG5+AMfSJwMw54HIkM3VZiSfJ4VLH90ia+T1dIvIMR7wexTd01bO8HcU3HMAeen5DcRBsHhkwA/VKurFAC/C9ARiNpMAnbN/B1eUCD6yUlLuidPs39ZF/NhOPuzFFRaEXIgOgMst+HZZbwGzntcPe5IDTkLrkLNrEOIXDUTQyEEFnPkDxHetp3uTwBopGhhNmvH6j+zKVwn3D7zyOLKsHKDiGAgEjSuB7Z3U4rJnt0tnmWWAlM+kaCTaXsJ+Ij2Iux+jkvxCDpWhhBop/6QoAgpP0W2ZwStlV+gjJ7brnSG9mttPxbwPgQRSTWayTY1xqeB/FJPK6/oqgD0s0GT/BdiWsJwQZzaqoR2y66gHNlSRwCt39w14vbZ+qskPt1S079kUSwNos18VxB9NKgY818SjO041YQ80z1FhPQ2lUeS13orR4K03nO4KPovGOiMZzgGdRfEXnSD3oxAcdZnhpBNhzEexhVF8KZToxuvnO7RFRPahNVsFaLNVo/E2jwmlwfKTa3BY17lmPBboAWQ7YrIO7Z1tgM1poZjOmo7gEBzgXxWfciGRaVGFgR97QzzSya5mL7PSVxkeTejenEvY2nLdEMjd7Lko7E8NUU9hH8Rq1MTGW3ixH8RUhnl2xqe6QpDiZ9cijGI+jwQ67oQgYr58Oj/CGMn9qKGCP0kUgFumWFALoy0Ik92oxGja1kCg+YWd2YWd2Zid2Zq2yJN/XLcK+mcHtQsAC2Jh/6Oe2jTTGR5EsKYnBhBy2L9cT0KoZRC3wWxRf01UT6VlIFvATdtIz3JmuwDgUdwILUYwhLMSuWIfbUXwc7QTUcyoztAB2Spxkr1s6mVTORUu922RtzHijtVCAZFxVQGfoT7MlF3P/2EBgqCm+w+9RBFr0DWApij/yMoolrK8FZFe+IEByB3/iCi7jXgIUT5VUlSZqEt6NjwiiHCcPOEarEuGvPeBwJIrfJaovA1hkaR95TxkXFyX637ko3cEkFxU5u1GTnigLih5FKz53Ah49+VwXY3Rx8HhHd1sp/WyKz3LWpZalKK5kIDMIuICwM9UX7eYxiFkELGBAFAQZsVJI1CdAcXfUHbaCz4wUsaZNqgA6ewhONHZWDmhkiw7AkzAb/msUC1mkHdEe0JPlKL5BalifSw7BTbGE0uYrXIMNNQnUAbeiWMbwiJc9i2QJAyNzRnADikbWwyUX9aIXJerL0ZZSEj77RHtWbg56bIQibEVZR9iQZzEDSqpUrxXJn77M196NYr3k0brR+AY0IzkKlzo9u1pgHJKJgMfjKL5jForXgE48j+IGAPrp+dQA45G8oufpaSdYfiWI+Tx/qYZEf5GizeonWftCdHDWvGoR9pNjlYmirzJAsZjVtONmdZbrJ1/TJBqWNQ9YyiIWMp/5zGeBjqSsiaAX/2YBY3CpwaOGbryP5EN9EQT9WYriZT3XMDz5CYo38KjBw4s6gxTFZT2fGduRKRbTRa8p7NvxCbvj4VELHEvAMtbV0Z9bkHwZcdGn+Iy7cPCo0yh8yToIBCcRMIf+upT52UiWsRYeOT1Dh2E0oxiFoK0I8jT64NCXFhS/Yis+YQFb4FCDS1e+KsnMtfXxq7QcmeJ9RlRDovBcigTXP1WJfVrX0lk54LhYTl0EYjejODgS1r0poCjQzEDtvt+WhUg+oi896EZXutKNrroO3wDQtvIN0UUYiyJs5O3qHEiF4oQS99PWtOg25/F6/NbWLpljNY8OTaP5JWZUP77QemMYIfsKyU1RPaQv9b85wDCmo3hUqyTjtf2ei8jpn+1mNg7FeGrI6XquTbSwDwAb0YjiBO5DodhE//4qFMs0MsIFRq2whOWgJBL3FJ2roB+gv7HcTTFGMLxKy/7XlpYM3yc0QfQIM0tDH6obFaqdikTxGyBHjno+QtHKzu2eDqtEnwgMpUCBAufThc04h+W6Zp9bopW38BP9Fw/BWBQBYxnFYYziEEZp5w3a/TPGkq+p2Djiyw7d+C8FpnIQtezMZBRfMkDLgJHkUdHY8CV5ZrEZfTiKWShm0x0H2I0AxWm6H/YwliN5m0M4jFEczCg2YCQtNLJe1FRYovg9UA+ch2Q5a/JrAlp5gPXZVl/Vk6OQs2Nsta5StuP0S3JfCzyvT8Wlis9oFHn8xG/o9qmpIhzqUMdUCrQmjNCCH/GKOJ51MooWhpW5Sf6C4mldLxmNDro26gwqdNOD41AorgQ8XtRibLY+hC8YFP3WZbquWy10+DauyvvMEmUAPsNPXFErflQbpTjjK/VbZunRB+pa16HbbLr2pxYrGioaWYBC8Q6DSlx4AQO1eXVYh/mdyUORseYRViF8hFo8agiTHxV1DNBPFdMXby1xevUpwWdV+53NvzmbdUqM1So+k1IMeGmVRR53t45wQMJdc4FhuqR26ZE/xhIG6+P6FXlt5da0K9IbOv8vAXLU8UI02hzGRk1aXWAkPoqrdSjBQTCERSVyJKCVgMtKYvAjrSsaVeYhdejFJG2SzGNMVCbC0a61G6L/LxjCO1qyNfMgXaNaVa+h+DuOJsHr9aULCCgQ8CUHMIs8QyJX23C+p0d0FUazmCdZHTiLufqivlSSU1rsqFpdQbgmXmY857If9SWpLlUjte/FN6aDSBxuYlJWoH8Z0HYUeyamEygEc7i4XQJF6dM/5wz2KCl77iA5mU95Q89pCwSS2Swsg2MLFKuzNjCXuThIatmIvViX25jLrCh1RKDoxxoo5tGA0O0IujGkLElEIfhCA6jD8bc2QLcFy7mERSX7KlD0YB0CBItKRgcYQj3TaNGzD5/ZQuc+fVryy8F0ZhrNGvJcG6VAhyN+xywG0pPJ0Xjr04+3onNzGcAM/bZ+9EXi6N+W5rzuxRO4FWewQROfl6XqBVW8K/r8P9LRrhtsSGMrAAAAAElFTkSuQmCC");
+  -webkit-mask:var(--wm-src) no-repeat center/contain;
+          mask:var(--wm-src) no-repeat center/contain}
+.brand{display:flex;align-items:center;gap:9px;min-width:0}
+.loginbox .wmark{height:52px;margin:0 auto 6px}
+@media(min-width:1000px){.top .wmark{height:30px}}
+
+/* ================= QUOTES ================= */
+#qlsheet{z-index:53}
+#qbsheet{z-index:56}
+body.driver .qonly{display:none !important}
+.qtype{display:flex;gap:7px;flex-wrap:wrap}
+.qtype .chip[disabled]{opacity:.55;cursor:default}
+.qsec{font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--green);
+  font-weight:800;margin:18px 0 2px;padding-top:12px;border-top:1px solid var(--line)}
+.qline{display:flex;gap:8px;align-items:center;margin-top:9px}
+.qline .f{margin:0;min-width:0}
+.qline select.f{flex:0 0 auto;width:auto}
+.qline input.f{flex:1}
+.qkey{flex:0 0 26px;height:26px;border-radius:7px;background:var(--green);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:13px}
+.qdel{flex:0 0 auto;width:34px;height:34px;font-size:14px}
+.qcont{padding-bottom:6px}
+.qgrid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-left:34px}
+@media(max-width:480px){.qgrid4{grid-template-columns:1fr 1fr}}
+.qchecks{display:flex;gap:14px;flex-wrap:wrap;padding:9px 0}
+.qchecks.col{flex-direction:column;gap:7px}
+.qchecks label{font-size:14px;display:flex;align-items:center;gap:7px}
+.qchecks input{width:18px;height:18px;accent-color:var(--green)}
+#qb-body .act{display:inline-block;flex:0 0 auto;margin-top:10px;padding:8px 12px}
+.qtotal{margin:16px 0 4px;background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:10px 13px;box-shadow:var(--shadow)}
+.qtotal div{display:flex;justify-content:space-between;gap:10px;padding:4px 0;font-size:14px}
+.qtotal b{color:var(--green);text-align:right;font-variant-numeric:tabular-nums}
+.qacts .btn{margin-top:10px}
+.qnew{display:flex;gap:9px;margin-bottom:12px}
+.qnew .btn{margin:0;flex:1;padding:12px;font-size:14px}
+.qcust{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
+.qcust .act{flex:0 0 auto;padding:8px 11px}
+.qcust .act.ghost{background:transparent;color:var(--muted);font-weight:600}
+.qrow.s-Accepted{box-shadow:inset 3px 0 0 var(--green)}
+.qrow.s-Sent{box-shadow:inset 3px 0 0 var(--warn)}
+.qrow.s-Declined{opacity:.6}
+@media(max-width:430px){.qnew{flex-direction:column}}
+
+/* ---------- the printed quote (letter, one page) ---------- */
+#qprint{display:none}
+@media print{
+  @page{size:letter;margin:.4in .55in .45in}
+  html,body{background:#fff !important;height:auto}
+  body > *:not(#qprint){display:none !important}
+  #qprint{display:block !important}
+}
+.qp{color:#222;font:9pt/1.3 -apple-system,Helvetica,Arial,sans-serif;
+  -webkit-print-color-adjust:exact;print-color-adjust:exact}
+.qp-h{display:flex;justify-content:space-between;align-items:flex-start;
+  border-bottom:2px solid #0B7A52;padding-bottom:6px}
+.qp-h i{display:block;color:#5A4632;font-size:9.5pt;margin-top:3px}
+.qp .qp-logo{height:42px;background-color:#0B7A52 !important}
+.qp-co{text-align:right;color:#666;font-size:8.5pt;line-height:1.35}
+.qp h1{color:#0B7A52;font-size:13.5pt;margin:8px 0 4px}
+.qp h2{color:#0B7A52;font-size:10pt;margin:8px 0 3px}
+.qp p{margin:0}
+.qp-meta{display:grid;grid-template-columns:58% 42%;gap:2px 0;font-size:9pt}
+.qp-t{width:100%;border-collapse:collapse;margin:3px 0 0;font-size:8.6pt}
+.qp-t th{background:#0B7A52;color:#fff;text-align:left;padding:3px 6px;font-weight:700}
+.qp-t td{border:.5pt solid #B0B0B0;padding:2.5px 6px}
+.qp-t tr:nth-child(odd) td{background:#EFDECD}
+.qp-t tr.b td,.qp-t td.bb{font-weight:700}
+.qp-t.alt{margin-top:6px}
+.qp-t.alt th{background:#EFDECD;color:#5A4632}
+.qp-t.alt tr td{background:#fff}
+.qp-t.est{margin-top:6px}
+.qp-t.est td:not(:first-child),.qp-t.est th:not(:first-child){text-align:right}
+.qp-t.est tr td{background:#fff}
+.qp-t.est tr.tot td{background:#EFDECD;font-weight:700}
+.qp-note{color:#666;font-size:7.8pt;margin-top:2px !important}
+.qp-terms{font-size:8.2pt;line-height:1.28}
+.qp-acc{font-size:9pt}
+.qp-acc > div{margin-top:5px}
+.qp-acc .ln{display:flex;justify-content:space-between;margin-top:12px}
+.qp-f{border-top:1px solid #0B7A52;margin-top:12px;padding-top:3px;color:#666;font-size:7.8pt}
+
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<div id="login">
+  <div class="loginbox">
+    <div class="lg"><span class="wmark" role="img" aria-label="Murphy Waste Systems"></span></div>
+    <p class="sub">Field CRM</p>
+    <label class="f" for="lg-email">Email</label>
+    <input class="f" id="lg-email" type="email" autocomplete="username" inputmode="email" placeholder="you@murphywaste.com">
+    <label class="f" for="lg-pass">Password</label>
+    <input class="f" id="lg-pass" type="password" autocomplete="current-password" placeholder="••••••••">
+    <button class="btn" id="lg-go">Sign In</button>
+    <div class="msg" id="lg-msg"></div>
+    <p class="switch">Accounts are created by the office. Everyone on the team sees the same prospect list.</p>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
+<div id="app">
+  <header class="top">
+    <div class="brand">
+      <span class="wmark" role="img" aria-label="Murphy Waste Systems"></span><span class="tagpill">CRM</span>
+    </div>
+    <div class="sp">
+      <button class="iconbtn" id="btn-refresh" aria-label="Refresh">⟳</button>
+      <button class="iconbtn" id="btn-menu" aria-label="Menu">⋯</button>
+    </div>
+  </header>
+
+  <div class="menu" id="menu">
+    <button data-m="quotes" class="qonly">📄  Quotes</button>
+    <button data-m="muni">🏛  Municipal</button>
+    <button data-m="inbox">📥  Inbox</button>
+    <button data-m="dash">📊  Mission Control</button>
+    <button data-m="map">🗺  Map</button>
+    <button data-m="board">🏆  Leaderboard</button>
+    <button data-m="mode">🔄  Switch to driver mode</button>
+    <button data-m="export">⬇︎  Export to Excel (CSV)</button>
+    <button data-m="backup">💾  Backup (JSON)</button>
+    <button data-m="theme">🌗  Light / Dark</button>
+    <button data-m="who">👤  Signed in as…</button>
+    <button data-m="out">↩︎  Sign out</button>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><b id="k-total">0</b><span>Prospects</span></div>
+    <div class="kpi"><b id="k-active">0</b><span>Won &amp; Active</span></div>
+    <div class="kpi m"><b id="k-mrr">$0</b><span>Monthly Recurring</span></div>
+    <div class="kpi"><b id="k-pipe">0</b><span>In Pipeline</span></div>
+  </div>
+
+  <div class="alertbar due" id="ab-due"></div>
+  <div class="alertbar ren" id="ab-ren"></div>
+
+  <div class="tools">
+    <input class="search" id="q" type="search" placeholder="Search company, contact, city, hauler…">
+  </div>
+  <div class="chips" id="chips">
+    <button class="chip on" data-f="all">All</button>
+    <button class="chip alert" data-f="due">⏰ Due</button>
+    <button class="chip" data-f="photos">📷 Has photos</button>
+    <button class="chip newq" data-f="unworked">🆕 Unworked</button>
+    <button class="chip" data-f="New">New</button>
+    <button class="chip" data-f="Quoted">Quoted</button>
+    <button class="chip" data-f="Won">Won</button>
+    <button class="chip" data-f="Active">Active</button>
+    <button class="chip" data-f="On Hold">On Hold</button>
+    <button class="chip" data-f="Lost">Lost</button>
+  </div>
+
+  <p class="modenote"><b>Driver mode.</b> One button. Spot it, shoot it, send it — sales does the rest. Your last submissions are below.</p>
+  <div class="list" id="list"></div>
+  <p class="tiny" id="syncline" style="text-align:center;padding:6px 16px 20px"></p>
+
+  <button class="fab" id="fab" aria-label="Add prospect">+</button>
+</div>
+
+<!-- ============ ADD / EDIT SHEET ============ -->
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet">
+  <div class="sheet-h">
+    <h2 id="sh-title">New Prospect</h2>
+    <div style="margin-left:auto"><button class="iconbtn" id="sh-close">✕</button></div>
+  </div>
+  <div class="sheet-b">
+    <div id="qa-wrap"></div>
+
+    <label class="f">Company *</label>
+    <input class="f" id="f-company" placeholder="ABC Construction">
+
+    <div class="row2">
+      <div><label class="f">Contact</label><input class="f" id="f-contact" placeholder="Name"></div>
+      <div><label class="f">Title</label><input class="f" id="f-title" placeholder="Estimator"></div>
+    </div>
+    <div class="row2">
+      <div><label class="f">Main phone</label><input class="f" id="f-phone" type="tel" inputmode="tel"></div>
+      <div><label class="f">Cell / direct</label><input class="f" id="f-phone2" type="tel" inputmode="tel"></div>
+    </div>
+    <label class="f">Email</label>
+    <input class="f" id="f-email" type="email" inputmode="email">
+
+    <div class="row2">
+      <div><label class="f">Address</label><input class="f" id="f-address"></div>
+      <div><label class="f">City</label><input class="f" id="f-city"></div>
+    </div>
+    <button class="pinbtn" id="f-pin" type="button">📍 Use my location</button>
+
+    <!-- ---------- SITE PHOTOS ---------- -->
+    <label class="f">Site photos</label>
+    <p class="tiny">Enclosure, access route, existing containers. Shrunk on the phone before upload.</p>
+    <div class="photobar">
+      <label class="pb" for="cam">📷  Take photo</label>
+      <label class="pb" for="lib">🖼  From library</label>
+    </div>
+    <input id="cam" type="file" accept="image/*" capture="environment" multiple hidden>
+    <input id="lib" type="file" accept="image/*" multiple hidden>
+    <div class="pgrid" id="pgrid"></div>
+
+    <div class="row2">
+      <div><label class="f">Status</label>
+        <select class="f" id="f-status">
+          <option>New</option><option>Quoted</option><option>Won</option>
+          <option>Active</option><option>On Hold</option><option>Lost</option>
+        </select></div>
+      <div><label class="f">Service line</label>
+        <select class="f" id="f-line">
+          <option value="">—</option><option>Roll-off</option><option>Front-load</option>
+          <option>Compactor</option><option>Grapple</option><option>Portable restrooms</option>
+          <option>Aggregates</option><option>Multiple</option><option>Other</option>
+        </select></div>
+    </div>
+    <label class="f">Size &amp; frequency</label>
+    <input class="f" id="f-spec" placeholder="8yd x 3/wk, or 30yd on call">
+
+    <!-- ---------- COMPETITOR INTEL ---------- -->
+    <label class="f">Current hauler</label>
+    <input class="f" id="f-hauler" placeholder="Who has it now">
+    <div class="row2">
+      <div><label class="f">Their rate ($/mo)</label><input class="f" id="f-rate" type="number" inputmode="decimal"></div>
+      <div><label class="f">Their contract ends</label><input class="f" id="f-cexp" type="date"></div>
+    </div>
+
+    <div class="row2">
+      <div><label class="f">Our monthly $</label><input class="f" id="f-mrr" type="number" inputmode="decimal"></div>
+      <div><label class="f">Next follow-up</label><input class="f" id="f-next" type="date"></div>
+    </div>
+    <div class="row2">
+      <div><label class="f">Our contract ends</label><input class="f" id="f-cend" type="date"></div>
+      <div><label class="f">Source</label><input class="f" id="f-source" placeholder="Drive-by, referral…"></div>
+    </div>
+
+    <label class="f">Notes</label>
+    <textarea class="f" id="f-notes" placeholder="Gate code, who to ask for, what they complained about…"></textarea>
+
+    <div id="log-wrap"></div>
+
+    <button class="btn" id="sh-save">Save</button>
+    <button class="btn sec" id="sh-cancel">Cancel</button>
+    <button class="btn danger" id="sh-del" style="display:none">Delete this prospect</button>
+  </div>
+</div>
+
+<!-- ============ QUICK LEAD (FRONTLINE INTEL) ============ -->
+<div class="qsheet" id="qsheet">
+  <div class="grab"></div>
+  <div class="qhead">
+    <h2>Spotted a lead</h2>
+    <p>Photo, name, done. Sales fills in the rest.</p>
+  </div>
+  <div class="qbody">
+
+    <label class="snap" id="q-snap" for="q-cam">
+      <span class="ico">📷</span>
+      <span>Photo of the site</span>
+      <small>Containers, sign, address — whatever you can see</small>
+    </label>
+    <input id="q-cam" type="file" accept="image/*" capture="environment" multiple hidden>
+    <div class="qthumbs" id="q-thumbs"></div>
+
+    <div class="geo" id="q-geo"><b>Locating…</b></div>
+
+    <label class="f">Business name or what the sign says *</label>
+    <input class="f" id="q-company" placeholder="Publix plaza on Federal" autocapitalize="words">
+
+    <label class="f">Whose containers are they?</label>
+    <input class="f" id="q-hauler" list="haulers" placeholder="Read the side of the box">
+    <datalist id="haulers"></datalist>
+
+    <label class="f">What did you see?</label>
+    <textarea class="f" id="q-note" rows="2"
+      placeholder="Two 8-yarders, both overflowing. Gate stays open till 4."></textarea>
+
+    <button class="btn" id="q-save">Submit lead</button>
+    <button class="btn sec" id="q-cancel">Cancel</button>
+    <button class="qmore" id="q-full">I have more detail — open the full form</button>
+  </div>
+</div>
+
+<!-- ============ LEADERBOARD ============ -->
+<div class="sheet" id="lbsheet">
+  <div class="sheet-h">
+    <h2>Leaderboard</h2>
+    <div style="margin-left:auto"><button class="iconbtn" id="lb-x">✕</button></div>
+  </div>
+  <div class="sheet-b">
+    <p class="tiny" style="margin-top:0">Credit goes to whoever <b>spotted</b> the lead, not
+      whoever closed it. Last 30 days shown in the small figures.</p>
+    <div class="lbwrap" id="lb-rows"></div>
+    <button class="btn sec" id="lb-close2">Close</button>
+  </div>
+</div>
+
+<!-- ============ MISSION CONTROL ============ -->
+<div class="sheet" id="dashsheet">
+  <div class="sheet-h">
+    <h2>Mission Control</h2>
+    <div style="margin-left:auto"><button class="iconbtn" id="dash-x">✕</button></div>
+  </div>
+  <div class="sheet-b">
+    <div id="dash-body"></div>
+    <button class="btn sec" id="dash-close2">Close</button>
+  </div>
+</div>
+
+<!-- ============ MAP ============ -->
+<div class="sheet mapsheet" id="mapsheet">
+  <div class="sheet-h">
+    <h2>Map</h2>
+    <div style="margin-left:auto"><button class="iconbtn" id="map-x">✕</button></div>
+  </div>
+  <p class="tiny" id="map-note" style="padding:0 18px 8px"></p>
+  <div id="map-c"></div>
+  <div style="padding:12px 18px calc(18px + var(--safe-b))">
+    <button class="btn sec" id="map-close2">Close</button>
+  </div>
+</div>
+
+<!-- ============ INBOX (web + QR leads) ============ -->
+<div class="sheet" id="inboxsheet">
+  <div class="sheet-h">
+    <h2>Inbox</h2>
+    <div style="margin-left:auto"><button class="iconbtn" id="inbox-x">✕</button></div>
+  </div>
+  <div class="sheet-b">
+    <p class="tiny" style="margin-top:0">Leads from your website and from printed QR codes.
+      They are held here until someone accepts one — spam never reaches the pipeline.</p>
+    <div id="inbox-body"></div>
+    <button class="btn sec" id="inbox-close2">Close</button>
+  </div>
+</div>
+
+<!-- ============ MUNICIPAL ============ -->
+<div class="sheet" id="munisheet">
+  <div class="sheet-h">
+    <h2>Municipal</h2>
+    <div style="margin-left:auto"><button class="iconbtn" id="muni-x">✕</button></div>
+  </div>
+  <div class="sheet-b">
+    <div id="muni-body"></div>
+    <button class="btn sec" id="muni-close2">Close</button>
+  </div>
+</div>
+
+<div class="sheet" id="mdsheet">
+  <div class="sheet-h">
+    <h2 id="md-title">Solicitation</h2>
+    <div style="margin-left:auto"><button class="iconbtn" id="md-x">✕</button></div>
+  </div>
+  <div class="sheet-b" id="md-body"></div>
+</div>
+
+<!-- ============ QUOTES ============ -->
+<div class="sheet" id="qlsheet">
+  <div class="sheet-h">
+    <h2>Quotes</h2>
+    <div style="margin-left:auto"><button class="iconbtn" id="ql-x">✕</button></div>
+  </div>
+  <div class="sheet-b">
+    <div id="ql-body"></div>
+    <button class="btn sec" id="ql-close2">Close</button>
+  </div>
+</div>
+
+<div class="sheet" id="qbsheet">
+  <div class="sheet-h">
+    <h2 id="qb-title">New quote</h2>
+    <div style="margin-left:auto"><button class="iconbtn" id="qb-x">✕</button></div>
+  </div>
+  <div class="sheet-b" id="qb-body"></div>
+</div>
+
+<!-- the printable quote: hidden on screen, the only thing shown when printing -->
+<div id="qprint"></div>
+
+<!-- ============ LIGHTBOX ============ -->
+<div class="lb" id="lb">
+  <button class="close" id="lb-close">✕</button>
+  <img id="lb-img" alt="">
+  <div class="cap" id="lb-cap"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* =====================================================================
+   MURPHY WASTE SYSTEMS — FIELD CRM v3
+   Shared team prospect list, site photos, Excel export.
+   ===================================================================== */
+
+/* ---------- 1. CONFIG — replace these two values ---------- */
+const SUPABASE_URL  = "https://rxukrprtoiokvkxhiite.supabase.co";
+const SUPABASE_KEY  = "sb_publishable_5dj2dgoJticIZ2DTheQ5TA_H0zkMPgV";
+const BUCKET        = "site-photos";
+/* --------------------------------------------------------- */
+
+(function () {
+  "use strict";
+
+  const $  = (s) => document.querySelector(s);
+  const $$ = (s) => Array.from(document.querySelectorAll(s));
+  const CACHE = "mws.crm3.cache";
+  const THEME = "mws.crm3.theme";
+
+  let sb = null, session = null;
+  let rows = [];            // customers
+  let photosBy = {};        // customer_id -> [{id, path, kind, url}]
+  let filter = "all", query = "";
+  let editing = null;       // the record being edited, or null for new
+  let staged = [];          // photos picked but not yet uploaded (new records)
+
+  /* ---------- 2. small helpers ---------- */
+  const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g,
+    (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+  const todayStr = () => new Date().toISOString().slice(0, 10);
+  const money = (n) => "$" + (Number(n) || 0).toLocaleString(undefined, { maximumFractionDigits: 0 });
+  function daysUntil(d) {
+    if (!d) return null;
+    const a = new Date(d + "T00:00:00"), b = new Date(todayStr() + "T00:00:00");
+    return Math.round((a - b) / 86400000);
+  }
+  const isDue   = (r) => r.next_follow && daysUntil(r.next_follow) <= 0;
+  const isSoon  = (r) => r.next_follow && daysUntil(r.next_follow) > 0 && daysUntil(r.next_follow) <= 7;
+  const isRenew = (r) => r.contract_end && daysUntil(r.contract_end) !== null && daysUntil(r.contract_end) <= 90;
+  function fmtDate(d) {
+    if (!d) return "";
+    const x = new Date(d + "T00:00:00");
+    return (x.getMonth() + 1) + "/" + x.getDate();
+  }
+  function setSync(state, text) {
+    $("#syncline").innerHTML = '<span class="syncdot ' + state + '"></span>' + esc(text);
+  }
+  function toast(msg) { setSync("ok", msg); }
+
+  /* ---------- 3. theme ---------- */
+  (function initTheme() {
+    const t = localStorage.getItem(THEME);
+    if (t) document.documentElement.setAttribute("data-theme", t);
+  })();
+  function toggleTheme() {
+    const cur = document.documentElement.getAttribute("data-theme");
+    const next = cur === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    localStorage.setItem(THEME, next);
+  }
+
+  /* ---------- 4. auth ---------- */
+  function boot() {
+    if (SUPABASE_URL.indexOf("PASTE_") === 0) {
+      $("#lg-msg").className = "msg err";
+      $("#lg-msg").textContent = "Not configured yet — the Supabase URL and key still need pasting into this file.";
+      return;
+    }
+    sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    openDB().then((d) => { idb = d; outboxLoad(); });
+    sb.auth.getSession().then(({ data }) => {
+      if (data && data.session) { session = data.session; showApp(); }
+    });
+    sb.auth.onAuthStateChange((_e, s) => { session = s; if (!s) showLogin(); });
+  }
+
+  async function signIn(create) {
+    const email = $("#lg-email").value.trim();
+    const pass  = $("#lg-pass").value;
+    const box   = $("#lg-msg");
+    if (!email || !pass) { box.className = "msg err"; box.textContent = "Email and password, please."; return; }
+    box.className = "msg"; box.textContent = "";
+    const fn = create ? sb.auth.signUp({ email, password: pass })
+                      : sb.auth.signInWithPassword({ email, password: pass });
+    const { data, error } = await fn;
+    if (error) { box.className = "msg err"; box.textContent = error.message; return; }
+    if (create && !data.session) {
+      box.className = "msg ok";
+      box.textContent = "Account made. Sign in with it now.";
+      return;
+    }
+    session = data.session;
+    showApp();
+  }
+
+  function showLogin() { $("#login").style.display = "flex"; $("#app").style.display = "none"; }
+  function showApp()   { $("#login").style.display = "none"; $("#app").style.display = "block"; load(); loadTeam(); }
+
+  /* ---------- 5. load ---------- */
+  async function load() {
+    const cached = localStorage.getItem(CACHE);
+    if (cached && !rows.length) { try { rows = JSON.parse(cached); render(); } catch (e) {} }
+    setSync("busy", "Syncing…");
+    const { data, error } = await sb.from("customers").select("*").order("updated_at", { ascending: false });
+    if (error) { setSync("err", "Offline — showing last saved copy"); return; }
+    rows = data || [];
+    localStorage.setItem(CACHE, JSON.stringify(rows));
+    await loadPhotos();
+    render();
+    setSync("ok", rows.length + " prospects · synced " + new Date().toLocaleTimeString());
+    flushOutbox();
+    loadInbound();
+    loadMunicipal();
+    loadQuotes();
+  }
+
+  async function loadPhotos() {
+    photosBy = {};
+    const { data, error } = await sb.from("customer_photos").select("*").order("taken_at", { ascending: true });
+    if (error || !data) return;
+    const paths = data.map((p) => p.path);
+    let urls = {};
+    if (paths.length) {
+      const { data: signed } = await sb.storage.from(BUCKET).createSignedUrls(paths, 3600);
+      (signed || []).forEach((s) => { if (s && s.path) urls[s.path] = s.signedUrl; });
+    }
+    data.forEach((p) => {
+      p.url = urls[p.path] || "";
+      (photosBy[p.customer_id] = photosBy[p.customer_id] || []).push(p);
+    });
+  }
+
+  /* ---------- 6. render ---------- */
+  function visible() {
+    const q = query.toLowerCase();
+    return rows.concat(queuedRows()).filter((r) => {
+      if (filter === "due" && !isDue(r)) return false;
+      if (filter === "photos" && !(photosBy[r.id] || []).length) return false;
+      if (filter === "unworked" && r.worked !== false) return false;
+      if (["all","due","photos","unworked"].indexOf(filter) < 0 && r.status !== filter) return false;
+      // in driver mode a driver sees what they themselves sent in, newest first
+      if (mode === "driver" && me && r.created_by !== me.id) return false;
+      if (!q) return true;
+      return [r.company, r.contact, r.city, r.address, r.current_hauler, r.notes, r.phone, r.phone2, r.email]
+        .filter(Boolean).join(" ").toLowerCase().includes(q);
+    });
+  }
+
+  function render() {
+    const act = rows.filter((r) => r.status === "Active" || r.status === "Won");
+    $("#k-total").textContent  = rows.length;
+    $("#k-active").textContent = act.length;
+    $("#k-mrr").textContent    = money(act.reduce((s, r) => s + (Number(r.mrr) || 0), 0));
+    $("#k-pipe").textContent   = rows.filter((r) => r.status === "New" || r.status === "Quoted").length;
+
+    const due = rows.filter(isDue), ren = rows.filter(isRenew);
+    const abd = $("#ab-due"), abr = $("#ab-ren");
+    abd.style.display = due.length ? "block" : "none";
+    abd.textContent = due.length ? "⏰ " + due.length + " follow-up" + (due.length > 1 ? "s" : "") + " due" : "";
+    abr.style.display = ren.length ? "block" : "none";
+    abr.textContent = ren.length ? "🔄 " + ren.length + " contract" + (ren.length > 1 ? "s" : "") + " renewing within 90 days" : "";
+
+    const v = visible();
+    const list = $("#list");
+    if (!v.length) {
+      list.innerHTML = '<div class="empty"><div class="big">🚛</div><b>' +
+        (rows.length ? "Nothing matches" : "No prospects yet") + "</b><p class=\"tiny\" style=\"margin-top:6px\">" +
+        (mode === "driver" ? "Nothing sent in yet — tap the button below."
+         : rows.length ? "Try a different filter." : "Tap + to add the first one.") + "</p></div>";
+      paintBadge();
+      return;
+    }
+    if (isDesk()) { renderGrid(v); paintBadge(); return; }
+    list.innerHTML = v.map(cardHTML).join("");
+    $$(".card").forEach((c) => {
+      c.addEventListener("click", (e) => {
+        if (e.target.closest("a") || e.target.closest(".thumbs img")) return;
+        // a queued lead has no server id yet, so there is nothing to edit
+        if (c.dataset.id.indexOf("queued:") === 0) {
+          const obId = c.dataset.id.slice(7);
+          if (navigator.onLine) flushOutbox(true); else discardQueued(obId);
+          return;
+        }
+        openSheet(rows.find((r) => r.id === c.dataset.id));
+      });
+    });
+    $$(".thumbs img").forEach((img) => {
+      img.addEventListener("click", (e) => { e.stopPropagation(); lightbox(img.dataset.full, img.dataset.cap); });
+    });
+    paintBadge();
+  }
+
+  function cardHTML(r) {
+    const ph = photosBy[r.id] || [];
+    const badges = [];
+    badges.push('<span class="badge s-' + esc((r.status || "New").replace(/\s/g, ".")) + '">' + esc(r.status || "New") + "</span>");
+    if (isDue(r))  badges.push('<span class="badge due">' + (daysUntil(r.next_follow) === 0 ? "Due today" : "Overdue") + "</span>");
+    else if (isSoon(r)) badges.push('<span class="badge">Follow ' + fmtDate(r.next_follow) + "</span>");
+    if (isRenew(r)) badges.push('<span class="badge ren">Renews ' + fmtDate(r.contract_end) + "</span>");
+    if (ph.length)  badges.push('<span class="badge ph">📷 ' + ph.length + "</span>");
+    if (r.worked === false) badges.push('<span class="badge ren">NEW LEAD</span>');
+    if (r._queued) badges.push('<span class="badge due">↑ NOT SENT YET</span>');
+
+    const meta = [];
+    if (r.city)           meta.push("📍 " + esc(r.city));
+    if (r.line)           meta.push("🚛 " + esc(r.line));
+    if (Number(r.mrr))    meta.push("💵 " + money(r.mrr) + "/mo");
+    if (r.current_hauler) meta.push("⚠︎ has " + esc(r.current_hauler));
+    if (r.lead_source === "driver" && r.created_by) {
+      const who = nameOf(r.created_by);
+      if (who) meta.push("👁 spotted by " + esc(who));
+    }
+
+    const thumbs = ph.length
+      ? '<div class="thumbs">' + ph.slice(0, 8).map((p) =>
+          '<img src="' + esc(p.url) + '" data-full="' + esc(p.url) + '" data-cap="' +
+          esc(r.company + (p.kind ? " · " + p.kind : "")) + '" alt="" loading="lazy">').join("") + "</div>"
+      : "";
+
+    const acts = [];
+    if (r.phone)  acts.push('<a class="act" href="tel:' + esc(r.phone) + '">Call</a>');
+    if (r.phone2) acts.push('<a class="act" href="tel:' + esc(r.phone2) + '">Cell</a>');
+    if (r.email)  acts.push('<a class="act" href="mailto:' + esc(r.email) + '">Email</a>');
+    if (r.address || r.city)
+      acts.push('<a class="act" target="_blank" rel="noopener" href="https://maps.apple.com/?q=' +
+        encodeURIComponent([r.address, r.city, "FL"].filter(Boolean).join(", ")) + '">Map</a>');
+    // a field lead often has no address at all, only the pin the phone dropped
+    else if (r.lat != null)
+      acts.push('<a class="act" target="_blank" rel="noopener" href="https://maps.google.com/?q=' +
+        r.lat + ',' + r.lng + '">📍 Pin</a>');
+
+    const spot = r.spotted_note
+      ? '<div class="spot"><em>Spotted</em>' + esc(r.spotted_note) + '</div>' : "";
+
+    return '<div class="card' + (r.worked === false ? ' unworked' : '')
+      + (r._queued ? ' queued' : '') + '" data-id="' + esc(r.id) + '">' +
+      "<h3>" + esc(r.company) + " " + badges.join(" ") + "</h3>" +
+      (r.contact ? '<div class="who">' + esc(r.contact) + (r.title ? " · " + esc(r.title) : "") + "</div>" : "") +
+      (meta.length ? '<div class="meta">' + meta.map((m) => "<span>" + m + "</span>").join("") + "</div>" : "") +
+      spot +
+      thumbs +
+      (acts.length ? '<div class="acts">' + acts.join("") + "</div>" : "") +
+      "</div>";
+  }
+
+  function lightbox(url, cap) {
+    $("#lb-img").src = url; $("#lb-cap").textContent = cap || ""; $("#lb").classList.add("on");
+  }
+
+  /* ---------- 7. photo capture ---------- */
+  // Phone photos are 3-8MB. Shrink to ~1600px / q0.78 before upload:
+  // faster on a jobsite connection and far cheaper to store.
+  function shrink(file, max, quality) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      const fr = new FileReader();
+      fr.onload = () => { img.src = fr.result; };
+      fr.onerror = reject;
+      img.onload = () => {
+        let { width: w, height: h } = img;
+        if (w > max || h > max) {
+          if (w > h) { h = Math.round(h * max / w); w = max; }
+          else       { w = Math.round(w * max / h); h = max; }
+        }
+        const cv = document.createElement("canvas");
+        cv.width = w; cv.height = h;
+        cv.getContext("2d").drawImage(img, 0, 0, w, h);
+        cv.toBlob((b) => b ? resolve(b) : reject(new Error("compress failed")), "image/jpeg", quality);
+      };
+      img.onerror = reject;
+      fr.readAsDataURL(file);
+    });
+  }
+
+  async function pickPhotos(files) {
+    for (const file of Array.from(files)) {
+      if (!file.type.startsWith("image/")) continue;
+      let blob;
+      try { blob = await shrink(file, 1600, 0.78); }
+      catch (e) { blob = file; }
+      const item = { blob, url: URL.createObjectURL(blob), state: "staged", id: "tmp" + Math.random().toString(36).slice(2) };
+      staged.push(item);
+      renderPhotoGrid();
+      if (editing && editing.id) uploadOne(item, editing.id);
+    }
+  }
+
+  async function uploadOne(item, customerId) {
+    item.state = "up"; renderPhotoGrid();
+    const name = customerId + "/" + Date.now() + "-" + Math.random().toString(36).slice(2) + ".jpg";
+    const { error } = await sb.storage.from(BUCKET).upload(name, item.blob, {
+      contentType: "image/jpeg", upsert: false
+    });
+    if (error) { item.state = "err"; renderPhotoGrid(); return; }
+    const { data: row, error: e2 } = await sb.from("customer_photos")
+      .insert({ customer_id: customerId, path: name, kind: "site" }).select().single();
+    if (e2) { item.state = "err"; renderPhotoGrid(); return; }
+    item.state = "done"; item.path = name; item.rowId = row.id;
+    renderPhotoGrid();
+  }
+
+  function renderPhotoGrid() {
+    const existing = (editing && photosBy[editing.id]) ? photosBy[editing.id] : [];
+    const cells = [];
+    existing.forEach((p) => {
+      cells.push('<div class="pcell"><img src="' + esc(p.url) + '" alt="">' +
+        '<button class="x" data-del="' + esc(p.id) + '" data-path="' + esc(p.path) + '">✕</button></div>');
+    });
+    staged.forEach((s) => {
+      const overlay = s.state === "up" ? '<div class="up">Uploading…</div>'
+                    : s.state === "err" ? '<div class="up">Failed — tap ✕</div>' : "";
+      cells.push('<div class="pcell"><img src="' + s.url + '" alt="">' + overlay +
+        '<button class="x" data-stage="' + s.id + '">✕</button></div>');
+    });
+    $("#pgrid").innerHTML = cells.join("");
+    $$("#pgrid .x").forEach((b) => b.addEventListener("click", async (e) => {
+      e.preventDefault();
+      if (b.dataset.stage) {
+        staged = staged.filter((s) => s.id !== b.dataset.stage);
+        renderPhotoGrid();
+      } else {
+        if (!confirm("Delete this photo?")) return;
+        await sb.storage.from(BUCKET).remove([b.dataset.path]);
+        await sb.from("customer_photos").delete().eq("id", b.dataset.del);
+        await loadPhotos(); renderPhotoGrid(); render();
+      }
+    }));
+  }
+
+  /* ---------- 8. the add/edit sheet ---------- */
+  const F = {
+    company:"#f-company", contact:"#f-contact", title:"#f-title", phone:"#f-phone", phone2:"#f-phone2",
+    email:"#f-email", address:"#f-address", city:"#f-city", status:"#f-status", line:"#f-line",
+    spec:"#f-spec", current_hauler:"#f-hauler", current_rate:"#f-rate", contract_expires:"#f-cexp",
+    mrr:"#f-mrr", next_follow:"#f-next", contract_end:"#f-cend", source:"#f-source", notes:"#f-notes"
+  };
+
+  function openSheet(rec) {
+    editing = rec || null;
+    staged = [];
+    $("#sh-title").textContent = rec ? rec.company : "New Prospect";
+    Object.keys(F).forEach((k) => { $(F[k]).value = rec && rec[k] != null ? rec[k] : ""; });
+    if (!rec) $("#f-status").value = "New";
+    $("#sh-del").style.display = rec ? "block" : "none";
+    sheetGeo = null;
+    $("#f-pin").classList.remove("ok");
+    $("#f-pin").textContent = (rec && rec.lat != null)
+      ? "📍 Already pinned · tap to move it here" : "📍 Use my location";
+    $("#qa-wrap").innerHTML = rec ? quickActions(rec) + customerQuoteBlock(rec) : "";
+    $("#log-wrap").innerHTML = rec ? activityBlock(rec) : "";
+    renderPhotoGrid();
+    $("#scrim").classList.add("on"); $("#sheet").classList.add("on");
+    wireLogButtons();
+  }
+  function closeSheet() {
+    $("#scrim").classList.remove("on"); $("#sheet").classList.remove("on");
+    editing = null; staged = [];
+  }
+
+  function quickActions(r) {
+    const a = [];
+    if (r.phone)  a.push('<a class="act" href="tel:' + esc(r.phone) + '">📞 Call</a>');
+    if (r.phone2) a.push('<a class="act" href="tel:' + esc(r.phone2) + '">📱 Cell</a>');
+    if (r.email)  a.push('<a class="act" href="mailto:' + esc(r.email) + '">✉️ Email</a>');
+    if (r.address || r.city)
+      a.push('<a class="act" target="_blank" rel="noopener" href="https://maps.apple.com/?q=' +
+        encodeURIComponent([r.address, r.city, "FL"].filter(Boolean).join(", ")) + '">🗺 Map</a>');
+    if (r.icans_url) a.push('<a class="act" target="_blank" rel="noopener" href="' + esc(r.icans_url) + '">iCans</a>');
+    return a.length ? '<div class="acts" style="margin-top:0">' + a.join("") + "</div>" : "";
+  }
+
+  function activityBlock(r) {
+    const log = Array.isArray(r.activity) ? r.activity : [];
+    const items = log.slice().reverse().slice(0, 12).map((x) =>
+      '<div class="tiny" style="padding:7px 0;border-bottom:1px solid var(--line)"><b>' +
+      esc(x.k) + "</b> · " + esc((x.t || "").slice(0, 10)) + (x.n ? " — " + esc(x.n) : "") + "</div>").join("");
+    return '<label class="f">Log activity</label><div class="acts" style="margin-top:0">' +
+      ["Call", "Visit", "Quote", "Note"].map((k) =>
+        '<button class="act" data-log="' + k + '">' + k + "</button>").join("") + "</div>" +
+      (items ? '<div style="margin-top:10px">' + items + "</div>" : "");
+  }
+
+  function wireLogButtons() {
+    $$("[data-log]").forEach((b) => b.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (!editing) return;
+      const note = prompt(b.dataset.log + " — add a note (optional)") || "";
+      const log = Array.isArray(editing.activity) ? editing.activity.slice() : [];
+      log.push({ k: b.dataset.log, n: note, t: new Date().toISOString() });
+      editing.activity = log;
+      $("#log-wrap").innerHTML = activityBlock(editing);
+      wireLogButtons();
+      toast("Logged — press Save to keep it");
+    }));
+  }
+
+  async function save() {
+    const payload = {};
+    Object.keys(F).forEach((k) => {
+      let v = $(F[k]).value;
+      if (v === "") v = null;
+      if ((k === "mrr" || k === "current_rate") && v != null) v = Number(v) || 0;
+      payload[k] = v;
+    });
+    if (!payload.company) { alert("Company name is required."); return; }
+    if (editing) payload.activity = editing.activity || [];
+    // touching a field lead is what clears it from the unworked queue
+    if (editing && editing.worked === false) payload.worked = true;
+    if (sheetGeo) { payload.lat = sheetGeo.lat; payload.lng = sheetGeo.lng; }
+
+    $("#sh-save").textContent = "Saving…";
+    let id = editing ? editing.id : null;
+    const blobs = staged.filter((s) => s.state === "staged" || s.state === "err").map((s) => s.blob);
+    if (editing) {
+      const { error } = await sb.from("customers").update(payload).eq("id", editing.id);
+      if (error) {
+        if (!(await queueInstead(error, "edit", Object.assign({ id: editing.id }, payload), blobs))) {
+          alert("Could not save: " + error.message); $("#sh-save").textContent = "Save"; }
+        return;
+      }
+    } else {
+      const { data, error } = await sb.from("customers").insert(payload).select().single();
+      if (error) {
+        if (!(await queueInstead(error, "lead", payload, blobs))) {
+          alert("Could not save: " + error.message); $("#sh-save").textContent = "Save"; }
+        return;
+      }
+      id = data.id;
+    }
+    // upload anything staged before the record existed
+    const pending = staged.filter((s) => s.state === "staged" || s.state === "err");
+    for (const s of pending) await uploadOne(s, id);
+
+    $("#sh-save").textContent = "Save";
+    closeSheet();
+    await load();
+  }
+
+  async function del() {
+    if (!editing) return;
+    if (!confirm("Delete " + editing.company + " and its photos?")) return;
+    const ph = photosBy[editing.id] || [];
+    if (ph.length) await sb.storage.from(BUCKET).remove(ph.map((p) => p.path));
+    await sb.from("customers").delete().eq("id", editing.id);
+    closeSheet(); await load();
+  }
+
+  /* ---------- 9. export ---------- */
+  const COLS = [
+    ["Company","company"],["Contact","contact"],["Title","title"],["Main Phone","phone"],
+    ["Cell / Direct","phone2"],["Email","email"],["Address","address"],["City","city"],
+    ["Status","status"],["Service Line","line"],["Size & Frequency","spec"],["Monthly $","mrr"],
+    ["Current Hauler","current_hauler"],["Their Rate","current_rate"],["Their Contract Ends","contract_expires"],
+    ["Next Follow-Up","next_follow"],["Our Contract Ends","contract_end"],["Source","source"],
+    ["Lead Type","lead_source"],["What Was Spotted","spotted_note"],["Notes","notes"]
+  ];
+  function csv() {
+    const q = (v) => '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"';
+    const head = COLS.map((c) => q(c[0]))
+      .concat([q("Spotted By"), q("Queue"), q("Map Pin"), q("Photos"), q("Photo Links")]).join(",");
+    const body = rows.map((r) => {
+      const ph = photosBy[r.id] || [];
+      const pin = r.lat != null ? "https://maps.google.com/?q=" + r.lat + "," + r.lng : "";
+      return COLS.map((c) => q(r[c[1]])).concat([
+        q(nameOf(r.created_by)), q(r.worked === false ? "UNWORKED" : ""), q(pin),
+        q(ph.length), q(ph.map((p) => p.url).join(" | "))
+      ]).join(",");
+    });
+    return [head].concat(body).join("\r\n");
+  }
+  function download(name, text, mime) {
+    const blob = new Blob(["﻿" + text], { type: mime || "text/csv;charset=utf-8" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+  }
+
+  /* ---------- 10. wiring ---------- */
+  $("#lg-go").addEventListener("click", () => signIn(false));
+  $("#lg-pass").addEventListener("keydown", (e) => { if (e.key === "Enter") signIn(false); });
+
+  // capture is always one tap; the full form is a link inside the quick sheet
+  $("#fab").addEventListener("click", openQuick);
+  $("#sh-close").addEventListener("click", closeSheet);
+  $("#sh-cancel").addEventListener("click", closeSheet);
+  $("#scrim").addEventListener("click", () => { closeSheet(); closeQuick(); closeBoard(); closeQuotes(); });
+  $("#sh-save").addEventListener("click", save);
+  $("#sh-del").addEventListener("click", del);
+
+  $("#cam").addEventListener("change", (e) => { pickPhotos(e.target.files); e.target.value = ""; });
+  $("#lib").addEventListener("change", (e) => { pickPhotos(e.target.files); e.target.value = ""; });
+
+  $("#lb-close").addEventListener("click", () => $("#lb").classList.remove("on"));
+  $("#lb").addEventListener("click", (e) => { if (e.target.id === "lb") $("#lb").classList.remove("on"); });
+
+  $("#q").addEventListener("input", (e) => { query = e.target.value; render(); });
+  $("#chips").addEventListener("click", (e) => {
+    const c = e.target.closest(".chip"); if (!c) return;
+    $$(".chip").forEach((x) => x.classList.remove("on"));
+    c.classList.add("on"); filter = c.dataset.f; render();
+  });
+
+  $("#btn-refresh").addEventListener("click", load);
+  $("#btn-menu").addEventListener("click", (e) => { e.stopPropagation(); $("#menu").classList.toggle("on"); });
+  document.addEventListener("click", () => $("#menu").classList.remove("on"));
+  $("#menu").addEventListener("click", async (e) => {
+    const b = e.target.closest("[data-m]"); if (!b) return;
+    $("#menu").classList.remove("on");
+    const m = b.dataset.m;
+    $('[data-m="mode"]').textContent =
+      (mode === "driver" ? "🔄  Switch to sales mode" : "🔄  Switch to driver mode");
+    if (m === "export") download("MWS-prospects-" + todayStr() + ".csv", csv());
+    if (m === "backup") download("MWS-backup-" + todayStr() + ".json",
+      JSON.stringify({ customers: rows, photos: photosBy }, null, 2), "application/json");
+    if (m === "quotes") openQuotes();
+    if (m === "muni")   openMuni();
+    if (m === "inbox")  openInbox();
+    if (m === "dash")   openDash();
+    if (m === "map")    openMap();
+    if (m === "board")  openBoard();
+    if (m === "mode")   { mode = (mode === "driver") ? "sales" : "driver"; applyMode(); }
+    if (m === "theme")  toggleTheme();
+    if (m === "who")    alert("Signed in as\n" + (session && session.user ? session.user.email : "unknown"));
+    if (m === "out")    { await sb.auth.signOut(); location.reload(); }
+  });
+
+  document.addEventListener("visibilitychange", () => { if (!document.hidden && session) load(); });
+  window.addEventListener("focus", () => { if (session) load(); });
+  setInterval(() => { if (session && !document.hidden) load(); }, 45000);
+
+  window.addEventListener("unhandledrejection", (e) =>
+    setSync("err", "Error: " + (e.reason && e.reason.message ? e.reason.message : e.reason)));
+
+
+  /* =================================================================
+     10. FRONTLINE INTEL — driver lead capture
+     A driver is in a truck at a light. The capture path is one tap to
+     the camera, one line of text, submit. Everything else is optional
+     and everything else is somebody else's job.
+     ================================================================= */
+
+  let me = null;              // my row from public.team
+  let teamRows = [];          // whole roster, for the leaderboard
+  let mode = localStorage.getItem("mws.crm3.mode") || "";   // "driver" | "sales" | ""
+  let qstaged = [];           // photos picked in the quick sheet
+  let qgeo = null;            // {lat, lng, acc} or null
+
+  async function loadTeam() {
+    const { data, error } = await sb.from("team").select("*");
+    if (error || !data) return;
+    teamRows = data;
+    me = data.find((t) => t.id === (session && session.user && session.user.id)) || null;
+    if (!mode) { mode = (me && me.role === "driver") ? "driver" : "sales"; }
+    applyMode();
+  }
+
+  function applyMode() {
+    document.body.classList.toggle("driver", mode === "driver");
+    $("#fab").textContent = mode === "driver" ? "＋  Spot a lead"
+      : (typeof isDesk === "function" && isDesk()) ? "＋  New prospect" : "+";
+    localStorage.setItem("mws.crm3.mode", mode);
+    render();
+  }
+
+  function nameOf(id) {
+    const t = teamRows.find((x) => x.id === id);
+    return t && t.name ? t.name : "";
+  }
+
+  /* ---------- unworked queue ---------- */
+  function unworkedCount() { return rows.filter((r) => r.worked === false).length; }
+
+  function paintBadge() {
+    const n = unworkedCount();
+    const host = $("#btn-menu");
+    let b = document.getElementById("newbadge");
+    if (!n) { if (b) b.remove(); return; }
+    if (!b) { b = document.createElement("span"); b.id = "newbadge"; b.className = "newbadge"; host.appendChild(b); }
+    b.textContent = n > 99 ? "99+" : n;
+    const chip = document.querySelector('.chip[data-f="unworked"]');
+    if (chip) chip.textContent = "🆕 Unworked (" + n + ")";
+  }
+
+  /* ---------- geolocation ---------- */
+  function grabLocation() {
+    const el = $("#q-geo");
+    qgeo = null;
+    if (!navigator.geolocation) {
+      el.className = "geo no"; el.innerHTML = "<b>No location on this device</b>"; return;
+    }
+    el.className = "geo"; el.innerHTML = "<b>Locating…</b>";
+    navigator.geolocation.getCurrentPosition(
+      (p) => {
+        qgeo = { lat: +p.coords.latitude.toFixed(6), lng: +p.coords.longitude.toFixed(6),
+                 acc: Math.round(p.coords.accuracy) };
+        el.className = "geo ok";
+        el.innerHTML = "<b>📍 Pin dropped</b> &middot; within " + qgeo.acc + " m" +
+          '<a target="_blank" rel="noopener" href="https://maps.google.com/?q=' +
+          qgeo.lat + "," + qgeo.lng + '">Check</a>';
+      },
+      () => {
+        el.className = "geo no";
+        el.innerHTML = "<b>Location off</b> &middot; the lead still saves" +
+          '<a href="#" id="q-retry">Retry</a>';
+        const r = document.getElementById("q-retry");
+        if (r) r.addEventListener("click", (e) => { e.preventDefault(); grabLocation(); });
+      },
+      { enableHighAccuracy: true, timeout: 12000, maximumAge: 30000 }
+    );
+  }
+
+  /* ---------- quick sheet photos ---------- */
+  function renderQThumbs() {
+    $("#q-thumbs").innerHTML = qstaged.map((s) =>
+      '<figure><img src="' + s.url + '" alt=""><button data-q="' + s.id + '">✕</button></figure>').join("");
+    $("#q-snap").classList.toggle("has", qstaged.length > 0);
+    $$("#q-thumbs button").forEach((b) => b.addEventListener("click", (e) => {
+      e.preventDefault();
+      qstaged = qstaged.filter((s) => s.id !== b.dataset.q);
+      renderQThumbs();
+    }));
+  }
+
+  async function qPick(files) {
+    for (const file of Array.from(files)) {
+      if (!file.type.startsWith("image/")) continue;
+      let blob;
+      try { blob = await shrink(file, 1600, 0.78); } catch (e) { blob = file; }
+      qstaged.push({ blob, url: URL.createObjectURL(blob),
+                     id: "q" + Math.random().toString(36).slice(2) });
+      renderQThumbs();
+    }
+  }
+
+  async function qUpload(item, customerId) {
+    const name = customerId + "/" + Date.now() + "-" + Math.random().toString(36).slice(2) + ".jpg";
+    const { error } = await sb.storage.from(BUCKET).upload(name, item.blob,
+      { contentType: "image/jpeg", upsert: false });
+    if (error) return false;
+    await sb.from("customer_photos").insert({ customer_id: customerId, path: name, kind: "site" });
+    return true;
+  }
+
+  /* ---------- open / close ---------- */
+  function openQuick() {
+    qstaged = []; qgeo = null;
+    ["#q-company", "#q-hauler", "#q-note"].forEach((s) => { $(s).value = ""; });
+    renderQThumbs();
+    // the haulers a driver actually reads off a container — built from what
+    // the team has already logged, so it learns the local market on its own
+    const seen = Array.from(new Set(rows.map((r) => r.current_hauler).filter(Boolean))).sort();
+    $("#haulers").innerHTML = seen.map((h) => '<option value="' + esc(h) + '">').join("");
+    $("#q-save").textContent = "Submit lead";
+    $("#scrim").classList.add("on"); $("#qsheet").classList.add("on");
+    grabLocation();
+  }
+  function closeQuick() {
+    $("#scrim").classList.remove("on"); $("#qsheet").classList.remove("on");
+    qstaged = []; qgeo = null;
+  }
+
+  async function qSave() {
+    const company = $("#q-company").value.trim();
+    if (!company) { alert("Give it a name — even “the grey warehouse on 12th” is enough."); return; }
+    $("#q-save").textContent = "Sending…";
+    const payload = {
+      company: company,
+      current_hauler: $("#q-hauler").value.trim() || null,
+      spotted_note: $("#q-note").value.trim() || null,
+      notes: $("#q-note").value.trim() || null,
+      status: "New",
+      source: "Field spot",
+      lead_source: "driver",
+      worked: false,
+      lat: qgeo ? qgeo.lat : null,
+      lng: qgeo ? qgeo.lng : null
+    };
+    const { data, error } = await sb.from("customers").insert(payload).select().single();
+    if (error) {
+      if (await queueInstead(error, "lead", payload, qstaged.map((s) => s.blob))) return;
+      alert("Could not send: " + error.message); $("#q-save").textContent = "Submit lead"; return;
+    }
+    let ok = 0;
+    for (const s of qstaged) { if (await qUpload(s, data.id)) ok++; }
+    closeQuick();
+    await load();
+    toast("Lead sent" + (ok ? " with " + ok + " photo" + (ok > 1 ? "s" : "") : "") + " — nice spot");
+  }
+
+  /* ---------- leaderboard ---------- */
+  async function openBoard() {
+    $("#lb-rows").innerHTML = '<div class="lbrow"><span class="nm">Loading…</span></div>';
+    $("#scrim").classList.add("on"); $("#lbsheet").classList.add("on");
+    const { data, error } = await sb.from("leaderboard").select("*");
+    if (error) {
+      $("#lb-rows").innerHTML = '<div class="lbrow"><span class="nm">Run 02_frontline.sql first</span></div>';
+      return;
+    }
+    const list = (data || []).slice().sort((a, b) =>
+      (b.won - a.won) || (b.submitted - a.submitted));
+    if (!list.length) { $("#lb-rows").innerHTML = '<div class="lbrow"><span class="nm">No one on the roster yet</span></div>'; return; }
+    $("#lb-rows").innerHTML = list.map((t, i) =>
+      '<div class="lbrow' + (i === 0 && t.won > 0 ? " top1" : "") + '">' +
+        '<span class="rk">' + (i === 0 && t.won > 0 ? "★" : i + 1) + "</span>" +
+        '<span class="nm">' + esc(t.name) +
+          "<small>" + esc(t.role || "") + (t.truck ? " &middot; " + esc(t.truck) : "") + "</small></span>" +
+        '<span class="n"><b>' + t.submitted + "</b><span>spotted</span></span>" +
+        '<span class="n"><b>' + t.quoted + "</b><span>quoted</span></span>" +
+        '<span class="n win"><b>' + t.won + "</b><span>won</span></span>" +
+      "</div>").join("");
+  }
+  function closeBoard() {
+    $("#scrim").classList.remove("on"); $("#lbsheet").classList.remove("on");
+  }
+
+  /* ---------- wiring ---------- */
+  $("#q-cam").addEventListener("change", (e) => { qPick(e.target.files); e.target.value = ""; });
+  $("#q-save").addEventListener("click", qSave);
+  $("#q-cancel").addEventListener("click", closeQuick);
+  $("#q-full").addEventListener("click", () => {
+    // carry what they already typed into the full form rather than making them retype
+    const c = $("#q-company").value, h = $("#q-hauler").value, n = $("#q-note").value;
+    const carried = qstaged.slice();
+    closeQuick();
+    openSheet(null);
+    $("#f-company").value = c; $("#f-hauler").value = h; $("#f-notes").value = n;
+    staged = carried.map((s) => ({ blob: s.blob, url: s.url, state: "staged", id: s.id }));
+    renderPhotoGrid();
+  });
+  $("#lb-x").addEventListener("click", closeBoard);
+  $("#lb-close2").addEventListener("click", closeBoard);
+
+  /* =================================================================
+     11. THE OUTBOX — capture must survive no signal
+     A driver is behind a warehouse, in a loading dock, or out on the
+     edge of a route. That is exactly where the leads are, and exactly
+     where the phone has no bars. A submit that fails there is a lead
+     that never existed. So nothing is ever submitted straight to the
+     network: it goes into a local queue first and drains when it can.
+     ================================================================= */
+
+  const DB_NAME = "mws.crm3.db", DB_STORE = "outbox";
+  let idb = null, outbox = [], flushing = false;
+
+  function openDB() {
+    return new Promise((resolve) => {
+      if (!window.indexedDB) return resolve(null);
+      let rq;
+      try { rq = indexedDB.open(DB_NAME, 1); } catch (e) { return resolve(null); }
+      rq.onupgradeneeded = () => {
+        const d = rq.result;
+        if (!d.objectStoreNames.contains(DB_STORE)) d.createObjectStore(DB_STORE, { keyPath: "id" });
+      };
+      rq.onsuccess = () => resolve(rq.result);
+      rq.onerror   = () => resolve(null);
+      rq.onblocked = () => resolve(null);
+    });
+  }
+
+  function tx(mode, fn) {
+    return new Promise((resolve, reject) => {
+      if (!idb) return reject(new Error("no local storage available"));
+      const t = idb.transaction(DB_STORE, mode);
+      const rq = fn(t.objectStore(DB_STORE));
+      t.oncomplete = () => resolve(rq && rq.result);
+      t.onerror    = () => reject(t.error || new Error("local write failed"));
+      t.onabort    = () => reject(t.error || new Error("local write aborted"));
+    });
+  }
+
+  const idbAll = ()   => tx("readonly",  (s) => s.getAll());
+  const idbPut = (v)  => tx("readwrite", (s) => s.put(v));
+  const idbDel = (id) => tx("readwrite", (s) => s.delete(id));
+
+  async function outboxLoad() {
+    if (!idb) return;
+    try { outbox = (await idbAll()) || []; } catch (e) { outbox = []; }
+    outbox.sort((a, b) => a.created - b.created);
+    paintOutbox();
+  }
+
+  /* A failure worth queueing is a transport failure. A 400 from Postgres
+     means the row is malformed and retrying forever will not fix it. */
+  function isOffline(err) {
+    if (!navigator.onLine) return true;
+    const m = String((err && err.message) || err || "");
+    return /failed to fetch|networkerror|load failed|network request failed|timeout|ERR_/i.test(m);
+  }
+
+  async function enqueue(kind, payload, blobs, label) {
+    const item = {
+      id: "ob" + Date.now() + Math.random().toString(36).slice(2, 7),
+      kind: kind, payload: payload, blobs: blobs || [],
+      label: label || payload.company || "lead", created: Date.now(), tries: 0, err: ""
+    };
+    await idbPut(item);
+    outbox.push(item);
+    paintOutbox();
+    return item;
+  }
+
+  function queuedCount() { return outbox.length; }
+
+  function paintOutbox() {
+    const n = queuedCount();
+    let el = document.getElementById("obpill");
+    if (!n) { if (el) el.remove(); return; }
+    if (!el) {
+      el = document.createElement("button");
+      el.id = "obpill"; el.className = "obpill";
+      el.addEventListener("click", () => flushOutbox(true));
+      document.body.appendChild(el);
+    }
+    el.innerHTML = "↑ " + n + " waiting to send" +
+      (navigator.onLine ? " &middot; tap to retry" : " &middot; no signal");
+    el.classList.toggle("off", !navigator.onLine);
+  }
+
+  /* Drain the queue oldest-first. One failure stops the run so we do not
+     hammer a dead connection with the whole backlog. */
+  async function flushOutbox(manual) {
+    if (flushing || !sb || !session) return;
+    if (!outbox.length) { if (manual) toast("Nothing waiting"); return; }
+    if (!navigator.onLine) { if (manual) setSync("err", "Still no signal — everything is saved on this phone"); return; }
+    flushing = true;
+    let sent = 0, stop = false;
+    for (const item of outbox.slice()) {
+      if (stop) break;
+      try {
+        let id = item.payload.id || null;
+        if (item.kind === "edit" && id) {
+          const p = Object.assign({}, item.payload); delete p.id;
+          const { error } = await sb.from("customers").update(p).eq("id", id);
+          if (error) throw error;
+        } else {
+          const p = Object.assign({}, item.payload); delete p.id;
+          const { data, error } = await sb.from("customers").insert(p).select().single();
+          if (error) throw error;
+          id = data.id;
+        }
+        for (const b of (item.blobs || [])) { await qUpload({ blob: b }, id); }
+        await idbDel(item.id);
+        outbox = outbox.filter((o) => o.id !== item.id);
+        sent++;
+        paintOutbox();
+      } catch (e) {
+        item.tries++; item.err = String((e && e.message) || e);
+        try { await idbPut(item); } catch (_) {}
+        // a malformed row will never succeed; keep it but stop the run either way
+        stop = true;
+        if (!isOffline(e)) setSync("err", "One queued lead was rejected: " + item.err);
+      }
+    }
+    flushing = false;
+    if (sent) { toast(sent + " queued lead" + (sent > 1 ? "s" : "") + " sent"); await load(); }
+    else if (manual) setSync("err", "Could not send yet — still saved on this phone");
+    paintOutbox();
+  }
+
+  /* Queued leads are shown in the list straight away. A driver who cannot
+     see what they just captured will capture it again. */
+  function queuedRows() {
+    return outbox.filter((o) => o.kind === "lead").map((o) => Object.assign({}, o.payload, {
+      id: "queued:" + o.id, _queued: true,
+      company: o.payload.company, updated_at: new Date(o.created).toISOString(),
+      created_by: session && session.user ? session.user.id : null
+    }));
+  }
+
+  async function discardQueued(obId) {
+    if (!confirm("Throw away this unsent lead? It has not reached the office.")) return;
+    try { await idbDel(obId); } catch (e) {}
+    outbox = outbox.filter((o) => o.id !== obId);
+    paintOutbox(); render();
+  }
+
+  window.addEventListener("online",  () => { paintOutbox(); flushOutbox(); });
+  window.addEventListener("offline", paintOutbox);
+
+  /* The bridge between a failed write and the queue. Returns true when the
+     work is safely stored locally, false when the row itself was rejected —
+     in which case the caller must show the real error rather than pretend. */
+  async function queueInstead(err, kind, payload, blobs) {
+    if (!isOffline(err)) return false;
+    if (!idb) return false;              // nowhere safe to put it; do not lie
+    try { await enqueue(kind, payload, blobs); }
+    catch (e) { return false; }
+    $("#sh-save").textContent = "Save";
+    $("#q-save").textContent  = "Submit lead";
+    closeSheet(); closeQuick();
+    render();
+    setSync("err", "No signal — saved on this phone, it will send itself");
+    return true;
+  }
+
+  /* =================================================================
+     12. MISSION CONTROL
+     Everything here is computed from rows already in memory — no extra
+     query, works offline, and stays correct while the list is filtered.
+     ================================================================= */
+
+  const DASH_STAGES = ["New", "Quoted", "Won", "Active", "On Hold", "Lost"];
+
+  function bar(label, n, max, cls, right) {
+    const pct = max > 0 ? Math.round((n / max) * 100) : 0;
+    return '<div class="dbar' + (cls ? " " + cls : "") + '">' +
+      '<span class="l">' + esc(label) + "</span>" +
+      '<span class="t"><i style="width:' + Math.max(pct, n ? 3 : 0) + '%"></i></span>' +
+      '<span class="v">' + esc(right == null ? n : right) + "</span></div>";
+  }
+
+  function statBlock(items) {
+    return '<div class="dstats">' + items.map((s) =>
+      '<div class="dstat' + (s.cls ? " " + s.cls : "") + '"><b>' + esc(s.v) + "</b><span>" +
+      esc(s.k) + "</span>" + (s.sub ? "<em>" + esc(s.sub) + "</em>" : "") + "</div>").join("") + "</div>";
+  }
+
+  function section(title, note, inner) {
+    return '<div class="dsec"><h3>' + esc(title) + "</h3>" +
+      (note ? '<p class="tiny">' + note + "</p>" : "") + inner + "</div>";
+  }
+
+  function renderDash() {
+    const host = $("#dash-body");
+    if (!rows.length) { host.innerHTML = '<p class="tiny">Nothing to report yet.</p>'; return; }
+
+    const won     = rows.filter((r) => r.status === "Won" || r.status === "Active");
+    const quoted  = rows.filter((r) => r.status === "Quoted");
+    const lost    = rows.filter((r) => r.status === "Lost");
+    const decided = won.length + lost.length;
+    const winRate = decided ? Math.round((won.length / decided) * 100) : 0;
+    const wonMrr  = won.reduce((s, r) => s + (Number(r.mrr) || 0), 0);
+    const pipeMrr = quoted.reduce((s, r) => s + (Number(r.mrr) || 0), 0);
+    const out = [];
+
+    /* ---- headline ---- */
+    out.push(statBlock([
+      { k: "Won & active", v: won.length },
+      { k: "Win rate",     v: winRate + "%", sub: decided + " decided" },
+      { k: "Booked / mo",  v: money(wonMrr), cls: "good" },
+      { k: "Quoted / mo",  v: money(pipeMrr) }
+    ]));
+
+    /* ---- the expiry radar: the only moment an incumbent can be beaten ---- */
+    const radar = rows
+      .filter((r) => r.contract_expires && r.status !== "Won" && r.status !== "Active" && r.status !== "Lost")
+      .map((r) => ({ r: r, d: daysUntil(r.contract_expires) }))
+      .filter((x) => x.d != null && x.d <= 365)
+      .sort((a, b) => a.d - b.d);
+
+    const band = (lo, hi) => radar.filter((x) => x.d >= lo && x.d <= hi).length;
+    let radarHTML = statBlock([
+      { k: "Past due",   v: band(-99999, -1), cls: band(-99999, -1) ? "hot" : "" },
+      { k: "≤ 30 days",  v: band(0, 30),   cls: band(0, 30) ? "hot" : "" },
+      { k: "31–90",      v: band(31, 90),  cls: band(31, 90) ? "warm" : "" },
+      { k: "91–365",     v: band(91, 365) }
+    ]);
+    if (radar.length) {
+      radarHTML += '<div class="dlist">' + radar.slice(0, 12).map((x) => {
+        const cls = x.d < 0 ? "hot" : x.d <= 30 ? "hot" : x.d <= 90 ? "warm" : "";
+        const when = x.d < 0 ? Math.abs(x.d) + "d ago" : x.d === 0 ? "today" : "in " + x.d + "d";
+        return '<button class="drow ' + cls + '" data-go="' + esc(x.r.id) + '">' +
+          '<span class="n">' + esc(x.r.company) + "</span>" +
+          '<span class="s">' + esc(x.r.current_hauler || "hauler unknown") +
+            (Number(x.r.current_rate) ? " · " + money(x.r.current_rate) + "/mo" : "") + "</span>" +
+          '<span class="d">' + when + "</span></button>";
+      }).join("") + "</div>";
+      if (radar.length > 12) radarHTML += '<p class="tiny">+ ' + (radar.length - 12) + " more further out.</p>";
+    } else {
+      radarHTML += '<p class="tiny">No competitor contract dates logged yet. It is the single most ' +
+        'useful thing a rep can ask on a first visit — “when are you up for renewal?”</p>';
+    }
+    out.push(section("Contract expiry radar",
+      "An incumbent is only beatable in the window before their renewal. Work these first.", radarHTML));
+
+    /* ---- pipeline ---- */
+    const byStage = DASH_STAGES.map((s) => ({ s: s, n: rows.filter((r) => r.status === s).length }));
+    const maxStage = Math.max.apply(null, byStage.map((x) => x.n).concat([1]));
+    out.push(section("Pipeline", "", byStage.map((x) =>
+      bar(x.s, x.n, maxStage, x.s === "Lost" ? "bad" : (x.s === "Won" || x.s === "Active") ? "good" : "")).join("")));
+
+    /* ---- whose business we are actually going after ---- */
+    const hMap = {};
+    rows.forEach((r) => {
+      if (!r.current_hauler) return;
+      const k = r.current_hauler.trim();
+      (hMap[k] = hMap[k] || { n: 0, mrr: 0 }).n++;
+      hMap[k].mrr += Number(r.current_rate) || 0;
+    });
+    const haulers = Object.keys(hMap).map((k) => ({ k: k, n: hMap[k].n, mrr: hMap[k].mrr }))
+      .sort((a, b) => b.n - a.n).slice(0, 8);
+    if (haulers.length) {
+      const mx = haulers[0].n;
+      out.push(section("Who holds the business",
+        "Counted from what your people read off the containers.",
+        haulers.map((h) => bar(h.k, h.n, mx, "", h.n + (h.mrr ? "  ·  " + money(h.mrr) + "/mo" : ""))).join("")));
+    }
+
+    /* ---- geography ---- */
+    const cMap = {};
+    rows.forEach((r) => { if (r.city) cMap[r.city.trim()] = (cMap[r.city.trim()] || 0) + 1; });
+    const cities = Object.keys(cMap).map((k) => ({ k: k, n: cMap[k] })).sort((a, b) => b.n - a.n).slice(0, 8);
+    if (cities.length) {
+      out.push(section("Density by city",
+        "Route economics live here — five accounts in one city beat fifteen scattered.",
+        cities.map((c) => bar(c.k, c.n, cities[0].n)).join("")));
+    }
+
+    /* ---- where leads come from ---- */
+    const src = { driver: 0, sales: 0, web: 0, other: 0 };
+    rows.forEach((r) => {
+      const k = r.lead_source || "sales";
+      if (src[k] == null) src.other++; else src[k]++;
+    });
+    const srcMax = Math.max(src.driver, src.sales, src.web, src.other, 1);
+    out.push(section("Where leads come from", "",
+      bar("Spotted in the field", src.driver, srcMax, "good") +
+      bar("Sales / office",       src.sales,  srcMax) +
+      bar("Website & QR",         src.web,    srcMax) +
+      (src.other ? bar("Other",   src.other,  srcMax) : "")));
+
+    /* ---- last 30 days ---- */
+    const cut = Date.now() - 30 * 864e5;
+    const recent = rows.filter((r) => r.created_at && new Date(r.created_at).getTime() > cut);
+    const conv   = rows.filter((r) => r.converted_at && new Date(r.converted_at).getTime() > cut);
+    out.push(section("Last 30 days", "", statBlock([
+      { k: "New leads in", v: recent.length },
+      { k: "From the field", v: recent.filter((r) => r.lead_source === "driver").length },
+      { k: "Closed won", v: conv.length, cls: conv.length ? "good" : "" },
+      { k: "Unworked now", v: unworkedCount(), cls: unworkedCount() ? "warm" : "" }
+    ])));
+
+    host.innerHTML = out.join("");
+    $$("#dash-body .drow").forEach((b) => b.addEventListener("click", () => {
+      const rec = rows.find((r) => r.id === b.dataset.go);
+      if (!rec) return;
+      closeDash(); openSheet(rec);
+    }));
+  }
+
+  function openDash()  { renderDash(); $("#scrim").classList.add("on"); $("#dashsheet").classList.add("on"); }
+  function closeDash() { $("#scrim").classList.remove("on"); $("#dashsheet").classList.remove("on"); }
+
+  $("#dash-x").addEventListener("click", closeDash);
+  $("#dash-close2").addEventListener("click", closeDash);
+
+  /* =================================================================
+     13. MAP & TERRITORY
+     Leaflet is fetched only when the map is first opened, so the app
+     still boots and captures leads on a phone that never loads it.
+     circleMarker is used rather than the default pin because Leaflet's
+     stock marker depends on image files resolved relative to the CSS,
+     which is the usual reason a CDN-loaded map shows blank markers.
+     ================================================================= */
+
+  const LEAFLET_JS  = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+  const LEAFLET_CSS = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+  let map = null, layer = null, leafletLoading = null;
+
+  const PIN_COLOR = {
+    "New":     "#B26B00", "Quoted":  "#1D6FB8", "Won":     "#0B7A52",
+    "Active":  "#0B7A52", "On Hold": "#7B6A58", "Lost":    "#9A8B7A"
+  };
+
+  function loadLeaflet() {
+    if (window.L) return Promise.resolve(true);
+    if (leafletLoading) return leafletLoading;
+    leafletLoading = new Promise((resolve) => {
+      const css = document.createElement("link");
+      css.rel = "stylesheet"; css.href = LEAFLET_CSS;
+      document.head.appendChild(css);
+      const s = document.createElement("script");
+      s.src = LEAFLET_JS;
+      s.onload  = () => resolve(true);
+      s.onerror = () => resolve(false);
+      document.head.appendChild(s);
+    });
+    return leafletLoading;
+  }
+
+  function pinned() { return rows.filter((r) => r.lat != null && r.lng != null); }
+
+  async function openMap() {
+    $("#scrim").classList.add("on"); $("#mapsheet").classList.add("on");
+    const note = $("#map-note");
+    const pts = pinned();
+    const missing = rows.length - pts.length;
+    note.innerHTML = pts.length
+      ? pts.length + " pinned" + (missing ? " &middot; " + missing +
+          " have no pin yet (open one and tap “Use my location” while you are there)" : "")
+      : "Nothing is pinned yet. Every lead a driver sends in drops a pin automatically.";
+
+    const ok = await loadLeaflet();
+    if (!ok) {
+      $("#map-c").innerHTML = '<p class="tiny" style="padding:20px">Could not load the map ' +
+        "library — that needs a connection. Everything else in the app still works.</p>";
+      return;
+    }
+    /* Leaflet fixes its pixel origin and tile range at construction time. If it
+       is built while the dialog is still animating in, the container is short,
+       and the tile range it computes then leaves an unpainted band across the
+       top that a later invalidateSize() does not repair — the tiles all report
+       as loaded, they are simply positioned for a viewport that no longer
+       exists. So wait for the transition to finish, then build it once. */
+    await new Promise((r) => setTimeout(r, 320));
+    if (!map) {
+      // zoom animation is turned off: a fitBounds that animates leaves the tile
+      // container mid-transform if anything interrupts it, which paints as a
+      // blank strip along one edge. Snapping straight to the view avoids it.
+      map = L.map("map-c", { zoomControl: true, attributionControl: true,
+                             zoomAnimation: false, fadeAnimation: false, markerZoomAnimation: false })
+             .setView([26.1224, -80.1373], 10);   // Fort Lauderdale
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19, attribution: "&copy; OpenStreetMap"
+      }).addTo(map);
+      layer = L.layerGroup().addTo(map);
+    } else {
+      map.invalidateSize();
+    }
+    drawPins();
+  }
+
+  function drawPins() {
+    if (!layer) return;
+    layer.clearLayers();
+    const pts = pinned();
+    if (!pts.length) return;
+    const bounds = [];
+    pts.forEach((r) => {
+      const c = PIN_COLOR[r.status] || "#7B6A58";
+      const m = L.circleMarker([r.lat, r.lng], {
+        radius: r.worked === false ? 10 : 8, color: "#fff", weight: 2,
+        fillColor: c, fillOpacity: r.worked === false ? 1 : 0.85
+      }).addTo(layer);
+      const why = [r.current_hauler ? "has " + r.current_hauler : "", r.spotted_note || ""]
+        .filter(Boolean).join(" — ");
+      m.bindPopup(
+        "<b>" + esc(r.company) + "</b><br>" +
+        '<span style="color:#7B6A58">' + esc(r.status || "New") + (why ? " · " + esc(why) : "") + "</span><br>" +
+        '<a href="#" data-open="' + esc(r.id) + '">Open this record</a>'
+      );
+      bounds.push([r.lat, r.lng]);
+    });
+    if (bounds.length === 1) map.setView(bounds[0], 15, { animate: false });
+    else map.fitBounds(bounds, { padding: [40, 40], maxZoom: 15, animate: false });
+  }
+
+  // Leaflet popups are built fresh each open, so the link is wired by delegation
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest("a[data-open]");
+    if (!a) return;
+    e.preventDefault();
+    const rec = rows.find((r) => r.id === a.dataset.open);
+    if (!rec) return;
+    closeMap(); openSheet(rec);
+  });
+
+  function closeMap() { $("#scrim").classList.remove("on"); $("#mapsheet").classList.remove("on"); }
+
+  /* ---- pin an existing record from wherever you are standing ---- */
+  let sheetGeo = null;
+  function pinHere() {
+    const b = $("#f-pin");
+    if (!navigator.geolocation) { b.textContent = "No location on this device"; return; }
+    b.textContent = "Locating…"; b.disabled = true;
+    navigator.geolocation.getCurrentPosition(
+      (p) => {
+        sheetGeo = { lat: +p.coords.latitude.toFixed(6), lng: +p.coords.longitude.toFixed(6) };
+        b.disabled = false;
+        b.textContent = "📍 Pinned here · ±" + Math.round(p.coords.accuracy) + "m — tap to redo";
+        b.classList.add("ok");
+      },
+      () => { b.disabled = false; b.textContent = "📍 Use my location (location is off)"; },
+      { enableHighAccuracy: true, timeout: 12000, maximumAge: 30000 }
+    );
+  }
+
+  $("#map-x").addEventListener("click", closeMap);
+  $("#map-close2").addEventListener("click", closeMap);
+  $("#f-pin").addEventListener("click", pinHere);
+
+  /* =================================================================
+     14. DESK VIEW
+     Same URL, same data, same login — the layout changes with the
+     screen. On a phone you get cards you can work one-handed; on a
+     computer you get a sortable grid you can scan a hundred rows in.
+     Nothing is duplicated: both read the same filtered set.
+     ================================================================= */
+
+  const DESK_Q = window.matchMedia("(min-width: 1000px)");
+  const isDesk = () => DESK_Q.matches;
+  let sortKey = "updated_at", sortDir = -1;
+
+  /* Fixed columns use minmax(0,Npx) so they compress instead of forcing the
+     whole grid into a horizontal scroll on a 1280 laptop. The three marked
+     `wide` drop out entirely below 1320 rather than being crushed to nothing. */
+  const GRID_COLS = [
+    { k: "company",          h: "Company",        w: "minmax(230px,2.6fr)", cls: "strong" },
+    { k: "contact",          h: "Contact",        w: "minmax(96px,1.2fr)", wide: true },
+    { k: "phone",            h: "Phone",          w: "minmax(0,116px)", tel: true },
+    { k: "city",             h: "City",           w: "minmax(0,112px)" },
+    { k: "status",           h: "Status",         w: "minmax(0,116px)", edit: "status" },
+    { k: "line",             h: "Service",        w: "minmax(0,108px)", wide: true },
+    { k: "mrr",              h: "Our $",          w: "minmax(0,84px)", money: true, num: true },
+    { k: "current_hauler",   h: "Hauler",         w: "minmax(0,112px)" },
+    { k: "current_rate",     h: "Their $",        w: "minmax(0,84px)", money: true, num: true },
+    { k: "contract_expires", h: "They renew",     w: "minmax(0,104px)", date: true, radar: true },
+    { k: "next_follow",      h: "Follow up",      w: "minmax(0,104px)", date: true, due: true },
+    { k: "_spotter",         h: "Spotted",        w: "minmax(0,94px)", wide: true },
+    { k: "_photos",          h: "📷",             w: "minmax(0,50px)", num: true }
+  ];
+  const cols = () => GRID_COLS.filter((c) => !c.wide || window.innerWidth >= 1320);
+
+  function cellVal(r, k) {
+    if (k === "_spotter") return nameOf(r.created_by);
+    if (k === "_photos")  return (photosBy[r.id] || []).length;
+    return r[k];
+  }
+
+  function sortRows(list) {
+    const c = GRID_COLS.find((x) => x.k === sortKey);
+    return list.slice().sort((a, b) => {
+      let x = cellVal(a, sortKey), y = cellVal(b, sortKey);
+      if (c && c.num) { x = Number(x) || 0; y = Number(y) || 0; return (x - y) * sortDir; }
+      // blanks always sink, whichever way the column is pointing
+      const bx = x == null || x === "", by = y == null || y === "";
+      if (bx && by) return 0;
+      if (bx) return 1;
+      if (by) return -1;
+      return String(x).localeCompare(String(y), undefined, { numeric: true }) * sortDir;
+    });
+  }
+
+  function gridCell(r, c) {
+    const v = cellVal(r, c.k);
+
+    if (c.edit === "status") {
+      // the one field a person at a desk changes all day, so it edits in place
+      const opts = ["New", "Quoted", "Won", "Active", "On Hold", "Lost"];
+      return '<span class="gc"><select class="gsel s-' + esc(String(v || "New").replace(/\s/g, ".")) +
+        '" data-id="' + esc(r.id) + '">' +
+        opts.map((o) => '<option' + (o === (v || "New") ? " selected" : "") + ">" + o + "</option>").join("") +
+        "</select></span>";
+    }
+    // a column of "$0" and "0" hides the numbers that matter
+    if (v == null || v === "" || ((c.money || c.k === "_photos") && !Number(v)))
+      return '<span class="gc dim">—</span>';
+    if (c.tel)   return '<span class="gc"><a href="tel:' + esc(v) + '">' + esc(v) + "</a></span>";
+    if (c.money) return '<span class="gc num">' + esc(money(v)) + "</span>";
+    if (c.date) {
+      const d = daysUntil(v);
+      let cls = "";
+      if (c.due   && d != null && d <= 0)              cls = " hot";
+      else if (c.due   && d != null && d <= 7)         cls = " warm";
+      else if (c.radar && d != null && d <= 90 && d >= 0) cls = " warm";
+      else if (c.radar && d != null && d < 0)          cls = " dim";
+      return '<span class="gc num' + cls + '">' + esc(fmtDate(v)) + "</span>";
+    }
+    if (c.num) return '<span class="gc num">' + esc(v) + "</span>";
+    return '<span class="gc' + (c.cls ? " " + c.cls : "") + '">' + esc(v) + "</span>";
+  }
+
+  function renderGrid(list) {
+    const host = $("#list");
+    const sorted = sortRows(list);
+    const CS = cols();
+    const tmpl = CS.map((c) => c.w).join(" ");
+
+    const head = '<div class="ghead" style="grid-template-columns:' + tmpl + '">' +
+      CS.map((c) =>
+        '<button class="gh' + (sortKey === c.k ? " on" : "") + '" data-sort="' + c.k + '">' +
+        esc(c.h) + (sortKey === c.k ? (sortDir === 1 ? " ▲" : " ▼") : "") + "</button>").join("") + "</div>";
+
+    const body = sorted.map((r) =>
+      '<div class="grow' + (r.worked === false ? " unworked" : "") + (r._queued ? " queued" : "") +
+      '" data-id="' + esc(r.id) + '" style="grid-template-columns:' + tmpl + '">' +
+      CS.map((c) => gridCell(r, c)).join("") + "</div>").join("");
+
+    host.innerHTML = '<div class="gwrap"><div class="gscroll">' + head + body + "</div>" +
+      '<p class="gfoot">' + sorted.length + " row" + (sorted.length === 1 ? "" : "s") +
+      " · click any row to open it · the Status column edits in place</p></div>";
+
+    $$("#list .gh").forEach((b) => b.addEventListener("click", () => {
+      if (sortKey === b.dataset.sort) sortDir = -sortDir;
+      else { sortKey = b.dataset.sort; sortDir = 1; }
+      render();
+    }));
+
+    $$("#list .gsel").forEach((sel) => {
+      sel.addEventListener("click", (e) => e.stopPropagation());
+      sel.addEventListener("change", async (e) => {
+        e.stopPropagation();
+        const id = sel.dataset.id;
+        if (id.indexOf("queued:") === 0) return;
+        const rec = rows.find((r) => r.id === id);
+        const patch = { status: sel.value };
+        if (rec && rec.worked === false) patch.worked = true;
+        sel.disabled = true;
+        const { error } = await sb.from("customers").update(patch).eq("id", id);
+        sel.disabled = false;
+        if (error) { setSync("err", "Could not change status: " + error.message); return; }
+        toast(rec.company + " → " + sel.value);
+        await load();
+      });
+    });
+
+    $$("#list .grow").forEach((rw) => rw.addEventListener("click", (e) => {
+      if (e.target.closest("a") || e.target.closest("select")) return;
+      const id = rw.dataset.id;
+      if (id.indexOf("queued:") === 0) {
+        if (navigator.onLine) flushOutbox(true); else discardQueued(id.slice(7));
+        return;
+      }
+      openSheet(rows.find((r) => r.id === id));
+    }));
+  }
+
+  // a laptop gets rotated, a window gets dragged to another monitor, and the
+  // wide-only columns come and go as it is resized
+  DESK_Q.addEventListener("change", () => { if (session) render(); });
+  let rsz = null;
+  window.addEventListener("resize", () => {
+    if (!session || !isDesk()) return;
+    clearTimeout(rsz); rsz = setTimeout(render, 180);
+  });
+
+  /* =================================================================
+     15. INBOX — leads from the website, yard signs and truck decals
+     These land in inbound_leads, not customers, so spam never reaches
+     the pipeline. A person reads each one and accepts it, which is
+     what turns it into a real prospect.
+     ================================================================= */
+
+  let inbound = [];
+
+  async function loadInbound() {
+    if (!sb || !session) return;
+    const { data, error } = await sb.from("inbound_leads")
+      .select("*").eq("handled", false).order("created_at", { ascending: false });
+    if (error) return;                       // 03_intake.sql not run yet — stay quiet
+    inbound = data || [];
+    paintInbox();
+  }
+
+  function paintInbox() {
+    const b = $('[data-m="inbox"]');
+    if (b) b.textContent = "📥  Inbox" + (inbound.length ? "  (" + inbound.length + ")" : "");
+    const dot = $("#inboxdot");
+    if (!inbound.length) { if (dot) dot.remove(); return; }
+    if (!dot) {
+      const d = document.createElement("span");
+      d.id = "inboxdot"; d.className = "newbadge inbox";
+      $("#btn-refresh").appendChild(d);
+    }
+    $("#inboxdot").textContent = inbound.length > 99 ? "99+" : inbound.length;
+  }
+
+  function inboundHTML(l) {
+    const when = new Date(l.created_at);
+    const bits = [l.city, l.service].filter(Boolean).join(" · ");
+    const acts = [];
+    if (l.phone) acts.push('<a class="act" href="tel:' + esc(l.phone) + '">📞 ' + esc(l.phone) + "</a>");
+    if (l.email) acts.push('<a class="act" href="mailto:' + esc(l.email) + '">✉️ Email</a>');
+    return '<div class="ibcard" data-lead="' + esc(l.id) + '">' +
+      '<h3>' + esc(l.company || l.contact || "Website enquiry") +
+        '<span class="badge ph">' + esc(l.source || "web") + "</span></h3>" +
+      (l.contact && l.company ? '<div class="who">' + esc(l.contact) + "</div>" : "") +
+      (bits ? '<div class="meta"><span>' + esc(bits) + "</span></div>" : "") +
+      (l.address ? '<div class="meta"><span>📍 ' + esc(l.address) + "</span></div>" : "") +
+      (l.message ? '<div class="spot"><em>They wrote</em>' + esc(l.message) + "</div>" : "") +
+      (acts.length ? '<div class="acts">' + acts.join("") + "</div>" : "") +
+      '<p class="tiny">Arrived ' + when.toLocaleDateString() + " " +
+        when.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) +
+        (l.page ? " · from " + esc(String(l.page).slice(0, 60)) : "") + "</p>" +
+      '<div class="ibacts">' +
+        '<button class="btn ibok" data-accept="' + esc(l.id) + '">Accept as a prospect</button>' +
+        '<button class="btn sec" data-bin="' + esc(l.id) + '">Not a lead</button>' +
+      "</div></div>";
+  }
+
+  function renderInbox() {
+    const host = $("#inbox-body");
+    if (!inbound.length) {
+      host.innerHTML = '<div class="empty"><div class="big">📥</div><b>Nothing waiting</b>' +
+        '<p class="tiny" style="margin-top:6px">Leads from your website form and from any QR code ' +
+        "you print will land here.</p></div>";
+      return;
+    }
+    host.innerHTML = inbound.map(inboundHTML).join("");
+
+    $$("#inbox-body [data-accept]").forEach((b) => b.addEventListener("click", async () => {
+      b.disabled = true; b.textContent = "Accepting…";
+      const { data, error } = await sb.rpc("accept_inbound", { lead_id: b.dataset.accept });
+      if (error) {
+        b.disabled = false; b.textContent = "Accept as a prospect";
+        setSync("err", "Could not accept: " + error.message); return;
+      }
+      inbound = inbound.filter((l) => l.id !== b.dataset.accept);
+      paintInbox(); renderInbox();
+      await load();
+      const rec = rows.find((r) => r.id === data);
+      toast("Added to the pipeline");
+      if (rec) { closeInbox(); openSheet(rec); }
+    }));
+
+    $$("#inbox-body [data-bin]").forEach((b) => b.addEventListener("click", async () => {
+      if (!confirm("Throw this away? It will not appear again.")) return;
+      const { error } = await sb.from("inbound_leads").delete().eq("id", b.dataset.bin);
+      if (error) { setSync("err", "Could not delete: " + error.message); return; }
+      inbound = inbound.filter((l) => l.id !== b.dataset.bin);
+      paintInbox(); renderInbox();
+    }));
+  }
+
+  function openInbox()  { renderInbox(); $("#scrim").classList.add("on"); $("#inboxsheet").classList.add("on"); }
+  function closeInbox() { $("#scrim").classList.remove("on"); $("#inboxsheet").classList.remove("on"); }
+
+  $("#inbox-x").addEventListener("click", closeInbox);
+  $("#inbox-close2").addEventListener("click", closeInbox);
+
+  /* =================================================================
+     16. MUNICIPAL — public-sector solicitations
+     Separate from the prospect pipeline on purpose: a city ITB has a
+     bid number and a deadline, not a monthly rate, and mixing the two
+     would distort every figure in Mission Control.
+     ================================================================= */
+
+  let muni = [], muniRun = null, muniFilter = "live";
+
+  async function loadMunicipal() {
+    if (!sb || !session) return;
+    const { data, error } = await sb.from("municipal_leads")
+      .select("*").order("due_date", { ascending: true });
+    if (error) return;                    // 04_municipal.sql not run yet — stay quiet
+    muni = data || [];
+    const { data: runs } = await sb.from("civic_runs")
+      .select("*").order("ran_at", { ascending: false }).limit(1);
+    muniRun = (runs && runs[0]) || null;
+    paintMuni();
+  }
+
+  const muniLive = (m) =>
+    m.status !== "Passed" && m.status !== "Lost" &&
+    (m.due_date == null || daysUntil(m.due_date) >= 0);
+  const muniNew  = (m) => m.status === "New" && muniLive(m);
+
+  function paintMuni() {
+    const b = $('[data-m="muni"]');
+    const n = muni.filter(muniNew).length;
+    if (b) b.textContent = "🏛  Municipal" + (n ? "  (" + n + ")" : "");
+  }
+
+  function muniVisible() {
+    if (muniFilter === "all")     return muni;
+    if (muniFilter === "hot")     return muni.filter((m) => muniLive(m) &&
+                                     m.due_date && daysUntil(m.due_date) <= 21);
+    if (muniFilter === "bidding") return muni.filter((m) => m.status === "Bidding" || m.status === "Submitted");
+    if (muniFilter === "new")     return muni.filter(muniNew);
+    return muni.filter(muniLive);
+  }
+
+  function muniRowHTML(m) {
+    const d = m.due_date ? daysUntil(m.due_date) : null;
+    const cls = d == null ? "" : d < 0 ? "dim" : d <= 7 ? "hot" : d <= 21 ? "warm" : "";
+    const when = d == null ? "no date"
+               : d < 0 ? "closed" : d === 0 ? "TODAY" : d + "d left";
+    const chips = [];
+    if (m.status === "New") chips.push('<span class="badge ren">NEW</span>');
+    if (m.category) chips.push('<span class="badge ph">' + esc(m.category) + "</span>");
+    if (m.relevance >= 70) chips.push('<span class="badge due">STRONG MATCH</span>');
+    return '<button class="mrow ' + cls + '" data-muni="' + esc(m.id) + '">' +
+      '<span class="j">' + esc(m.jurisdiction) +
+        (m.solicitation_no ? ' <i>' + esc(m.solicitation_no) + "</i>" : "") + "</span>" +
+      '<span class="t">' + esc(m.title) + "</span>" +
+      (chips.length ? '<span class="c">' + chips.join(" ") + "</span>" : "") +
+      '<span class="d">' + when + "</span></button>";
+  }
+
+  function renderMuni() {
+    const host = $("#muni-body");
+    const v = muniVisible();
+
+    // "nothing new" and "the job never ran" look identical without this
+    let head = "";
+    if (muniRun) {
+      const ago = Math.round((Date.now() - new Date(muniRun.ran_at).getTime()) / 36e5);
+      const stale = ago > 36;
+      head = '<p class="tiny' + (stale ? " warnline" : "") + '">Last checked ' +
+        (ago < 1 ? "under an hour ago" : ago + "h ago") + " · " +
+        muniRun.sources_ok + " of " + muniRun.sources_tried + " sources read · " +
+        muniRun.new_leads + " new" +
+        (muniRun.sources_failed ? " · " + muniRun.sources_failed + " could not be read" : "") +
+        (stale ? " — that is older than a day, so the daily job may not be running." : "") + "</p>";
+    } else {
+      head = '<p class="tiny warnline">No run recorded yet. Nothing here is out of date — ' +
+             "it simply has not collected anything yet.</p>";
+    }
+
+    const chips = [["live", "Open"], ["hot", "⏰ Closing soon"], ["new", "New"],
+                   ["bidding", "We are bidding"], ["all", "Everything"]];
+    head += '<div class="chips" style="padding:10px 0 8px">' + chips.map(([k, label]) =>
+      '<button class="chip' + (muniFilter === k ? " on" : "") + '" data-mf="' + k + '">' +
+      esc(label) + "</button>").join("") + "</div>";
+
+    host.innerHTML = head + (v.length
+      ? '<div class="mlist">' + v.map(muniRowHTML).join("") + "</div>"
+      : '<div class="empty"><div class="big">🏛</div><b>Nothing here</b>' +
+        '<p class="tiny" style="margin-top:6px">Either no solicitation matches this filter, ' +
+        "or the daily check has not found one yet.</p></div>");
+
+    $$("#muni-body [data-mf]").forEach((b) => b.addEventListener("click", () => {
+      muniFilter = b.dataset.mf; renderMuni();
+    }));
+    $$("#muni-body .mrow").forEach((b) => b.addEventListener("click", () =>
+      openMuniDetail(muni.find((m) => m.id === b.dataset.muni))));
+  }
+
+  function openMuniDetail(m) {
+    if (!m) return;
+    const dates = [
+      ["Due", m.due_date], ["Questions due", m.question_due], ["Pre-bid meeting", m.prebid_date],
+      ["Posted", m.posted_date]
+    ].filter((x) => x[1]);
+    $("#md-title").textContent = m.title;
+    $("#md-body").innerHTML =
+      '<p class="tiny" style="margin-top:0">' + esc(m.jurisdiction) +
+        (m.county ? " · " + esc(m.county) + " County" : "") +
+        (m.solicitation_no ? " · " + esc(m.solicitation_no) : "") +
+        (m.kind ? " · " + esc(m.kind) : "") + "</p>" +
+      (dates.length ? '<div class="mdates">' + dates.map((x) =>
+        '<div><b>' + esc(fmtDate(x[1])) + "</b><span>" + esc(x[0]) + "</span></div>").join("") + "</div>" : "") +
+      (m.summary ? '<div class="spot"><em>Summary</em>' + esc(m.summary) + "</div>" : "") +
+      (m.evidence ? '<div class="spot"><em>Why this was flagged' +
+        (m.matched_on ? " — matched “" + esc(m.matched_on) + "”" : "") + "</em>" +
+        esc(m.evidence) + "</div>" : "") +
+      (m.url ? '<div class="acts"><a class="act" target="_blank" rel="noopener" href="' +
+        esc(m.url) + '">Open the solicitation ↗</a></div>' : "") +
+      '<label class="f">Where we stand</label>' +
+      '<select class="f" id="md-status">' +
+        ["New", "Reviewing", "Bidding", "Submitted", "Won", "Lost", "Passed"].map((s) =>
+          "<option" + (s === m.status ? " selected" : "") + ">" + s + "</option>").join("") +
+      "</select>" +
+      '<label class="f">Notes</label>' +
+      '<textarea class="f" id="md-notes" placeholder="Who we called, what the scope really is, go/no-go reasoning…">' +
+        esc(m.notes || "") + "</textarea>" +
+      '<button class="btn" id="md-save">Save</button>' +
+      '<button class="btn sec" id="md-back">Back to the list</button>';
+
+    $("#md-save").addEventListener("click", async () => {
+      const b = $("#md-save"); b.disabled = true; b.textContent = "Saving…";
+      const { error } = await sb.from("municipal_leads")
+        .update({ status: $("#md-status").value, notes: $("#md-notes").value || null })
+        .eq("id", m.id);
+      b.disabled = false; b.textContent = "Save";
+      if (error) { setSync("err", "Could not save: " + error.message); return; }
+      await loadMunicipal(); closeMuniDetail(); renderMuni(); toast("Updated");
+    });
+    $("#md-back").addEventListener("click", closeMuniDetail);
+    $("#scrim").classList.add("on"); $("#mdsheet").classList.add("on");
+  }
+  function closeMuniDetail() { $("#mdsheet").classList.remove("on"); }
+
+  function openMuni()  { renderMuni(); $("#scrim").classList.add("on"); $("#munisheet").classList.add("on"); }
+  function closeMuni() {
+    $("#scrim").classList.remove("on");
+    $("#munisheet").classList.remove("on"); $("#mdsheet").classList.remove("on");
+  }
+
+  $("#muni-x").addEventListener("click", closeMuni);
+  $("#muni-close2").addEventListener("click", closeMuni);
+  $("#md-x").addEventListener("click", closeMuniDetail);
+
+  /* =================================================================
+     17. QUOTES — build, save, print and email a customer quote
+     Same layout and terms as the desktop quote scripts. A saved quote is
+     a snapshot: once Sent it is never edited, only revised (-R1, -R2…).
+     Sales + admin only; the database enforces that, the UI just hides it.
+     ================================================================= */
+
+  let quotes = [];                 // every quote, newest first
+  let qb = null;                   // the quote open in the builder
+  let qlFilter = "all";
+
+  const PAYMENT_LINE = "credit card payments are subject to a 3.5% processing fee; " +
+                       "ACH and Zelle payments have no transaction fees.";
+  const ESCALATOR = "the greater of 3% or the change in CPI-U";
+  const OPTIONAL = [
+    ["caster",   "Caster installation (one-time)",                        "$80.00"],
+    ["rollout",  "Roll-out / caster service (we roll the container out and back)", "$35.27 per month"],
+    ["cart",     "Delinquent cart pull (account past due)",               "$100.00"],
+    ["dumpster", "Delinquent dumpster pull (account past due)",           "$275.00"],
+  ];
+  const FREQS = [["weekly", "Weekly"], ["bi-weekly", "Bi-weekly (every other week)"],
+                 ["2x per week", "2x per week"], ["3x per week", "3x per week"]];
+  const FREQ_DETAIL = { "bi-weekly": "bi-weekly (every other week)" };
+  // pct = share of the invoice added on top and paid to the City.
+  // A city with a flat permit instead of a % gets pct 0 and a note.
+  const CITY_FEES = {
+    "fort lauderdale": { frontload: 25, rolloff: 25, label: "City of Fort Lauderdale franchise fee",
+                         hint: "Front-load below 2x/week needs the City frequency waiver." },
+    "delray beach":    { rolloff: 10, label: "City of Delray Beach franchise fee",
+                         hint: "Front-load is closed in Delray (WM exclusive)." },
+    "boca raton":      { frontload: 8, rolloff: 15, label: "City of Boca Raton franchise fee" },
+    "coral springs":   { frontload: 0, rolloff: 0, label: "",
+                         hint: "Flat annual permit — no per-quote fee. Front-load is closed (Coastal)." },
+  };
+
+  const usd = (n) => "$" + (Number(n) || 0).toLocaleString(undefined,
+    { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const num = (v) => (v === "" || v == null || isNaN(Number(v))) ? null : Number(v);
+  const canQuote = () => mode !== "driver" && (!me || me.role === "sales" || me.role === "admin");
+
+  /* ---------- load ---------- */
+  async function loadQuotes() {
+    if (!sb || !session) return;
+    const { data, error } = await sb.from("quotes").select("*").order("created_at", { ascending: false });
+    if (error) return;                        // 05_quotes.sql not run yet — stay quiet
+    quotes = data || [];
+    if ($("#qlsheet").classList.contains("on")) renderQuoteList();
+  }
+
+  /* ---------- defaults ---------- */
+  function cityKey(c) { return String(c || "").trim().toLowerCase().replace(/^city of\s+/, ""); }
+
+  function feeFor(kind, city) {
+    const f = CITY_FEES[cityKey(city)];
+    if (!f) return { pct: null, label: "", hint: "No fee on file for this city — check the Franchise Tracker." };
+    return { pct: f[kind] != null ? f[kind] : null, label: f.label || "", hint: f.hint || "" };
+  }
+
+  function blankQuote(kind, cust) {
+    const c = cust || {};
+    const q = {
+      id: null, quote_no: null, base_no: null, revision: 0, kind: kind, status: "Draft",
+      customer_id: c.id || null, company: c.company || "", contact: c.contact || "",
+      email: c.email || "", phone: c.phone || c.phone2 || "", address: c.address || "",
+      city: c.city || "", zip: "",
+      data: { valid_days: 30, fee_pct: null, fee_label: "", payment: PAYMENT_LINE }
+    };
+    if (kind === "frontload") Object.assign(q.data, {
+      options: [{ size: "4", freq: "weekly", rate: "" }],
+      extra: "", extra_next: "", extra_next_date: "",
+      optional: { caster: true, rollout: true, cart: false, dumpster: true },
+      terms: [3, 5]
+    });
+    else Object.assign(q.data, {
+      containers: [{ size: "20", material: "C&D / roofing", rate: "", tons: "", over: "", hauls: 1 }],
+      delivery: "Included"
+    });
+    const f = feeFor(kind, q.city);
+    q.data.fee_pct = f.pct; q.data.fee_label = f.label;
+    return q;
+  }
+
+  /* ---------- totals ---------- */
+  function totals(q) {
+    const d = q.data, pct = (num(d.fee_pct) || 0) / 100;
+    if (q.kind === "frontload") {
+      const per = (d.options || []).map((o) => {
+        const b = num(o.rate) || 0;
+        return { base: b, fee: b * pct, total: b + b * pct };
+      });
+      return { per: per, base: per.length ? per[0].base : 0, total: per.length ? per[0].total : 0 };
+    }
+    const lines = (d.containers || []).map((c) => (num(c.rate) || 0) * (num(c.hauls) || 1));
+    const deliv = num(d.delivery) || 0;
+    const sub = lines.reduce((a, b) => a + b, 0) + deliv * (d.containers || []).length;
+    return { lines: lines, deliv: deliv * (d.containers || []).length, base: sub, fee: sub * pct, total: sub + sub * pct };
+  }
+
+  /* ---------- the builder sheet ---------- */
+  const locked = () => qb && qb.status !== "Draft";
+
+  function field(label, key, val, attrs) {
+    return '<div><label class="f">' + label + '</label><input class="f" data-k="' + key + '" value="' +
+      esc(val == null ? "" : val) + '"' + (attrs || "") + (locked() ? " disabled" : "") + "></div>";
+  }
+  const money$ = ' type="number" inputmode="decimal" step="0.01" min="0"';
+
+  function renderBuilder() {
+    const q = qb, d = q.data, L = locked();
+    const dis = L ? " disabled" : "";
+    const f = feeFor(q.kind, q.city);
+    let h = "";
+
+    h += '<div class="qtype">' + [["frontload", "Front-load (monthly)"], ["rolloff", "Roll-off (one-time job)"]]
+      .map(([k, t]) => '<button class="chip' + (q.kind === k ? " on" : "") + '" data-kind="' + k + '"' +
+        (q.id ? " disabled" : "") + ">" + t + "</button>").join("") + "</div>";
+
+    if (q.quote_no) h += '<p class="tiny" style="margin:6px 0 0"><b>' + esc(q.quote_no) + "</b> · " +
+      esc(q.status) + (q.sent_at ? " · sent " + esc(q.sent_at.slice(0, 10)) : "") +
+      (L ? " — sent quotes are locked. Use <b>Revise</b> to change one." : "") + "</p>";
+
+    h += '<h4 class="qsec">Customer</h4>';
+    h += '<div class="row2">' + field("Contact", "contact", q.contact) + field("Business", "company", q.company) + "</div>";
+    h += '<div class="row2">' + field("Email", "email", q.email, ' type="email" inputmode="email"') +
+         field("Phone", "phone", q.phone, ' type="tel" inputmode="tel"') + "</div>";
+    h += field("Service address", "address", q.address);
+    h += '<div class="row2">' + field("City", "city", q.city) + field("ZIP", "zip", q.zip, ' inputmode="numeric"') + "</div>";
+
+    if (q.kind === "frontload") {
+      h += '<h4 class="qsec">Service options</h4>';
+      d.options.forEach((o, i) => {
+        h += '<div class="qline"><b class="qkey">' + String.fromCharCode(65 + i) + "</b>" +
+          '<select class="f" data-o="' + i + '" data-ok="size"' + dis + ">" +
+            ["2", "3", "4", "6", "8"].map((s) => "<option" + (String(o.size) === s ? " selected" : "") +
+              ' value="' + s + '">' + s + "-yard</option>").join("") + "</select>" +
+          '<select class="f" data-o="' + i + '" data-ok="freq"' + dis + ">" +
+            FREQS.map(([v, t]) => '<option value="' + v + '"' + (o.freq === v ? " selected" : "") + ">" + t + "</option>").join("") +
+          "</select>" +
+          '<input class="f" data-o="' + i + '" data-ok="rate" placeholder="$ / month" value="' + esc(o.rate) + '"' + money$ + dis + ">" +
+          (d.options.length > 1 && !L ? '<button class="iconbtn qdel" data-delo="' + i + '">✕</button>' : "") +
+          "</div>";
+      });
+      if (!L && d.options.length < 3) h += '<button class="act" data-add="option">＋ Add an option</button>';
+
+      h += '<div class="row2">' + field("Extra dump / overage ($)", "d.extra", d.extra, money$) +
+           field("Rises to ($, optional)", "d.extra_next", d.extra_next, money$) + "</div>";
+      h += '<div class="row2">' + field("…effective", "d.extra_next_date", d.extra_next_date, ' placeholder="January 1, 2027"') +
+           '<div><label class="f">Term</label><div class="qchecks">' +
+           [3, 5].map((y) => '<label><input type="checkbox" data-term="' + y + '"' +
+             ((d.terms || []).indexOf(y) >= 0 ? " checked" : "") + dis + "> " + y + "-year</label>").join("") +
+           "</div></div></div>";
+      h += '<label class="f">Optional charges to show</label><div class="qchecks col">' +
+        OPTIONAL.map(([k, t, r]) => '<label><input type="checkbox" data-opt="' + k + '"' +
+          (d.optional[k] ? " checked" : "") + dis + "> " + esc(t) + " — " + r + "</label>").join("") + "</div>";
+    } else {
+      h += '<h4 class="qsec">Containers</h4>';
+      d.containers.forEach((c, i) => {
+        h += '<div class="qcont">' +
+          '<div class="qline"><b class="qkey">' + (i + 1) + "</b>" +
+          '<select class="f" data-c="' + i + '" data-ck="size"' + dis + ">" +
+            ["10", "15", "20", "30", "40"].map((s) => "<option" + (String(c.size) === s ? " selected" : "") +
+              ' value="' + s + '">' + s + "-yard</option>").join("") + "</select>" +
+          '<input class="f" data-c="' + i + '" data-ck="material" list="qmat" placeholder="Material" value="' + esc(c.material) + '"' + dis + ">" +
+          (d.containers.length > 1 && !L ? '<button class="iconbtn qdel" data-delc="' + i + '">✕</button>' : "") +
+          "</div>" +
+          '<div class="qgrid4">' +
+            '<div><label class="f">$ per haul</label><input class="f" data-c="' + i + '" data-ck="rate" value="' + esc(c.rate) + '"' + money$ + dis + "></div>" +
+            '<div><label class="f">Tons incl.</label><input class="f" data-c="' + i + '" data-ck="tons" value="' + esc(c.tons) + '" type="number" inputmode="decimal" step="0.5"' + dis + "></div>" +
+            '<div><label class="f">$ / ton over</label><input class="f" data-c="' + i + '" data-ck="over" value="' + esc(c.over) + '"' + money$ + dis + "></div>" +
+            '<div><label class="f">Hauls</label><input class="f" data-c="' + i + '" data-ck="hauls" value="' + esc(c.hauls) + '" type="number" inputmode="numeric" min="1" step="1"' + dis + "></div>" +
+          "</div></div>";
+      });
+      h += '<datalist id="qmat"><option>C&amp;D / roofing</option><option>Clean roof tile</option>' +
+           "<option>Clean concrete</option><option>Household cleanout</option><option>Yard waste</option></datalist>";
+      if (!L) h += '<button class="act" data-add="container">＋ Add a container</button>';
+      h += field("Delivery ($, or blank = included)", "d.delivery", d.delivery === "Included" ? "" : d.delivery, money$);
+    }
+
+    h += '<h4 class="qsec">City fee</h4>';
+    h += '<div class="row2">' + field("Fee %", "d.fee_pct", d.fee_pct, ' type="number" inputmode="decimal" step="0.5" min="0"') +
+         field("Shown on the quote as", "d.fee_label", d.fee_label, ' placeholder="City of … franchise fee"') + "</div>";
+    if (f.hint) h += '<p class="tiny warnline" style="margin-top:4px">' + esc(f.hint) + "</p>";
+
+    h += '<div class="qtotal" id="qb-total"></div>';
+
+    // actions
+    h += '<div class="qacts">';
+    if (!L) h += '<button class="btn" id="qb-save">' + (q.id ? "Save changes" : "Save quote") + "</button>";
+    h += '<button class="btn sec" id="qb-print">🖨  Print / Save PDF</button>';
+    h += '<button class="btn sec" id="qb-mail">✉️  Email it</button>';
+    h += '<button class="btn sec" id="qb-copy">📋  Copy email text</button>';
+    if (q.id) {
+      h += '<label class="f">Status</label><select class="f" id="qb-status">' +
+        ["Draft", "Sent", "Accepted", "Declined", "Superseded"].map((s) =>
+          "<option" + (s === q.status ? " selected" : "") + ">" + s + "</option>").join("") + "</select>";
+      if (L && q.status !== "Superseded") h += '<button class="btn sec" id="qb-revise">✏️  Revise (makes ' +
+        esc(q.base_no + "-R" + (q.revision + 1)) + ")</button>";
+      if (q.status === "Draft") h += '<button class="btn danger" id="qb-del">Delete draft</button>';
+    }
+    h += "</div>";
+
+    $("#qb-body").innerHTML = h;
+    $("#qb-title").textContent = q.quote_no ? q.quote_no : "New quote";
+    paintTotal();
+  }
+
+  function paintTotal() {
+    const t = totals(qb), d = qb.data, pct = num(d.fee_pct) || 0;
+    let h = "";
+    if (qb.kind === "frontload") {
+      h = d.options.map((o, i) => {
+        const p = t.per[i];
+        return "<div><span>Option " + String.fromCharCode(65 + i) + " · " + esc(o.size) + "-yd " + esc(o.freq) +
+          "</span><b>" + usd(p.base) + (pct ? " + " + usd(p.fee) + " fee = " + usd(p.total) : "") + "/mo</b></div>";
+      }).join("");
+    } else {
+      h = "<div><span>Job (included weight)</span><b>" + usd(t.base) +
+        (pct ? " + " + usd(t.fee) + " fee = " + usd(t.total) : "") + "</b></div>";
+    }
+    $("#qb-total").innerHTML = h;
+  }
+
+  function openBuilder(q) {
+    if (!canQuote()) { alert("Quotes are built by sales or admin."); return; }
+    qb = JSON.parse(JSON.stringify(q));
+    renderBuilder();
+    $("#scrim").classList.add("on"); $("#qbsheet").classList.add("on");
+  }
+  function closeBuilder() { $("#qbsheet").classList.remove("on"); qb = null;
+    if (!$("#qlsheet").classList.contains("on") && !$("#sheet").classList.contains("on")) $("#scrim").classList.remove("on"); }
+
+  // one set of delegated listeners for the whole builder body
+  $("#qb-body").addEventListener("input", (e) => {
+    if (!qb || locked()) return;
+    const t = e.target, d = qb.data;
+    if (t.dataset.k) {
+      const k = t.dataset.k;
+      if (k.indexOf("d.") === 0) {
+        const kk = k.slice(2);
+        d[kk] = (kk === "delivery" && t.value === "") ? "Included" : t.value;
+      } else {
+        qb[k] = t.value;
+        if (k === "city") {                       // a new city re-reads the fee table
+          const f = feeFor(qb.kind, t.value);
+          if (f.pct != null) { d.fee_pct = f.pct; d.fee_label = f.label;
+            const a = $('[data-k="d.fee_pct"]'), b = $('[data-k="d.fee_label"]');
+            if (a) a.value = f.pct; if (b) b.value = f.label; }
+        }
+      }
+    }
+    if (t.dataset.o != null)  d.options[+t.dataset.o][t.dataset.ok] = t.value;
+    if (t.dataset.c != null)  d.containers[+t.dataset.c][t.dataset.ck] = t.value;
+    paintTotal();
+  });
+  $("#qb-body").addEventListener("change", (e) => {
+    if (!qb) return;
+    const t = e.target, d = qb.data;
+    if (t.id === "qb-status") { setStatus(t.value); return; }
+    if (locked()) return;
+    if (t.dataset.term) {
+      const y = +t.dataset.term;
+      d.terms = (d.terms || []).filter((x) => x !== y);
+      if (t.checked) d.terms.push(y);
+      d.terms.sort();
+    }
+    if (t.dataset.opt) d.optional[t.dataset.opt] = t.checked;
+    if (t.dataset.o != null)  { d.options[+t.dataset.o][t.dataset.ok] = t.value; paintTotal(); }
+    if (t.dataset.c != null)  { d.containers[+t.dataset.c][t.dataset.ck] = t.value; paintTotal(); }
+  });
+  $("#qb-body").addEventListener("click", (e) => {
+    if (!qb) return;
+    const b = e.target.closest("button"); if (!b) return;
+    const d = qb.data;
+    if (b.dataset.kind && !qb.id) {
+      const keep = qb; qb = blankQuote(b.dataset.kind, {});
+      ["customer_id", "company", "contact", "email", "phone", "address", "city", "zip"].forEach((k) => qb[k] = keep[k]);
+      const f = feeFor(qb.kind, qb.city); qb.data.fee_pct = f.pct; qb.data.fee_label = f.label;
+      renderBuilder(); return;
+    }
+    if (b.dataset.add === "option")    { d.options.push({ size: "4", freq: "weekly", rate: "" }); renderBuilder(); return; }
+    if (b.dataset.add === "container") { d.containers.push({ size: "20", material: "", rate: "", tons: "", over: "", hauls: 1 }); renderBuilder(); return; }
+    if (b.dataset.delo != null) { d.options.splice(+b.dataset.delo, 1); renderBuilder(); return; }
+    if (b.dataset.delc != null) { d.containers.splice(+b.dataset.delc, 1); renderBuilder(); return; }
+    if (b.id === "qb-save")   saveQuote();
+    if (b.id === "qb-print")  printQuote();
+    if (b.id === "qb-mail")   mailQuote();
+    if (b.id === "qb-copy")   copyEmail();
+    if (b.id === "qb-revise") reviseQuote();
+    if (b.id === "qb-del")    deleteQuote();
+  });
+
+  /* ---------- save / revise / status ---------- */
+  function check(q) {
+    if (!q.contact && !q.company) return "Add a contact or business name.";
+    if (!q.address || !q.city)   return "Add the service address and city.";
+    if (q.kind === "frontload" && !q.data.options.every((o) => num(o.rate))) return "Every option needs a monthly rate.";
+    if (q.kind === "rolloff" && !q.data.containers.every((c) => num(c.rate) && c.material)) return "Every container needs a material and a price.";
+    if (q.data.fee_pct == null || q.data.fee_pct === "") return "Set the city fee % (0 if there is none).";
+    return "";
+  }
+
+  function rowFor(q) {
+    const t = totals(q);
+    return {
+      kind: q.kind, status: q.status, customer_id: q.customer_id,
+      company: q.company || null, contact: q.contact || null, email: q.email || null,
+      phone: q.phone || null, address: q.address || null, city: q.city || null, zip: q.zip || null,
+      data: q.data, total: Math.round(t.total * 100) / 100, base_total: Math.round(t.base * 100) / 100
+    };
+  }
+
+  async function saveQuote() {
+    const bad = check(qb); if (bad) { alert(bad); return false; }
+    const btn = $("#qb-save"); if (btn) { btn.disabled = true; btn.textContent = "Saving…"; }
+    const done = (ok) => { if (btn) { btn.disabled = false; btn.textContent = qb && qb.id ? "Save changes" : "Save quote"; } return ok; };
+    const row = rowFor(qb);
+    if (qb.id) {
+      const { error } = await sb.from("quotes").update(row).eq("id", qb.id);
+      if (error) { alert("Could not save: " + error.message); return done(false); }
+    } else {
+      const n = await sb.rpc("next_quote_no");
+      if (n.error) {
+        alert(/next_quote_no|quotes/.test(n.error.message)
+          ? "The quotes table is not set up yet — run 05_quotes.sql in Supabase first."
+          : "Could not number the quote: " + n.error.message);
+        return done(false);
+      }
+      row.quote_no = n.data; row.base_no = n.data; row.revision = 0;
+      const { data, error } = await sb.from("quotes").insert(row).select().single();
+      if (error) { alert("Could not save: " + error.message); return done(false); }
+      Object.assign(qb, data);
+      await touchCustomer(qb, "Quote " + qb.quote_no + " built");
+    }
+    await loadQuotes();
+    renderBuilder(); toast("Saved " + qb.quote_no);
+    return done(true);
+  }
+
+  // first quote moves a New prospect to Quoted and logs it on the record
+  async function touchCustomer(q, note) {
+    if (!q.customer_id) return;
+    const c = rows.find((r) => r.id === q.customer_id); if (!c) return;
+    const patch = {};
+    const log = Array.isArray(c.activity) ? c.activity.slice() : [];
+    log.push({ k: "Quote", n: note, t: new Date().toISOString() });
+    patch.activity = log;
+    if (!c.status || c.status === "New") patch.status = "Quoted";
+    if (q.kind === "frontload" && !Number(c.mrr)) patch.mrr = totals(q).base;
+    const { error } = await sb.from("customers").update(patch).eq("id", c.id);
+    if (!error) Object.assign(c, patch);
+  }
+
+  async function setStatus(s) {
+    if (!qb || !qb.id) return;
+    const patch = { status: s };
+    if (s === "Sent" && !qb.sent_at) patch.sent_at = new Date().toISOString();
+    const { error } = await sb.from("quotes").update(patch).eq("id", qb.id);
+    if (error) { alert("Could not update: " + error.message); renderBuilder(); return; }
+    Object.assign(qb, patch);
+    if (s === "Sent" || s === "Accepted" || s === "Declined")
+      await touchCustomer(qb, "Quote " + qb.quote_no + " marked " + s);
+    if (s === "Accepted" && qb.customer_id) {
+      const c = rows.find((r) => r.id === qb.customer_id);
+      if (c && c.status !== "Active" && c.status !== "Won" &&
+          confirm("Mark " + (c.company || "this customer") + " as Won?")) {
+        await sb.from("customers").update({ status: "Won" }).eq("id", c.id); c.status = "Won";
+      }
+    }
+    await loadQuotes(); renderBuilder(); render(); toast(qb.quote_no + " → " + s);
+  }
+
+  async function reviseQuote() {
+    const src = qb;
+    const rev = Object.assign(JSON.parse(JSON.stringify(src)), {
+      id: null, status: "Draft", sent_at: null, revision: src.revision + 1,
+      quote_no: src.base_no + "-R" + (src.revision + 1)
+    });
+    const row = rowFor(rev);
+    Object.assign(row, { quote_no: rev.quote_no, base_no: src.base_no, revision: rev.revision });
+    const { data, error } = await sb.from("quotes").insert(row).select().single();
+    if (error) { alert("Could not create the revision: " + error.message); return; }
+    if (src.status === "Sent" || src.status === "Draft")
+      await sb.from("quotes").update({ status: "Superseded" }).eq("id", src.id);
+    await loadQuotes();
+    qb = data; renderBuilder(); toast("Revision " + data.quote_no + " started — edit and save");
+  }
+
+  async function deleteQuote() {
+    if (!confirm("Delete draft " + qb.quote_no + "? Its number will not be reused.")) return;
+    const { error } = await sb.from("quotes").delete().eq("id", qb.id);
+    if (error) { alert("Could not delete: " + error.message); return; }
+    await loadQuotes(); closeBuilder(); toast("Draft deleted");
+  }
+
+  /* ---------- the printed quote ---------- */
+  const words = { 1: "one", 2: "two", 3: "three", 4: "four", 5: "five" };
+  const mid = (t) => { const w = String(t || "").split(" ")[0];
+    return (w.indexOf("&") >= 0 || /[A-Z]/.test(w.slice(1))) ? t : t.charAt(0).toLowerCase() + t.slice(1); };
+  const longDate = (dt) => dt.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+
+  function quoteHTML(q) {
+    const d = q.data, t = totals(q), pct = num(d.fee_pct) || 0;
+    const multi = q.kind === "frontload" && d.options.length > 1;
+    const made = q.created_at ? new Date(q.created_at) : new Date();
+    const valid = new Date(made.getTime() + (num(d.valid_days) || 30) * 864e5);
+    const site = [q.address, [q.city, "FL"].filter(Boolean).join(", ") + (q.zip ? " " + q.zip : "")]
+      .filter(Boolean).join(", ");
+    const who = [q.contact, q.company].filter(Boolean).join(" · ");
+    let h = '<div class="qp">';
+
+    h += '<div class="qp-h"><div><span class="wmark qp-logo"></span><i>Right size. Right now.</i></div>' +
+         '<div class="qp-co">5390 NW 12th Ave<br>Fort Lauderdale, FL 33309<br>954-772-6440<br>murphywaste.com</div></div>';
+    h += '<h1>' + (q.kind === "frontload" ? "COMMERCIAL SERVICE QUOTE" : "ROLL-OFF CONTAINER QUOTE") + "</h1>";
+    h += '<div class="qp-meta">' +
+      "<div><b>Quote #:</b> " + esc(q.quote_no || "DRAFT") + "</div><div><b>Date:</b> " + longDate(made) + "</div>" +
+      "<div><b>Prepared for:</b> " + esc(who) + "</div><div><b>Valid through:</b> " + longDate(valid) + "</div>" +
+      "<div><b>" + (q.kind === "frontload" ? "Service address" : "Job site") + ":</b> " + esc(site) +
+      "</div><div><b>Prepared by:</b> Sean-Patrick Murphy</div>" +
+      (q.email ? "<div><b>Email:</b> " + esc(q.email) + "</div><div></div>" : "") + "</div>";
+
+    if (q.kind === "frontload") {
+      const freqTxt = d.options.map((o, i) => (FREQ_DETAIL[o.freq] || o.freq) +
+        (multi ? " (Option " + String.fromCharCode(65 + i) + ")" : "")).join(" or ");
+      const sizes = Array.from(new Set(d.options.map((o) => o.size)));
+      h += "<h2>Scope of Service</h2><p>One (1) " + (sizes.length === 1 ? sizes[0] + "-yard" : "") +
+        " front-load container, supplied and maintained by Murphy Waste Systems, serviced " + esc(freqTxt) +
+        " on a regular scheduled day. Container delivery, placement, repairs and replacement are included in " +
+        "the monthly rate. Additional service is available on call.</p>";
+
+      const ex = num(d.extra), star = num(d.extra_next) ? "*" : "";
+      h += '<h2>Pricing</h2><table class="qp-t"><tr><th>Item</th><th>Rate</th></tr>' +
+        d.options.map((o, i) => '<tr class="b"><td>' + (multi ? "Option " + String.fromCharCode(65 + i) + ": " : "") +
+          esc(o.size) + "-yard front-load container, serviced " + esc(o.freq) + "</td><td>" + usd(o.rate) + " per month</td></tr>").join("") +
+        (ex != null ? "<tr><td>Extra dump (on-call service beyond the scheduled day)</td><td>" + usd(ex) + " per dump" + star + "</td></tr>" +
+          "<tr><td>Overage (container overfilled / lid not closed at service)</td><td>" + usd(ex) + " per occurrence" + star + "</td></tr>" : "") +
+        "<tr><td>Container delivery &amp; setup</td><td>Included</td></tr>" +
+        (pct ? "<tr><td>" + esc(d.fee_label || "City franchise fee") + "</td><td>" + pct + "% of invoice</td></tr>" : "") +
+        "</table>";
+      if (ex != null) h += '<p class="qp-note">Overage is billed as an extra dump: if the container is overfilled or the lid ' +
+        "cannot close at the time of service, the excess is charged at the extra-dump rate of " + usd(ex) + "." +
+        (star ? " <b>*Effective " + esc(d.extra_next_date || "a later date") + ", the extra-dump and overage rate increases to " +
+          usd(d.extra_next) + ".</b>" : "") + "</p>";
+
+      const opts = OPTIONAL.filter(([k]) => d.optional[k]);
+      if (opts.length) h += '<table class="qp-t alt"><tr><th>Optional Services &amp; Other Charges (only if they apply)</th><th>Rate</th></tr>' +
+        opts.map(([, n, r]) => "<tr><td>" + esc(n) + "</td><td>" + r + "</td></tr>").join("") + "</table>";
+
+      h += '<table class="qp-t est"><tr><th>Estimated Monthly Invoice</th>' +
+        d.options.map((o, i) => "<th>" + (multi ? "Option " + String.fromCharCode(65 + i) + " (" + esc(o.freq) + ")" : "") + "</th>").join("") + "</tr>" +
+        "<tr><td>Scheduled service" + (multi ? "" : " (" + esc(d.options[0].freq) + ")") + "</td>" + t.per.map((p) => "<td>" + usd(p.base) + "</td>").join("") + "</tr>" +
+        (pct ? "<tr><td>" + esc(d.fee_label || "City franchise fee") + " (" + pct + "%)</td>" + t.per.map((p) => "<td>" + usd(p.fee) + "</td>").join("") + "</tr>" : "") +
+        '<tr class="tot"><td>Estimated monthly total</td>' + t.per.map((p) => "<td>" + usd(p.total) + "</td>").join("") + "</tr></table>";
+      h += '<p class="qp-note">Extra dumps and overages, when they occur, are added to the invoice for that month.' +
+        (pct ? " The franchise fee is imposed by the City on collection services within the City and is remitted to the City; it is not a Murphy Waste Systems charge." : "") + "</p>";
+
+      const yrs = (d.terms && d.terms.length ? d.terms : [3, 5]);
+      const etc = d.options.map((o, i) => (multi ? "Option " + String.fromCharCode(65 + i) + " " : "") + usd(2 * (num(o.rate) || 0))).join("; ");
+      h += '<h2>Terms</h2><p class="qp-terms"><b>Term:</b> ' + yrs.map((y) => (words[y] || y) + " (" + y + ") years").join(" or ") +
+        ", at the customer's election, beginning on the first service date. <b>Renewal:</b> the agreement automatically renews for " +
+        "successive terms of the same length unless either party gives written notice of non-renewal at least ninety (90) days before " +
+        "the end of the then-current term. <b>Termination:</b> the customer may terminate for convenience at any time with ninety (90) " +
+        "days' written notice and payment of an early-termination charge equal to two (2) months of the monthly service rate (" + etc +
+        "). After the first twenty-four (24) months of service, the early-termination charge no longer applies and the customer may " +
+        "terminate with ninety (90) days' written notice alone. <b>Rate adjustment:</b> the monthly rate and fees adjust annually on the " +
+        "service anniversary by " + ESCALATOR + ". <b>Acceptable materials:</b> non-hazardous commercial solid waste; no hazardous " +
+        "materials, liquids, paint, tires, batteries, or construction debris. <b>Payment:</b> billed monthly in advance, due on receipt; " +
+        esc(d.payment || PAYMENT_LINE) + " Quote valid for " + (num(d.valid_days) || 30) + " days from the date above.</p>";
+
+      h += '<h2>Acceptance</h2><div class="qp-acc">' +
+        (multi ? "<div><b>Select option:</b> " + d.options.map((o, i) => "[&nbsp;&nbsp;] " + String.fromCharCode(65 + i) +
+          " (" + usd(o.rate) + ")").join("&nbsp;&nbsp;&nbsp;") + "</div>" : "") +
+        "<div><b>Select term:</b> " + yrs.map((y) => "[&nbsp;&nbsp;] " + y + "-year term").join("&nbsp;&nbsp;&nbsp;") + "</div>" +
+        '<div class="ln"><span>Authorized signature: ______________________________</span><span>Date: ______________</span></div>' +
+        '<div class="ln"><span>Print name / title: ______________________________</span><span>Start date: __________</span></div></div>';
+    } else {
+      const n = d.containers.length;
+      h += "<h2>Scope of Service</h2><p>" + (words[n] || n).replace(/^./, (c) => c.toUpperCase()) + " (" + n + ") roll-off container" +
+        (n > 1 ? "s" : "") + " delivered to the job site: " +
+        d.containers.map((c) => "one (1) " + esc(c.size) + "-yard for " + esc(mid(c.material))).join("; ") +
+        ". Each container is delivered, filled by the customer, and hauled away for disposal or recycling when you call for pickup." +
+        (d.delivery === "Included" ? " Delivery is included." : "") + "</p>";
+      h += '<h2>Pricing</h2><table class="qp-t"><tr><th>Container</th><th>Material</th><th>Price per haul</th><th>Weight included</th><th>Over the limit</th></tr>' +
+        d.containers.map((c) => '<tr><td class="bb">' + esc(c.size) + "-yard</td><td>" + esc(c.material) + '</td><td class="bb">' + usd(c.rate) +
+          "</td><td>" + (num(c.tons) ? num(c.tons) + " tons" : "—") + "</td><td>" + (num(c.over) ? usd(c.over) + " per ton" : "—") + "</td></tr>").join("") +
+        "</table>";
+      h += '<table class="qp-t alt"><tr><th>Other Charges (only if they apply)</th><th>Rate</th></tr>' +
+        "<tr><td>Container delivery</td><td>" + (d.delivery === "Included" ? "Included" : usd(d.delivery) + " per container") + "</td></tr>" +
+        "<tr><td>Container rental (after the 30-day included period)</td><td>$15.00 per day</td></tr>" +
+        "<tr><td>Trip charge / relocation on site</td><td>$175.00 per occurrence</td></tr>" +
+        (pct ? "<tr><td>" + esc(d.fee_label || "City franchise fee") + "</td><td>" + pct + "% of invoice</td></tr>" : "") + "</table>";
+      h += '<table class="qp-t est"><tr><th>Estimated Job Total</th><th></th></tr>' +
+        d.containers.map((c, i) => "<tr><td>" + esc(c.size) + "-yard — " + esc(mid(c.material)) + " (" + (num(c.hauls) || 1) + " haul" +
+          ((num(c.hauls) || 1) !== 1 ? "s" : "") + ")</td><td>" + usd(t.lines[i]) + "</td></tr>").join("") +
+        (t.deliv ? "<tr><td>Delivery</td><td>" + usd(t.deliv) + "</td></tr>" : "") +
+        (pct ? "<tr><td>" + esc(d.fee_label || "City franchise fee") + " (" + pct + "%)</td><td>" + usd(t.fee) + "</td></tr>" : "") +
+        '<tr class="tot"><td>Estimated job total</td><td>' + usd(t.total) + "</td></tr></table>";
+      h += '<p class="qp-note">Total assumes each container stays within its included weight. Weight over the limit is billed per ton from the scale ticket.</p>';
+      const tile = d.containers.find((c) => /tile|concrete|inert|masonry/i.test(c.material));
+      h += '<h2>Accepted Materials</h2><p class="qp-terms">' +
+        (tile ? "<b>Clean " + esc(mid(tile.material).replace(/^clean\s+/i, "")) + " container:</b> clean roof tile, concrete, brick and masonry only. No underlayment, wood, metal, shingles or trash. A clean-material container that contains other material is billed at the C&amp;D rate. " : "") +
+        d.containers.filter((c) => num(c.tons) && num(c.over)).map((c) => "<b>" + esc(c.size) + "-yard " + esc(mid(c.material)) + ":</b> weight above " +
+          num(c.tons) + " tons is billed at " + usd(c.over) + " per ton, from the scale ticket. ").join("") +
+        "<b>Not accepted in any container:</b> hazardous materials, paint, liquids, tires, batteries, appliances with refrigerant, or household garbage.</p>";
+      h += '<h2>Terms</h2><p class="qp-terms">Quote valid for ' + (num(d.valid_days) || 30) + " days from the date above. " +
+        (d.delivery === "Included" ? "Container delivery is included. " : "") +
+        "Each container includes a 30-day rental period; if no haul is requested within 30 days of delivery, $15.00 per day applies until " +
+        "service is requested. If we cannot service a container because of blocked access or other site conditions, or you ask us to move it on " +
+        "the same site, a $175.00 trip charge applies. Containers must be loaded level with the top rim — nothing above the sides — and the " +
+        "customer is responsible for a clear, firm placement area; we are not responsible for damage to driveways or surfaces at the placement " +
+        "location requested by the customer. " + esc((d.payment || PAYMENT_LINE).replace(/^./, (c) => c.toUpperCase())) +
+        " Payment due upon receipt of invoice.</p>";
+      h += '<h2>Acceptance</h2><div class="qp-acc">' +
+        '<div class="ln"><span>Authorized signature: ______________________________</span><span>Date: ______________</span></div>' +
+        '<div class="ln"><span>Print name: ______________________________</span><span>Delivery date: ________</span></div></div>';
+    }
+    h += '<div class="qp-f">Murphy Waste Systems  •  5390 NW 12th Ave, Fort Lauderdale, FL 33309  •  954-772-6440  •  murphywaste.com</div>';
+    return h + "</div>";
+  }
+
+  async function printQuote() {
+    if (!qb.id && !locked()) { if (!(await saveQuote())) return; }
+    $("#qprint").innerHTML = quoteHTML(qb);
+    const t = document.title;
+    // the PDF file name comes from the page title on most browsers
+    document.title = "MWS_Quote_" + String(qb.contact || qb.company || "Customer").replace(/[^A-Za-z0-9]+/g, "_") + "_" + qb.quote_no;
+    setTimeout(() => { window.print(); document.title = t; }, 60);
+  }
+
+  /* ---------- cover email ---------- */
+  function coverEmail(q) {
+    const d = q.data, t = totals(q), pct = num(d.fee_pct) || 0;
+    const first = String(q.contact || "").split(" ")[0] || "there";
+    const site = [q.address, q.city, q.zip].filter(Boolean).join(", ");
+    const L = [];
+    const dots = (a, b) => "  " + a + " " + ".".repeat(Math.max(2, 46 - a.length)) + " " + b;
+    if (q.kind === "frontload") {
+      const multi = d.options.length > 1;
+      L.push("Hi " + first + ",", "",
+        "Thank you for the chance to quote your trash service. The details are below,",
+        "and the signed-ready quote (" + q.quote_no + ") is attached.", "",
+        "SERVICE",
+        "Front-load service at " + site + ", serviced on a set day.",
+        "Delivery, setup, repairs and container replacement are all included.", "", "PRICING");
+      d.options.forEach((o, i) => L.push(dots((multi ? "Option " + String.fromCharCode(65 + i) + ": " : "") +
+        o.size + "-yard, serviced " + o.freq, usd(o.rate) + " per month")));
+      if (num(d.extra) != null) {
+        L.push(dots("Extra dump (on call)", usd(d.extra) + " per dump"),
+               dots("Overage (overfilled / lid won't close)", "billed as an extra dump"));
+        if (num(d.extra_next)) L.push("  (Extra-dump rate goes to " + usd(d.extra_next) + " effective " + (d.extra_next_date || "a later date") + ".)");
+      }
+      if (pct) L.push(dots(d.fee_label || "City franchise fee", pct + "%"));
+      L.push("", "ESTIMATED MONTHLY INVOICE");
+      d.options.forEach((o, i) => L.push(dots((multi ? "Option " + String.fromCharCode(65 + i) : "Total") +
+        (pct ? " (incl. City fee)" : ""), usd(t.per[i].total))));
+      if (pct) L.push("", "The franchise fee is required by the City on collection service inside city",
+        "limits and is paid to the City.");
+      const yrs = d.terms && d.terms.length ? d.terms : [3, 5];
+      L.push("", "TERM",
+        "Your choice of a " + yrs.join("-year or ") + "-year agreement. During the first 24 months you",
+        "can end it for any reason with 90 days' written notice and a charge of two",
+        "months' service. After 24 months the charge drops off. It renews",
+        "automatically unless either of us gives 90 days' notice before it ends.", "",
+        "To get started, check the " + (multi ? "option and " : "") + "term you prefer on the attached quote, sign,",
+        "and send it back. I'll confirm your delivery date and service day.");
+    } else {
+      L.push("Hi " + first + ",", "",
+        "Thank you for reaching out. Here is the quote for your roll-off service at",
+        site + ", with the signed-ready quote (" + q.quote_no + ") attached.", "", "PRICING");
+      d.containers.forEach((c) => L.push(dots(c.size + "-yard, " + c.material, usd(c.rate) +
+        (num(c.tons) ? "  (" + num(c.tons) + " tons incl; " + usd(c.over) + "/ton over)" : ""))));
+      L.push(dots("Delivery", d.delivery === "Included" ? "Included" : usd(d.delivery) + " each"));
+      if (pct) L.push(dots((d.fee_label || "City fee") + " (" + pct + "%)", usd(t.fee)));
+      L.push("", dots("ESTIMATED JOB TOTAL", usd(t.total)), "",
+        "The total assumes each container stays within its included weight. Any",
+        "weight over is billed per ton from the scale ticket.", "",
+        "OTHER CHARGES, IF THEY APPLY",
+        "  Rental: each container includes 30 days, then $15.00 per day if no haul",
+        "  has been requested.",
+        "  Trip / relocation: $175.00 for blocked access or moving a container.", "",
+        "Sign the attached quote, add your preferred delivery date, and send it back,",
+        "and I'll get it scheduled.");
+    }
+    L.push("", "PAYMENT", (d.payment || PAYMENT_LINE).replace(/^./, (c) => c.toUpperCase()),
+      "Payment due on receipt of invoice.", "", "Thank you,", "", "Sean-Patrick Murphy",
+      "Murphy Waste Systems", "954-772-6440", "murphywaste.com");
+    return L.join("\n");
+  }
+  const subjectOf = (q) => (q.kind === "frontload" ? "Front-load service quote " : "Roll-off quote ") +
+    q.quote_no + " – " + [q.address, q.city].filter(Boolean).join(", ");
+
+  async function mailQuote() {
+    if (!qb.id) { if (!(await saveQuote())) return; }
+    alert("Your email app will open with the message filled in.\n\nAttach the PDF yourself — " +
+          "use Print / Save PDF first if you have not saved it yet.");
+    location.href = "mailto:" + encodeURIComponent(qb.email || "") + "?subject=" +
+      encodeURIComponent(subjectOf(qb)) + "&body=" + encodeURIComponent(coverEmail(qb));
+  }
+  async function copyEmail() {
+    if (!qb.id) { if (!(await saveQuote())) return; }
+    const text = "Subject: " + subjectOf(qb) + "\n\n" + coverEmail(qb);
+    try { await navigator.clipboard.writeText(text); toast("Email text copied"); }
+    catch (e) { prompt("Copy this:", text); }
+  }
+
+  /* ---------- the list ---------- */
+  function renderQuoteList() {
+    const chips = [["all", "All"], ["Draft", "Drafts"], ["Sent", "Sent"], ["Accepted", "Accepted"], ["Declined", "Declined"]];
+    const v = quotes.filter((q) => qlFilter === "all" ? q.status !== "Superseded" : q.status === qlFilter);
+    let h = '<div class="chips" style="padding:0 0 10px">' + chips.map(([k, t]) =>
+      '<button class="chip' + (qlFilter === k ? " on" : "") + '" data-qf="' + k + '">' + t + "</button>").join("") + "</div>";
+    h += canQuote() ? '<div class="qnew"><button class="btn" data-new="frontload">＋ Front-load quote</button>' +
+                      '<button class="btn" data-new="rolloff">＋ Roll-off quote</button></div>' : "";
+    h += v.length ? '<div class="mlist">' + v.map((q) =>
+      '<button class="mrow qrow s-' + esc(q.status) + '" data-q="' + esc(q.id) + '">' +
+        '<span class="j">' + esc(q.quote_no) + " <i>" + (q.kind === "frontload" ? "front-load" : "roll-off") + "</i></span>" +
+        '<span class="t">' + esc([q.contact, q.company].filter(Boolean).join(" · ") || "—") +
+          (q.city ? ' <span class="tiny">· ' + esc(q.city) + "</span>" : "") + "</span>" +
+        '<span class="c"><span class="badge">' + esc(q.status) + "</span> <span class=\"tiny\">" + esc((q.created_at || "").slice(0, 10)) + "</span></span>" +
+        '<span class="d">' + usd(q.total) + (q.kind === "frontload" ? "/mo" : "") + "</span></button>").join("") + "</div>"
+      : '<div class="empty"><div class="big">📄</div><b>No quotes here yet</b></div>';
+    $("#ql-body").innerHTML = h;
+  }
+  $("#ql-body").addEventListener("click", (e) => {
+    const f = e.target.closest("[data-qf]"); if (f) { qlFilter = f.dataset.qf; renderQuoteList(); return; }
+    const n = e.target.closest("[data-new]"); if (n) { openBuilder(blankQuote(n.dataset.new, null)); return; }
+    const r = e.target.closest("[data-q]"); if (r) openBuilder(quotes.find((q) => q.id === r.dataset.q));
+  });
+
+  function openQuotes() { renderQuoteList(); $("#scrim").classList.add("on"); $("#qlsheet").classList.add("on"); loadQuotes(); }
+  function closeQuotes() { $("#qlsheet").classList.remove("on"); $("#qbsheet").classList.remove("on"); qb = null;
+    if (!$("#sheet").classList.contains("on")) $("#scrim").classList.remove("on"); }
+
+  /* ---------- from a customer record ---------- */
+  function customerQuoteBlock(rec) {
+    if (!rec || !canQuote()) return "";
+    const mine = quotes.filter((q) => q.customer_id === rec.id && q.status !== "Superseded");
+    return '<div class="qcust"><button class="act" data-qc="frontload">📄 Front-load quote</button>' +
+      '<button class="act" data-qc="rolloff">📄 Roll-off quote</button>' +
+      mine.map((q) => '<button class="act ghost" data-qo="' + esc(q.id) + '">' + esc(q.quote_no) + " · " + esc(q.status) + "</button>").join("") +
+      "</div>";
+  }
+  $("#qa-wrap").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-qc],[data-qo]"); if (!b || !editing) return;
+    e.preventDefault();
+    if (b.dataset.qc) openBuilder(blankQuote(b.dataset.qc, editing));
+    else openBuilder(quotes.find((q) => q.id === b.dataset.qo));
+  });
+
+  $("#ql-x").addEventListener("click", closeQuotes);
+  $("#ql-close2").addEventListener("click", closeQuotes);
+  $("#qb-x").addEventListener("click", closeBuilder);
+
+  boot();
+})();
+</script>
+</body>
+</html>
